@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!-- Exclude codegen output (DTO + API) -->
+    <Match>
+        <Package name="saas.identity.shared.dto"/>
+    </Match>
+    <Match>
+        <Package name="saas.identity.shared.api"/>
+    </Match>
+    <!-- Spring service/controller singleton injection is fine -->
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+    </Match>
+    <!-- Unboxing/reboxing int parameters in scaffold code -->
+    <Match>
+        <Bug pattern="BX_UNBOXING_IMMEDIATELY_REBOXED"/>
+    </Match>
+</FindBugsFilter>

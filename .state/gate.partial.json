@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "project": "saas-identity-platform-springboot",
+  "passed": false,
+  "partial": true,
+  "ran": [
+    "L5"
+  ],
+  "checked_at": "2026-08-12T13:37:45+0800",
+  "gates": [
+    {
+      "level": "L5",
+      "name": "引用完整性",
+      "passed": false,
+      "returncode": 2,
+      "duration_s": 5.5,
+      "output": "契约错误: saas-identity-platform-springboot: trace_cmd 跑完了，却没有产出 .state/trace.json。\r\n    适配器没生效。常见原因：测试框架版本变了，reporter API 不兼容。\r\n    命令: mvn -q test -Dharness.trace=true"
+    }
+  ]
+}
