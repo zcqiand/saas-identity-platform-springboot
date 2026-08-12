@@ -3,8 +3,14 @@
   "project": "saas-identity-platform-springboot",
   "stack": "java-spring",
   "suite_version": "0.5.0",
-  "source_dirs": ["src/main/java","src/main/resources"],
-  "test_dirs": ["src/test/java","src/test/resources"],
-  "trace_cmd": ["npx", "--no", "vitest", "run"],
-  "trace_env": { "TRACE_MAP": "1" }
+  "source_dirs": ["src/main/java", "src/main/resources"],
+  "test_dirs": ["src/test/java", "src/test/resources"],
+  "gates": {
+    "L1": { "name": "格式", "cmd": ["mvn", "-q", "spotless:check"], "fix": "mvn spotless:apply" },
+    "L2": { "name": "静态检查", "cmd": ["mvn", "-q", "spotbugs:check"], "fix": "逐条修复 SpotBugs" },
+    "L3": { "name": "编译", "cmd": ["mvn", "-q", "-DskipTests", "compile"], "fix": "先让它编译过" },
+    "L4": { "name": "测试", "cmd": ["mvn", "-q", "test"], "fix": "先让测试变绿" }
+  },
+  "trace_cmd": ["mvn", "-q", "test", "-Dharness.trace=true"],
+  "trace_env": {}
 }
