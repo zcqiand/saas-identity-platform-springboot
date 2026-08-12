@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "project": "saas-identity-platform-springboot",
+  "stack": "java-spring",
+  "suite_version": "0.5.0",
+  "source_dirs": ["src/main/java","src/main/resources"],
+  "test_dirs": ["src/test/java","src/test/resources"],
+  "trace_cmd": ["npx", "--no", "vitest", "run"],
+  "trace_env": { "TRACE_MAP": "1" }
+}
