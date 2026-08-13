@@ -14,7 +14,7 @@ import org.springframework.lang.Nullable;
 /** UpdateRoleRequest */
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-08-12T13:11:49.950871300+08:00[Asia/Shanghai]",
+    date = "2026-08-13T19:43:32.481885100+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
 public class UpdateRoleRequest {
 

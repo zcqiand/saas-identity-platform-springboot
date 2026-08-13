@@ -16,21 +16,58 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Generated;
 import jakarta.validation.constraints.*;
 import java.util.List;
+import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import saas.identity.shared.dto.CurrentUser;
+import saas.identity.shared.dto.EffectiveMenuNode;
 import saas.identity.shared.dto.ErrorResponse;
 import saas.identity.shared.dto.SwitchTenantResponse;
 import saas.identity.shared.dto.TenantMembership;
 
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-08-12T13:11:49.950871300+08:00[Asia/Shanghai]",
+    date = "2026-08-13T19:43:32.481885100+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
 @Validated
 @Tag(name = "me", description = "the me API")
 public interface MeApi {
+
+  String PATH_ME_GET_MY_MENUS = "/api/v1/me/menus";
+
+  /**
+   * GET /api/v1/me/menus
+   *
+   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
+   *     code 200)
+   */
+  @Operation(
+      operationId = "meGetMyMenus",
+      tags = {"me"},
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "The request has succeeded.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = EffectiveMenuNode.class))
+            }),
+        @ApiResponse(
+            responseCode = "default",
+            description = "An unexpected error response.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            })
+      })
+  @RequestMapping(
+      method = RequestMethod.GET,
+      value = MeApi.PATH_ME_GET_MY_MENUS,
+      produces = {"application/json"})
+  ResponseEntity<Map<String, List<EffectiveMenuNode>>> meGetMyMenus();
 
   String PATH_ME_LIST_MY_TENANTS = "/api/v1/me/tenants";
 
