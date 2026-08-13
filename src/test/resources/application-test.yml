@@ -1,0 +1,19 @@
+spring:
+  # H2 + PostgreSQL mode for @DataJpaTest
+  # ddl-auto=create-drop 让 Hibernate 从 JPA Entity 生成 H2 schema（不需要 Flyway）
+  # 真实 PG + Flyway 验证由 spring.profiles.active=integration 走 Testcontainers（Phase 5 落地）
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+  flyway:
+    enabled: false

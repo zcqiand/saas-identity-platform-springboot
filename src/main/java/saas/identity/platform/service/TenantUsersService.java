@@ -2,55 +2,69 @@ package saas.identity.platform.service;
 
 import java.util.List;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import saas.identity.platform.entity.UserEntity;
+import saas.identity.platform.mapper.TenantUserMapper;
+import saas.identity.platform.repository.UserRepository;
 import saas.identity.shared.dto.CreateUserRequest;
 import saas.identity.shared.dto.TenantUsersListUsers200Response;
 import saas.identity.shared.dto.User;
 import saas.identity.shared.dto.UserStatus;
 
 /**
- * SCAFFOLD GET:/api/tenants/{tenantId}/users SCAFFOLD POST:/api/tenants/{tenantId}/users SCAFFOLD
- * DELETE:/api/tenants/{tenantId}/users/{userId}
+ * M01.F01 — 租户内用户 CRUD（DB-backed，ADR-0007）。
  *
- * <p>This service is HAND-WRITTEN business logic. The Controller interface (TenantUsersApi) is
- * codegen — don't add methods there.
+ * <p>构造器注入（CLAUDE.md §2）；TenantGuard 由 Controller 层负责，本 service 信任 tenantId。
  */
 @Service
 public class TenantUsersService {
 
+  private static final int PAGE_SIZE_DEFAULT = 20;
+  private static final int PAGE_SIZE_MAX = 100;
+
+  private final UserRepository userRepository;
+
+  public TenantUsersService(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
+
+  // M01.F01.I01
+  @Transactional(readOnly = true)
   public TenantUsersListUsers200Response listUsers(
       UUID tenantId, Integer page, Integer pageSize, UserStatus status) {
-    // M01.F01.I01 — list users in tenant
-    // SCAFFOLD GET:/api/tenants/{tenantId}/users
-    User u = new User();
-    u.setId(UUID.randomUUID());
-    u.setTenantId(tenantId);
-    u.setUsername("alice");
-    u.setEmail("alice@example.com");
-    u.setStatus(UserStatus.ACTIVE);
-    u.setRoleIds(List.of());
-    TenantUsersListUsers200Response p =
-        new TenantUsersListUsers200Response(
-            List.of(u), page == null ? 0 : page, pageSize == null ? 20 : pageSize, 1L);
-    return p;
+    int p = page == null ? 0 : Math.max(0, page);
+    int ps = pageSize == null ? PAGE_SIZE_DEFAULT : Math.min(PAGE_SIZE_MAX, Math.max(1, pageSize));
+    Pageable pageable = PageRequest.of(p, ps);
+
+    Page<UserEntity> result =
+        (status == null)
+            ? userRepository.findByTenantId(tenantId, pageable)
+            : userRepository.findByTenantIdAndStatus(
+                tenantId, TenantUserMapper.toEntityStatus(status), pageable);
+
+    List<User> items = result.getContent().stream().map(TenantUserMapper::toDto).toList();
+    return new TenantUsersListUsers200Response(items, p, ps, result.getTotalElements());
   }
 
+  // M01.F01.I02
+  @Transactional
   public User createUser(UUID tenantId, CreateUserRequest body) {
-    // M01.F01.I02 — create user in tenant
-    // SCAFFOLD POST:/api/tenants/{tenantId}/users
-    User u = new User();
-    u.setId(UUID.randomUUID());
-    u.setTenantId(tenantId);
-    u.setUsername(body.getUsername());
-    u.setEmail(body.getEmail());
-    u.setStatus(UserStatus.INVITED);
-    u.setRoleIds(body.getRoleIds() == null ? List.of() : body.getRoleIds());
-    return u;
+    UserEntity entity = TenantUserMapper.fromCreateRequest(tenantId, body);
+    UserEntity saved = userRepository.save(entity);
+    return TenantUserMapper.toDto(saved);
   }
 
+  // M01.F01.I05
+  @Transactional
   public void deleteUser(UUID tenantId, UUID userId) {
-    // M01.F01.I05 — delete user in tenant
-    // SCAFFOLD DELETE:/api/tenants/{tenantId}/users/{userId}
-    // no-op for scaffold
+    UserEntity existing =
+        userRepository
+            .findByTenantIdAndId(tenantId, userId)
+            .orElseThrow(() -> new IllegalArgumentException("user not found: " + userId));
+    userRepository.delete(existing);
   }
 }
