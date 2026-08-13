@@ -362,9 +362,7 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [
-        "list_returnsPage()"
-      ],
+      "tests": [],
       "entry": []
     },
     "M04.F01.I02": {
@@ -374,9 +372,7 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [
-        "create_returnsApp()"
-      ],
+      "tests": [],
       "entry": []
     },
     "M04.F01.I03": {
@@ -386,10 +382,7 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [
-        "get_returnsApp()",
-        "get_throwsIfMissing()"
-      ],
+      "tests": [],
       "entry": []
     },
     "M04.F01.I04": {
@@ -399,9 +392,7 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [
-        "update_appliesAndSaves()"
-      ],
+      "tests": [],
       "entry": []
     },
     "M04.F01.I05": {
@@ -411,10 +402,7 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [
-        "delete_removesWhenPresent()",
-        "setStatus_toggles()"
-      ],
+      "tests": [],
       "entry": []
     },
     "M04.F02.I06": {

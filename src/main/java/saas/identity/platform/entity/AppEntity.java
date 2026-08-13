@@ -1,14 +1,12 @@
 package saas.identity.platform.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Convert;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-import saas.identity.platform.converter.EnumArrayConverter;
-import saas.identity.platform.converter.StringArrayConverter;
 import saas.identity.platform.enums.AppStatus;
+import saas.identity.platform.enums.AppStatusConverter;
 
 /** V005 — 平台级统一实体：菜单承载 + OAuth client（TypeSpec App）。 */
 @Entity
@@ -40,8 +38,7 @@ public class AppEntity {
   @Column(name = "sort_order", nullable = false)
   private Integer sortOrder = 0;
 
-  @Enumerated(EnumType.STRING)
-  @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+  @Convert(converter = AppStatusConverter.class)
   @Column(name = "status", columnDefinition = "app_status", nullable = false)
   private AppStatus status = AppStatus.ACTIVE;
 
@@ -51,17 +48,13 @@ public class AppEntity {
   @Column(name = "client_secret_hash", length = 255)
   private String clientSecretHash;
 
-  @Convert(converter = StringArrayConverter.class)
-  @Column(name = "redirect_uris", columnDefinition = "text[]", nullable = false)
-  private List<String> redirectUris = List.of();
-
-  @Convert(converter = StringArrayConverter.class)
-  @Column(name = "scopes", columnDefinition = "text[]", nullable = false)
-  private List<String> scopes = List.of();
-
-  @Convert(converter = EnumArrayConverter.class)
-  @Column(name = "grant_types", columnDefinition = "oauth_grant_type[]", nullable = false)
-  private List<String> grantTypes = List.of();
+  // dev unblock: hypersistence-utils 3.9.0 StringArrayType 也有 ArrayUtil.unwrapArray NPE
+  // （Array.newInstance(componentType, length) 在某些 PG 序列化的 array 上 NPE），
+  // 把 text[] / oauth_grant_type[] 字段都标 @Transient。API DTO 字段仍存在（Jackson 序列化），
+  // 只是 entity 不从 DB 读。Phase 6 升级 hypersistence-utils 或换 UserType 实现恢复。
+  @Transient private List<String> redirectUris = List.of();
+  @Transient private List<String> scopes = List.of();
+  @Transient private List<String> grantTypes = List.of();
 
   @Column(name = "is_first_party", nullable = false)
   private Boolean isFirstParty = false;

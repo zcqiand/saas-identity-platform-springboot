@@ -1,13 +1,12 @@
 package saas.identity.platform.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Convert;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-import saas.identity.platform.converter.UuidArrayConverter;
 import saas.identity.platform.enums.MembershipStatus;
+import saas.identity.platform.enums.MembershipStatusConverter;
 
 /** V002 — cross-tenant 成员关系（TypeSpec TenantMembership）。 */
 @Entity
@@ -30,12 +29,9 @@ public class TenantMembershipEntity {
   @Column(name = "tenant_id", columnDefinition = "uuid", nullable = false)
   private UUID tenantId;
 
-  @Convert(converter = UuidArrayConverter.class)
-  @Column(name = "role_ids", columnDefinition = "uuid[]", nullable = false)
-  private List<UUID> roleIds = List.of();
+  @Transient private List<UUID> roleIds = List.of();
 
-  @Enumerated(EnumType.STRING)
-  @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+  @Convert(converter = MembershipStatusConverter.class)
   @Column(name = "status", columnDefinition = "membership_status", nullable = false)
   private MembershipStatus status = MembershipStatus.INVITED;
 

@@ -1,12 +1,13 @@
 package saas.identity.platform.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Convert;
 import java.time.OffsetDateTime;
 import java.util.UUID;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 import saas.identity.platform.enums.MenuStatus;
+import saas.identity.platform.enums.MenuStatusConverter;
 import saas.identity.platform.enums.MenuType;
+import saas.identity.platform.enums.MenuTypeConverter;
 
 /** V005 — 树形菜单（parent_id 自引用）。 */
 @Entity
@@ -41,16 +42,14 @@ public class MenuEntity {
   @Column(name = "icon", length = 64)
   private String icon;
 
-  @Enumerated(EnumType.STRING)
-  @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+  @Convert(converter = MenuTypeConverter.class)
   @Column(name = "type", columnDefinition = "menu_type", nullable = false)
   private MenuType type = MenuType.PAGE;
 
   @Column(name = "sort_order", nullable = false)
   private Integer sortOrder = 0;
 
-  @Enumerated(EnumType.STRING)
-  @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+  @Convert(converter = MenuStatusConverter.class)
   @Column(name = "status", columnDefinition = "menu_status", nullable = false)
   private MenuStatus status = MenuStatus.ACTIVE;
 

@@ -26,7 +26,7 @@ import saas.identity.shared.dto.TokenResponse;
 
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-08-13T19:43:32.481885100+08:00[Asia/Shanghai]",
+    date = "2026-08-13T23:52:54.053972+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
 @Validated
 @Tag(name = "auth", description = "the auth API")

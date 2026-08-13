@@ -1,13 +1,14 @@
 package saas.identity.platform.entity;
 
+import io.hypersistence.utils.hibernate.type.array.StringArrayType;
 import jakarta.persistence.*;
+import jakarta.persistence.Convert;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-import saas.identity.platform.converter.StringArrayConverter;
+import org.hibernate.annotations.Type;
 import saas.identity.platform.enums.ApiKeyStatus;
+import saas.identity.platform.enums.ApiKeyStatusConverter;
 
 /** V004 — tenant-scoped API key（TypeSpec ApiKey）；secret_hash 不可逆散列。 */
 @Entity
@@ -36,12 +37,11 @@ public class ApiKeyEntity {
   @Column(name = "secret_hash", length = 255, nullable = false)
   private String secretHash;
 
-  @Enumerated(EnumType.STRING)
-  @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+  @Convert(converter = ApiKeyStatusConverter.class)
   @Column(name = "status", columnDefinition = "api_key_status", nullable = false)
   private ApiKeyStatus status = ApiKeyStatus.ACTIVE;
 
-  @Convert(converter = StringArrayConverter.class)
+  @Type(StringArrayType.class)
   @Column(name = "scopes", columnDefinition = "text[]", nullable = false)
   private List<String> scopes = List.of();
 

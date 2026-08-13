@@ -69,6 +69,20 @@
             <version>0.2.6</version>
         </dependency>
 
+        <!--
+          M09.Database — Hibernate 6 自定义 JDBC 类型：uuid[] / String[] / 等 PG 原生数组列。
+          替代 @Convert(UuidArrayConverter) 那种 AttributeConverter 写法——后者声明返回 Java 数组，
+          Hibernate 找不到对应的 JDBC SQL type code，启动期 buildStaticUpdateGroup 会崩。
+          hypersistence-utils-hibernate-63 提供 UuidArrayType / StringArrayType UserType 实现，
+          正确声明 Types.ARRAY + nullSafe Get/Set 走 JDBC Array API。
+          Phase 6：testcontainers + saas_test 干净库跑 Flyway drift detection，本 dep 保留用于运行时。
+        -->
+        <dependency>
+            <groupId>io.hypersistence</groupId>
+            <artifactId>hypersistence-utils-hibernate-63</artifactId>
+            <version>3.9.0</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

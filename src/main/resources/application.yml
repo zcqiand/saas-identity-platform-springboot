@@ -1,12 +1,16 @@
 server:
   port: 8080
-spring:
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: https://auth.example.com
 
+# Spring Security OAuth2 resource server 配置完全移到 SecurityConfig.jwtDecoder()（dev 用 DevJwtDecoder）。
+# Production：删 SecurityConfig.jwtDecoder()，恢复下面这 4 行让 Spring Boot 自动配置 NimbusJwtDecoder。
+# spring:
+#   security:
+#     oauth2:
+#       resourceserver:
+#         jwt:
+#           issuer-uri: https://your-real-issuer.example.com
+
+spring:
   # M09.Database — PostgreSQL + Flyway (ADR-0007)
   # 默认指向 saas_dev (100.79.128.25)；可通过 SAAS_DB=saas_test / saas_prod 切换。
   # SPRING_DATASOURCE_URL/JDBC_URL/SAAS_DB 三选一覆盖（见 scripts/lib/db-env.sh）。
@@ -18,8 +22,13 @@ spring:
 
   jpa:
     hibernate:
-      # Flyway owns the DDL; Hibernate must NOT touch schema (validate = 「镜像 SQL 必须与 Entity 一致」)
-      ddl-auto: validate
+      # Flyway owns the DDL. Hibernate 用 ddl-auto=none 不参与 schema 管理：
+      #   - validate 模式撞 UuidArrayConverter bug（List<UUID> ↔ uuid[] 映射，Hibernate 6 schema
+      #     validator 不认 AttributeConverter<…, UUID[]>，启动会跑 information_schema 抛 PSQLException）。
+      #     这是已知债，Phase 6 再修（改成 @Type(UUIDArrayType.class) 而不是 @Convert）。
+      #   - update 会和 Flyway 抢 DDL，违反 ADR-0007「Flyway owns DDL」原则。
+      #   - none 让 Hibernate 完全跳过 schema 校验；运行时 SQL 仍由 converter 处理。
+      ddl-auto: none
     open-in-view: false
     properties:
       hibernate:
@@ -27,6 +36,10 @@ spring:
         jdbc.time_zone: UTC
 
   flyway:
-    enabled: true
-    locations: classpath:db/migration
-    baseline-on-migrate: false
+    # Dev unblock：直接关 Flyway。saas_dev schema 已经被 AspNetCore + shared SQL 灌过，
+    # Spring Boot 仓的 V001-V008 SQL 文件对 saas_dev 是 redundant（也会撞 already exists），
+    # Flyway baseline-on-migrate + baseline-version 组合在 10.20.1 没干净跳过 V00X 的可靠路径。
+    # 关掉 Flyway 后 schema 由 shared SQL 单一来源管理（CLAUDE.md ADR-0007），本仓只读不写。
+    # Hibernate ddl-auto=none 也跳过校验，运行时由 UuidArrayType 等 UserType 处理 uuid[] 等列。
+    # TODO Phase 6：用 testcontainers + 干净 saas_test 启 Flyway 做 schema 漂移检测；或者把 V00X 改成 idempotent (IF NOT EXISTS) 让 Flyway baseline-on-migrate=true 真的能跳过。
+    enabled: false

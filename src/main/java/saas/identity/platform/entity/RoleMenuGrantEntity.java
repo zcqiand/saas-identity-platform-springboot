@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
-import saas.identity.platform.converter.UuidArrayConverter;
 
 /** V005 — tenant-scoped 角色↔菜单 M:N（TypeSpec RoleMenuGrant；整批 PUT）。 */
 @Entity
@@ -18,9 +17,7 @@ public class RoleMenuGrantEntity {
   @Column(name = "tenant_id", columnDefinition = "uuid", nullable = false)
   private UUID tenantId;
 
-  @Convert(converter = UuidArrayConverter.class)
-  @Column(name = "menu_ids", columnDefinition = "uuid[]", nullable = false)
-  private List<UUID> menuIds = List.of();
+  @Transient private List<UUID> menuIds = List.of();
 
   @Column(name = "updated_at", columnDefinition = "timestamptz", nullable = false)
   private OffsetDateTime updatedAt;

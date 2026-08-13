@@ -1,12 +1,14 @@
 package saas.identity.platform.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Convert;
 import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.UUID;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import saas.identity.platform.enums.AuditAction;
+import saas.identity.platform.enums.AuditActionConverter;
 
 /** V006 — tenant-scoped 不可变审计事件（应用层 insert-only）。 */
 @Entity
@@ -24,8 +26,7 @@ public class AuditEventEntity {
   @Column(name = "actor_user_id", columnDefinition = "uuid")
   private UUID actorUserId;
 
-  @Enumerated(EnumType.STRING)
-  @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+  @Convert(converter = AuditActionConverter.class)
   @Column(name = "action", columnDefinition = "audit_action", nullable = false)
   private AuditAction action;
 

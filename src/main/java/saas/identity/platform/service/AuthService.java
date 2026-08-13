@@ -31,7 +31,13 @@ public class AuthService {
 
   @Transactional
   public LoginResponse login(LoginRequest body) {
-    if (body == null) throw new SecurityException("invalid body");
+    if (body == null
+        || body.getUsername() == null
+        || body.getUsername().isBlank()
+        || body.getPassword() == null
+        || body.getPassword().isBlank()) {
+      throw new SecurityException("invalid credentials");
+    }
     UUID tenantId = null;
     UUID tenantCode = body.getTenantCode();
     if (tenantCode != null) {
@@ -51,7 +57,7 @@ public class AuthService {
                   UUID.fromString("00000000-0000-0000-0000-000000000001"), body.getUsername())
               .orElse(null);
     }
-    if (user == null || body.getPassword() == null) {
+    if (user == null) {
       throw new SecurityException("invalid credentials");
     }
     String hash = user.getPasswordHash() == null ? "" : user.getPasswordHash();

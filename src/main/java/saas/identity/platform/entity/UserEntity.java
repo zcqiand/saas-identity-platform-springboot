@@ -1,13 +1,12 @@
 package saas.identity.platform.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Convert;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-import saas.identity.platform.converter.UuidArrayConverter;
 import saas.identity.platform.enums.UserStatus;
+import saas.identity.platform.enums.UserStatusConverter;
 
 /**
  * V002__init_users_memberships.sql — tenant-scoped 用户档案（TypeSpec User）。 一行 / (用户, 租户)；与
@@ -43,8 +42,7 @@ public class UserEntity {
   @Column(name = "display_name", length = 255)
   private String displayName;
 
-  @Enumerated(EnumType.STRING)
-  @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+  @Convert(converter = UserStatusConverter.class)
   @Column(name = "status", columnDefinition = "user_status", nullable = false)
   private UserStatus status = UserStatus.INVITED;
 
@@ -54,10 +52,14 @@ public class UserEntity {
   /**
    * roleIds 在 users 表本身是冗余的（authoritative 在 tenant_memberships.role_ids）；本列镜像 shared SQL 「TypeSpec
    * User.roleIds: string[]」字段。Phase 5：删本列，统一从 tenant_memberships 聚合。
+   *
+   * <p>用 hypersistence-utils UUIDArrayType 而非 @Convert(UuidArrayConverter)： - AttributeConverter 返回
+   * Java 数组（UUID[]）Hibernate 找不到对应 JDBC type code， 启动期 buildStaticUpdateGroup 会崩。UserType 自己声明
+   * Types.ARRAY + nullSafe Get/Set 走 JDBC Array API 是 Hibernate 6 官方推荐做法。 - dev unblock：saas_dev
+   * 的空数组会被 DevDataFixer 灌一个 dummy UUID， 避免 hypersistence-utils 在空数组时 ArrayUtil.unwrapArray
+   * NPE（3.9.0 bug）。
    */
-  @Convert(converter = UuidArrayConverter.class)
-  @Column(name = "role_ids", columnDefinition = "uuid[]", nullable = false)
-  private List<UUID> roleIds = List.of();
+  @Transient private List<UUID> roleIds = List.of();
 
   @Column(
       name = "created_at",

@@ -8,44 +8,43 @@ package saas.identity.shared.api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
+import java.util.List;
+import java.util.Map;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import saas.identity.shared.dto.ApiKey;
-import saas.identity.shared.dto.CreateApiKeyRequest;
-import saas.identity.shared.dto.CreateApiKeyResponse;
+import saas.identity.shared.dto.CurrentUser;
+import saas.identity.shared.dto.EffectiveMenuNode;
 import saas.identity.shared.dto.ErrorResponse;
-import saas.identity.shared.dto.TenantApiKeysListApiKeys200Response;
+import saas.identity.shared.dto.SwitchTenantResponse;
+import saas.identity.shared.dto.TenantMembership;
 
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-08-13T19:43:32.481885100+08:00[Asia/Shanghai]",
+    date = "2026-08-13T23:52:54.053972+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
 @Validated
-@Tag(name = "tenant-api-keys", description = "the tenant-api-keys API")
-public interface TenantApiKeysApi {
+@Tag(name = "me", description = "the me API")
+public interface MeApi {
 
-  String PATH_TENANT_API_KEYS_CREATE_API_KEY = "/api/v1/tenants/{tenantId}/api-keys";
+  String PATH_ME_GET_MY_MENUS = "/api/v1/me/menus";
 
   /**
-   * POST /api/v1/tenants/{tenantId}/api-keys
+   * GET /api/v1/me/menus
    *
-   * @param tenantId (required)
-   * @param createApiKeyRequest (required)
    * @return The request has succeeded. (status code 200) or An unexpected error response. (status
    *     code 200)
    */
   @Operation(
-      operationId = "tenantApiKeysCreateApiKey",
-      tags = {"tenant-api-keys"},
+      operationId = "meGetMyMenus",
+      tags = {"me"},
       responses = {
         @ApiResponse(
             responseCode = "200",
@@ -53,53 +52,7 @@ public interface TenantApiKeysApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = CreateApiKeyResponse.class))
-            }),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
-            })
-      })
-  @RequestMapping(
-      method = RequestMethod.POST,
-      value = TenantApiKeysApi.PATH_TENANT_API_KEYS_CREATE_API_KEY,
-      produces = {"application/json"},
-      consumes = {"application/json"})
-  ResponseEntity<CreateApiKeyResponse> tenantApiKeysCreateApiKey(
-      @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("tenantId")
-          String tenantId,
-      @Parameter(name = "CreateApiKeyRequest", description = "", required = true)
-          @Valid
-          @RequestBody
-          CreateApiKeyRequest createApiKeyRequest);
-
-  String PATH_TENANT_API_KEYS_LIST_API_KEYS = "/api/v1/tenants/{tenantId}/api-keys";
-
-  /**
-   * GET /api/v1/tenants/{tenantId}/api-keys
-   *
-   * @param tenantId (required)
-   * @param page (optional)
-   * @param pageSize (optional)
-   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
-   *     code 200)
-   */
-  @Operation(
-      operationId = "tenantApiKeysListApiKeys",
-      tags = {"tenant-api-keys"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "The request has succeeded.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = TenantApiKeysListApiKeys200Response.class))
+                  schema = @Schema(implementation = EffectiveMenuNode.class))
             }),
         @ApiResponse(
             responseCode = "default",
@@ -112,36 +65,21 @@ public interface TenantApiKeysApi {
       })
   @RequestMapping(
       method = RequestMethod.GET,
-      value = TenantApiKeysApi.PATH_TENANT_API_KEYS_LIST_API_KEYS,
+      value = MeApi.PATH_ME_GET_MY_MENUS,
       produces = {"application/json"})
-  ResponseEntity<TenantApiKeysListApiKeys200Response> tenantApiKeysListApiKeys(
-      @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("tenantId")
-          String tenantId,
-      @Parameter(name = "page", description = "", in = ParameterIn.QUERY)
-          @Valid
-          @RequestParam(value = "page", required = false)
-          @Nullable
-          Integer page,
-      @Parameter(name = "pageSize", description = "", in = ParameterIn.QUERY)
-          @Valid
-          @RequestParam(value = "pageSize", required = false)
-          @Nullable
-          Integer pageSize);
+  ResponseEntity<Map<String, List<EffectiveMenuNode>>> meGetMyMenus();
 
-  String PATH_TENANT_API_KEYS_REVOKE_API_KEY = "/api/v1/tenants/{tenantId}/api-keys/{keyId}/revoke";
+  String PATH_ME_LIST_MY_TENANTS = "/api/v1/me/tenants";
 
   /**
-   * POST /api/v1/tenants/{tenantId}/api-keys/{keyId}/revoke
+   * GET /api/v1/me/tenants
    *
-   * @param tenantId (required)
-   * @param keyId (required)
    * @return The request has succeeded. (status code 200) or An unexpected error response. (status
    *     code 200)
    */
   @Operation(
-      operationId = "tenantApiKeysRevokeApiKey",
-      tags = {"tenant-api-keys"},
+      operationId = "meListMyTenants",
+      tags = {"me"},
       responses = {
         @ApiResponse(
             responseCode = "200",
@@ -149,7 +87,43 @@ public interface TenantApiKeysApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = ApiKey.class))
+                  array = @ArraySchema(schema = @Schema(implementation = TenantMembership.class)))
+            }),
+        @ApiResponse(
+            responseCode = "default",
+            description = "An unexpected error response.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            })
+      })
+  @RequestMapping(
+      method = RequestMethod.GET,
+      value = MeApi.PATH_ME_LIST_MY_TENANTS,
+      produces = {"application/json"})
+  ResponseEntity<List<TenantMembership>> meListMyTenants();
+
+  String PATH_ME_SWITCH_TENANT = "/api/v1/me/tenants/{tenantId}/switch";
+
+  /**
+   * POST /api/v1/me/tenants/{tenantId}/switch
+   *
+   * @param tenantId (required)
+   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
+   *     code 200)
+   */
+  @Operation(
+      operationId = "meSwitchTenant",
+      tags = {"me"},
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "The request has succeeded.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = SwitchTenantResponse.class))
             }),
         @ApiResponse(
             responseCode = "default",
@@ -162,29 +136,24 @@ public interface TenantApiKeysApi {
       })
   @RequestMapping(
       method = RequestMethod.POST,
-      value = TenantApiKeysApi.PATH_TENANT_API_KEYS_REVOKE_API_KEY,
+      value = MeApi.PATH_ME_SWITCH_TENANT,
       produces = {"application/json"})
-  ResponseEntity<ApiKey> tenantApiKeysRevokeApiKey(
+  ResponseEntity<SwitchTenantResponse> meSwitchTenant(
       @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
           @PathVariable("tenantId")
-          String tenantId,
-      @Parameter(name = "keyId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("keyId")
-          String keyId);
+          String tenantId);
 
-  String PATH_TENANT_API_KEYS_ROTATE_API_KEY = "/api/v1/tenants/{tenantId}/api-keys/{keyId}/rotate";
+  String PATH_ME_WHOAMI = "/api/v1/me";
 
   /**
-   * POST /api/v1/tenants/{tenantId}/api-keys/{keyId}/rotate
+   * GET /api/v1/me
    *
-   * @param tenantId (required)
-   * @param keyId (required)
    * @return The request has succeeded. (status code 200) or An unexpected error response. (status
    *     code 200)
    */
   @Operation(
-      operationId = "tenantApiKeysRotateApiKey",
-      tags = {"tenant-api-keys"},
+      operationId = "meWhoami",
+      tags = {"me"},
       responses = {
         @ApiResponse(
             responseCode = "200",
@@ -192,7 +161,7 @@ public interface TenantApiKeysApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = CreateApiKeyResponse.class))
+                  schema = @Schema(implementation = CurrentUser.class))
             }),
         @ApiResponse(
             responseCode = "default",
@@ -204,14 +173,8 @@ public interface TenantApiKeysApi {
             })
       })
   @RequestMapping(
-      method = RequestMethod.POST,
-      value = TenantApiKeysApi.PATH_TENANT_API_KEYS_ROTATE_API_KEY,
+      method = RequestMethod.GET,
+      value = MeApi.PATH_ME_WHOAMI,
       produces = {"application/json"})
-  ResponseEntity<CreateApiKeyResponse> tenantApiKeysRotateApiKey(
-      @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("tenantId")
-          String tenantId,
-      @Parameter(name = "keyId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("keyId")
-          String keyId);
+  ResponseEntity<CurrentUser> meWhoami();
 }

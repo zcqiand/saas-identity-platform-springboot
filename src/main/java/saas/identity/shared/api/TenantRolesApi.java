@@ -15,40 +15,38 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import java.time.OffsetDateTime;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import saas.identity.shared.dto.AuditAction;
+import saas.identity.shared.dto.CreateRoleRequest;
 import saas.identity.shared.dto.ErrorResponse;
-import saas.identity.shared.dto.TenantAuditExportAuditEvents200Response;
-import saas.identity.shared.dto.TenantAuditExportAuditEventsRequest;
-import saas.identity.shared.dto.TenantAuditGetRetentionPolicy200Response;
-import saas.identity.shared.dto.TenantAuditListAuditEvents200Response;
+import saas.identity.shared.dto.Role;
+import saas.identity.shared.dto.TenantRolesListRoles200Response;
+import saas.identity.shared.dto.TenantRolesSetPermissionsRequest;
+import saas.identity.shared.dto.UpdateRoleRequest;
 
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-08-13T19:43:32.481885100+08:00[Asia/Shanghai]",
+    date = "2026-08-13T23:52:54.053972+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
 @Validated
-@Tag(name = "tenant-audit", description = "the tenant-audit API")
-public interface TenantAuditApi {
+@Tag(name = "tenant-roles", description = "the tenant-roles API")
+public interface TenantRolesApi {
 
-  String PATH_TENANT_AUDIT_EXPORT_AUDIT_EVENTS = "/api/v1/tenants/{tenantId}/audit-events/export";
+  String PATH_TENANT_ROLES_CREATE_ROLE = "/api/v1/tenants/{tenantId}/roles";
 
   /**
-   * POST /api/v1/tenants/{tenantId}/audit-events/export
+   * POST /api/v1/tenants/{tenantId}/roles
    *
    * @param tenantId (required)
-   * @param tenantAuditExportAuditEventsRequest (required)
+   * @param createRoleRequest (required)
    * @return The request has succeeded. (status code 200) or An unexpected error response. (status
    *     code 200)
    */
   @Operation(
-      operationId = "tenantAuditExportAuditEvents",
-      tags = {"tenant-audit"},
+      operationId = "tenantRolesCreateRole",
+      tags = {"tenant-roles"},
       responses = {
         @ApiResponse(
             responseCode = "200",
@@ -56,7 +54,7 @@ public interface TenantAuditApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = TenantAuditExportAuditEvents200Response.class))
+                  schema = @Schema(implementation = Role.class))
             }),
         @ApiResponse(
             responseCode = "default",
@@ -69,31 +67,68 @@ public interface TenantAuditApi {
       })
   @RequestMapping(
       method = RequestMethod.POST,
-      value = TenantAuditApi.PATH_TENANT_AUDIT_EXPORT_AUDIT_EVENTS,
+      value = TenantRolesApi.PATH_TENANT_ROLES_CREATE_ROLE,
       produces = {"application/json"},
       consumes = {"application/json"})
-  ResponseEntity<TenantAuditExportAuditEvents200Response> tenantAuditExportAuditEvents(
+  ResponseEntity<Role> tenantRolesCreateRole(
       @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
           @PathVariable("tenantId")
           String tenantId,
-      @Parameter(name = "TenantAuditExportAuditEventsRequest", description = "", required = true)
-          @Valid
-          @RequestBody
-          TenantAuditExportAuditEventsRequest tenantAuditExportAuditEventsRequest);
+      @Parameter(name = "CreateRoleRequest", description = "", required = true) @Valid @RequestBody
+          CreateRoleRequest createRoleRequest);
 
-  String PATH_TENANT_AUDIT_GET_RETENTION_POLICY =
-      "/api/v1/tenants/{tenantId}/audit-events/retention";
+  String PATH_TENANT_ROLES_DELETE_ROLE = "/api/v1/tenants/{tenantId}/roles/{roleId}";
 
   /**
-   * GET /api/v1/tenants/{tenantId}/audit-events/retention
+   * DELETE /api/v1/tenants/{tenantId}/roles/{roleId}
    *
    * @param tenantId (required)
+   * @param roleId (required)
+   * @return There is no content to send for this request, but the headers may be useful. (status
+   *     code 204) or An unexpected error response. (status code 200)
+   */
+  @Operation(
+      operationId = "tenantRolesDeleteRole",
+      tags = {"tenant-roles"},
+      responses = {
+        @ApiResponse(
+            responseCode = "204",
+            description =
+                "There is no content to send for this request, but the headers may be useful. "),
+        @ApiResponse(
+            responseCode = "default",
+            description = "An unexpected error response.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            })
+      })
+  @RequestMapping(
+      method = RequestMethod.DELETE,
+      value = TenantRolesApi.PATH_TENANT_ROLES_DELETE_ROLE,
+      produces = {"application/json"})
+  ResponseEntity<Void> tenantRolesDeleteRole(
+      @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("tenantId")
+          String tenantId,
+      @Parameter(name = "roleId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("roleId")
+          String roleId);
+
+  String PATH_TENANT_ROLES_GET_ROLE = "/api/v1/tenants/{tenantId}/roles/{roleId}";
+
+  /**
+   * GET /api/v1/tenants/{tenantId}/roles/{roleId}
+   *
+   * @param tenantId (required)
+   * @param roleId (required)
    * @return The request has succeeded. (status code 200) or An unexpected error response. (status
    *     code 200)
    */
   @Operation(
-      operationId = "tenantAuditGetRetentionPolicy",
-      tags = {"tenant-audit"},
+      operationId = "tenantRolesGetRole",
+      tags = {"tenant-roles"},
       responses = {
         @ApiResponse(
             responseCode = "200",
@@ -101,7 +136,7 @@ public interface TenantAuditApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = TenantAuditGetRetentionPolicy200Response.class))
+                  schema = @Schema(implementation = Role.class))
             }),
         @ApiResponse(
             responseCode = "default",
@@ -114,106 +149,30 @@ public interface TenantAuditApi {
       })
   @RequestMapping(
       method = RequestMethod.GET,
-      value = TenantAuditApi.PATH_TENANT_AUDIT_GET_RETENTION_POLICY,
+      value = TenantRolesApi.PATH_TENANT_ROLES_GET_ROLE,
       produces = {"application/json"})
-  ResponseEntity<TenantAuditGetRetentionPolicy200Response> tenantAuditGetRetentionPolicy(
-      @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("tenantId")
-          String tenantId);
-
-  String PATH_TENANT_AUDIT_LIST_AUDIT_EVENTS = "/api/v1/tenants/{tenantId}/audit-events";
-
-  /**
-   * GET /api/v1/tenants/{tenantId}/audit-events
-   *
-   * @param tenantId (required)
-   * @param page (optional)
-   * @param pageSize (optional)
-   * @param actorUserId (optional)
-   * @param action (optional)
-   * @param from (optional)
-   * @param to (optional)
-   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
-   *     code 200)
-   */
-  @Operation(
-      operationId = "tenantAuditListAuditEvents",
-      tags = {"tenant-audit"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "The request has succeeded.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = TenantAuditListAuditEvents200Response.class))
-            }),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
-            })
-      })
-  @RequestMapping(
-      method = RequestMethod.GET,
-      value = TenantAuditApi.PATH_TENANT_AUDIT_LIST_AUDIT_EVENTS,
-      produces = {"application/json"})
-  ResponseEntity<TenantAuditListAuditEvents200Response> tenantAuditListAuditEvents(
+  ResponseEntity<Role> tenantRolesGetRole(
       @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
           @PathVariable("tenantId")
           String tenantId,
-      @Parameter(name = "page", description = "", in = ParameterIn.QUERY)
-          @Valid
-          @RequestParam(value = "page", required = false)
-          @Nullable
-          Integer page,
-      @Parameter(name = "pageSize", description = "", in = ParameterIn.QUERY)
-          @Valid
-          @RequestParam(value = "pageSize", required = false)
-          @Nullable
-          Integer pageSize,
-      @Parameter(name = "actorUserId", description = "", in = ParameterIn.QUERY)
-          @Valid
-          @RequestParam(value = "actorUserId", required = false)
-          @Nullable
-          String actorUserId,
-      @Parameter(name = "action", description = "", in = ParameterIn.QUERY)
-          @Valid
-          @RequestParam(value = "action", required = false)
-          @Nullable
-          AuditAction action,
-      @Parameter(name = "from", description = "", in = ParameterIn.QUERY)
-          @Valid
-          @RequestParam(value = "from", required = false)
-          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-          @Nullable
-          OffsetDateTime from,
-      @Parameter(name = "to", description = "", in = ParameterIn.QUERY)
-          @Valid
-          @RequestParam(value = "to", required = false)
-          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-          @Nullable
-          OffsetDateTime to);
+      @Parameter(name = "roleId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("roleId")
+          String roleId);
 
-  String PATH_TENANT_AUDIT_LIST_AUDIT_EVENTS_BY_USER =
-      "/api/v1/tenants/{tenantId}/audit-events/by-user/{userId}";
+  String PATH_TENANT_ROLES_LIST_ROLES = "/api/v1/tenants/{tenantId}/roles";
 
   /**
-   * GET /api/v1/tenants/{tenantId}/audit-events/by-user/{userId}
+   * GET /api/v1/tenants/{tenantId}/roles
    *
    * @param tenantId (required)
-   * @param userId (required)
    * @param page (optional)
    * @param pageSize (optional)
    * @return The request has succeeded. (status code 200) or An unexpected error response. (status
    *     code 200)
    */
   @Operation(
-      operationId = "tenantAuditListAuditEventsByUser",
-      tags = {"tenant-audit"},
+      operationId = "tenantRolesListRoles",
+      tags = {"tenant-roles"},
       responses = {
         @ApiResponse(
             responseCode = "200",
@@ -221,7 +180,7 @@ public interface TenantAuditApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = TenantAuditListAuditEvents200Response.class))
+                  schema = @Schema(implementation = TenantRolesListRoles200Response.class))
             }),
         @ApiResponse(
             responseCode = "default",
@@ -234,15 +193,12 @@ public interface TenantAuditApi {
       })
   @RequestMapping(
       method = RequestMethod.GET,
-      value = TenantAuditApi.PATH_TENANT_AUDIT_LIST_AUDIT_EVENTS_BY_USER,
+      value = TenantRolesApi.PATH_TENANT_ROLES_LIST_ROLES,
       produces = {"application/json"})
-  ResponseEntity<TenantAuditListAuditEvents200Response> tenantAuditListAuditEventsByUser(
+  ResponseEntity<TenantRolesListRoles200Response> tenantRolesListRoles(
       @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
           @PathVariable("tenantId")
           String tenantId,
-      @Parameter(name = "userId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("userId")
-          String userId,
       @Parameter(name = "page", description = "", in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "page", required = false)
@@ -254,20 +210,21 @@ public interface TenantAuditApi {
           @Nullable
           Integer pageSize);
 
-  String PATH_TENANT_AUDIT_SET_RETENTION_POLICY =
-      "/api/v1/tenants/{tenantId}/audit-events/retention";
+  String PATH_TENANT_ROLES_SET_PERMISSIONS =
+      "/api/v1/tenants/{tenantId}/roles/{roleId}/permissions";
 
   /**
-   * PUT /api/v1/tenants/{tenantId}/audit-events/retention
+   * PUT /api/v1/tenants/{tenantId}/roles/{roleId}/permissions
    *
    * @param tenantId (required)
-   * @param tenantAuditGetRetentionPolicy200Response (required)
+   * @param roleId (required)
+   * @param tenantRolesSetPermissionsRequest (required)
    * @return The request has succeeded. (status code 200) or An unexpected error response. (status
    *     code 200)
    */
   @Operation(
-      operationId = "tenantAuditSetRetentionPolicy",
-      tags = {"tenant-audit"},
+      operationId = "tenantRolesSetPermissions",
+      tags = {"tenant-roles"},
       responses = {
         @ApiResponse(
             responseCode = "200",
@@ -275,7 +232,7 @@ public interface TenantAuditApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = TenantAuditGetRetentionPolicy200Response.class))
+                  schema = @Schema(implementation = Role.class))
             }),
         @ApiResponse(
             responseCode = "default",
@@ -288,18 +245,65 @@ public interface TenantAuditApi {
       })
   @RequestMapping(
       method = RequestMethod.PUT,
-      value = TenantAuditApi.PATH_TENANT_AUDIT_SET_RETENTION_POLICY,
+      value = TenantRolesApi.PATH_TENANT_ROLES_SET_PERMISSIONS,
       produces = {"application/json"},
       consumes = {"application/json"})
-  ResponseEntity<TenantAuditGetRetentionPolicy200Response> tenantAuditSetRetentionPolicy(
+  ResponseEntity<Role> tenantRolesSetPermissions(
       @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
           @PathVariable("tenantId")
           String tenantId,
-      @Parameter(
-              name = "TenantAuditGetRetentionPolicy200Response",
-              description = "",
-              required = true)
+      @Parameter(name = "roleId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("roleId")
+          String roleId,
+      @Parameter(name = "TenantRolesSetPermissionsRequest", description = "", required = true)
           @Valid
           @RequestBody
-          TenantAuditGetRetentionPolicy200Response tenantAuditGetRetentionPolicy200Response);
+          TenantRolesSetPermissionsRequest tenantRolesSetPermissionsRequest);
+
+  String PATH_TENANT_ROLES_UPDATE_ROLE = "/api/v1/tenants/{tenantId}/roles/{roleId}";
+
+  /**
+   * PATCH /api/v1/tenants/{tenantId}/roles/{roleId}
+   *
+   * @param tenantId (required)
+   * @param roleId (required)
+   * @param updateRoleRequest (required)
+   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
+   *     code 200)
+   */
+  @Operation(
+      operationId = "tenantRolesUpdateRole",
+      tags = {"tenant-roles"},
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "The request has succeeded.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = Role.class))
+            }),
+        @ApiResponse(
+            responseCode = "default",
+            description = "An unexpected error response.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            })
+      })
+  @RequestMapping(
+      method = RequestMethod.PATCH,
+      value = TenantRolesApi.PATH_TENANT_ROLES_UPDATE_ROLE,
+      produces = {"application/json"},
+      consumes = {"application/json"})
+  ResponseEntity<Role> tenantRolesUpdateRole(
+      @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("tenantId")
+          String tenantId,
+      @Parameter(name = "roleId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("roleId")
+          String roleId,
+      @Parameter(name = "UpdateRoleRequest", description = "", required = true) @Valid @RequestBody
+          UpdateRoleRequest updateRoleRequest);
 }

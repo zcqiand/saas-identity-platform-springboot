@@ -1,12 +1,14 @@
 package saas.identity.platform.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Convert;
 import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.UUID;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import saas.identity.platform.enums.TenantStatus;
+import saas.identity.platform.enums.TenantStatusConverter;
 
 /**
  * V001__init_tenants.sql — 多租户根 entity。 JSONB settings 列用 Map<String,Object>
@@ -27,8 +29,7 @@ public class TenantEntity {
   @Column(name = "name", length = 255, nullable = false)
   private String name;
 
-  @Enumerated(EnumType.STRING)
-  @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+  @Convert(converter = TenantStatusConverter.class)
   @Column(name = "status", columnDefinition = "tenant_status", nullable = false)
   private TenantStatus status = TenantStatus.ACTIVE;
 
