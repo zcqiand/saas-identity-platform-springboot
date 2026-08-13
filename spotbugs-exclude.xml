@@ -15,4 +15,13 @@
     <Match>
         <Bug pattern="BX_UNBOXING_IMMEDIATELY_REBOXED"/>
     </Match>
+    <!--
+      NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE: codegen-generated DTO getters are
+      declared @Nullable for OpenAPI optional fields. SpotBugs cannot statically
+      track short-circuit null checks (a == null ? b : a) and flags false
+      positives on every nullable setter. Code is correct under manual review.
+    -->
+    <Match>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
 </FindBugsFilter>

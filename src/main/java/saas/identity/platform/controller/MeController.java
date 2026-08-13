@@ -1,5 +1,7 @@
 package saas.identity.platform.controller;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -7,6 +9,7 @@ import saas.identity.platform.security.TenantContext;
 import saas.identity.platform.service.MeService;
 import saas.identity.shared.api.MeApi;
 import saas.identity.shared.dto.CurrentUser;
+import saas.identity.shared.dto.EffectiveMenuNode;
 import saas.identity.shared.dto.SwitchTenantResponse;
 import saas.identity.shared.dto.TenantMembership;
 
@@ -46,5 +49,12 @@ public class MeController implements MeApi {
   @Override
   public ResponseEntity<SwitchTenantResponse> meSwitchTenant(String tenantId) {
     return ResponseEntity.ok(service.switchTenant(currentUserId(), UUID.fromString(tenantId)));
+  }
+
+  // M03.F03 stub: 当前用户的有效菜单树（按 appId 分组）。Phase 2 待 MeService
+  // 加 getMyMenus(userId) 实际实现（读 role_menu_grants + menus + 父级合并）。
+  @Override
+  public ResponseEntity<Map<String, List<EffectiveMenuNode>>> meGetMyMenus() {
+    return ResponseEntity.ok(Map.of());
   }
 }
