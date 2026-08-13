@@ -33,8 +33,7 @@ npx --yes @openapitools/openapi-generator-cli generate \
   --model-package saas.identity.shared.dto \
   --api-package saas.identity.shared.api \
   --invoker-package saas.identity.shared \
-  --additional-properties useTags=true,interfaceOnly=true,skipDefaultInterface=true,useBeanValidation=true,useSpringBoot3=true,dateLibrary=java8 \
-  --skip-operations false
+  --additional-properties useTags=true,interfaceOnly=true,skipDefaultInterface=true,useBeanValidation=true,useSpringBoot3=true,dateLibrary=java8
 
 # Move generated dto + api into the springboot source tree.
 mkdir -p "$DEST/saas/identity/shared/dto" "$DEST/saas/identity/platform/api"
