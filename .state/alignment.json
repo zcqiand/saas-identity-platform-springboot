@@ -18,7 +18,8 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "annotationIsReadable()"
+        "annotationIsReadable()",
+        "list_returnsPage()"
       ],
       "entry": []
     },
@@ -29,7 +30,9 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "create_returnsTenant()"
+      ],
       "entry": []
     },
     "M00.F01.I03": {
@@ -40,6 +43,8 @@
       "flows": [],
       "designs": [],
       "tests": [
+        "get_returnsTenant()",
+        "get_throwsIfMissing()",
         "tenantGuard_acceptsMatch()",
         "tenantGuard_throwsOnMismatch()"
       ],
@@ -52,7 +57,9 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "update_appliesAndSaves()"
+      ],
       "entry": []
     },
     "M00.F01.I05": {
@@ -62,7 +69,9 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "delete_removesWhenPresent()"
+      ],
       "entry": []
     },
     "M00.F02.I01": {
@@ -72,7 +81,10 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "whoami_returnsCurrentUser()",
+        "whoami_throwsIfUserMissing()"
+      ],
       "entry": []
     },
     "M00.F02.I02": {
@@ -82,7 +94,9 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "listMyTenants_excludesRemoved()"
+      ],
       "entry": []
     },
     "M00.F02.I03": {
@@ -92,7 +106,10 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "switchTenant_returnsToken()",
+        "switchTenant_throwsIfNotMember()"
+      ],
       "entry": []
     },
     "M01.F01.I01": {
@@ -147,7 +164,7 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "deleteUser_isNoOp()"
+        "deleteUser_throwsIfMissing()"
       ],
       "entry": []
     },
@@ -198,7 +215,9 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "list_returnsPage()"
+      ],
       "entry": []
     },
     "M02.F01.I02": {
@@ -208,7 +227,9 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "create_returnsRole()"
+      ],
       "entry": []
     },
     "M02.F01.I03": {
@@ -218,7 +239,10 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "get_returnsRole()",
+        "get_throwsIfMissing()"
+      ],
       "entry": []
     },
     "M02.F01.I04": {
@@ -228,7 +252,9 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "update_appliesAndSaves()"
+      ],
       "entry": []
     },
     "M02.F01.I05": {
@@ -238,7 +264,10 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "delete_noopWhenMissing()",
+        "delete_removesWhenPresent()"
+      ],
       "entry": []
     },
     "M02.F02.I01": {
@@ -248,7 +277,10 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "setPermissions_replacesBatch()",
+        "setPermissions_skipsInvalidUuid()"
+      ],
       "entry": []
     },
     "M03.F01.I01": {
@@ -258,7 +290,9 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "login_success_returnsToken()"
+      ],
       "entry": []
     },
     "M03.F01.I02": {
@@ -268,7 +302,10 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "login_badPassword_throws()",
+        "login_unknownUser_throws()"
+      ],
       "entry": []
     },
     "M03.F02.I03": {
@@ -278,7 +315,9 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "oidcCallback_returnsMockToken()"
+      ],
       "entry": []
     },
     "M03.F02.I04": {
@@ -288,7 +327,10 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "refresh_badToken_throws()",
+        "refresh_returnsNewToken()"
+      ],
       "entry": []
     },
     "M03.F03.I05": {
@@ -298,7 +340,9 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "logout_isNoop()"
+      ],
       "entry": []
     },
     "M03.F03.I06": {
@@ -318,7 +362,9 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "list_returnsPage()"
+      ],
       "entry": []
     },
     "M04.F01.I02": {
@@ -328,7 +374,9 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "create_returnsApp()"
+      ],
       "entry": []
     },
     "M04.F01.I03": {
@@ -338,7 +386,10 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "get_returnsApp()",
+        "get_throwsIfMissing()"
+      ],
       "entry": []
     },
     "M04.F01.I04": {
@@ -348,7 +399,9 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "update_appliesAndSaves()"
+      ],
       "entry": []
     },
     "M04.F01.I05": {
@@ -358,7 +411,10 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "delete_removesWhenPresent()",
+        "setStatus_toggles()"
+      ],
       "entry": []
     },
     "M04.F02.I06": {
@@ -398,7 +454,9 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "list_returnsPage()"
+      ],
       "entry": []
     },
     "M05.F01.I02": {
@@ -408,7 +466,9 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "create_returnsResponseWithSecret()"
+      ],
       "entry": []
     },
     "M05.F01.I03": {
@@ -418,7 +478,10 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "revoke_setsStatusRevoked()",
+        "revoke_throwsIfMissing()"
+      ],
       "entry": []
     },
     "M05.F01.I04": {
@@ -428,7 +491,9 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "rotate_revokesOldAndCreatesNew()"
+      ],
       "entry": []
     },
     "M06.F01.I01": {
@@ -438,7 +503,9 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "list_returnsPage()"
+      ],
       "entry": []
     },
     "M06.F01.I02": {
@@ -448,7 +515,9 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "list_byActorUsesActorQuery()"
+      ],
       "entry": []
     },
     "M06.F01.I03": {
@@ -458,7 +527,9 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "list_byTimeRangeUsesBetweenQuery()"
+      ],
       "entry": []
     },
     "M06.F02.I04": {
@@ -468,7 +539,11 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "getRetention_defaultsTo90()",
+        "getRetention_returnsStored()",
+        "setRetention_createsIfMissing()"
+      ],
       "entry": []
     }
   }
