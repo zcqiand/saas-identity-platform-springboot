@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Base64;
+import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,6 +22,14 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 public class SecurityConfig {
+
+  /**
+   * 逗号分隔的允许 origin 列表。默认给 dev：saas-nextjs(:3000) + lab-react,vue(:5173) + lab-nextjs(:3001)；生产用
+   * SAAS_CORS_ALLOWED_ORIGINS env override 改为正式域名。
+   */
+  @Value(
+      "${saas.cors.allowed-origins:http://localhost:3000,http://localhost:5173,http://localhost:3001}")
+  private List<String> allowedOrigins;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -44,13 +54,17 @@ public class SecurityConfig {
   }
 
   /**
-   * CORS 配置：让 next.js dev server (http://localhost:3000) 能调本后端。 与 aspnetcore 端的 AddCors("NextDev")
-   * 对称。 Production：用 allowedOriginPatterns 指定具体域名；这里 localhost:* 是 dev-only。
+   * CORS 配置：白名单 origin 走 saas.cors.allowed-origins（env SAAS_CORS_ALLOWED_ORIGINS 覆盖）。 与 aspnetcore
+   * 端的 AddCors("NextDev") 对称 — aspnetcore 同样读 SAAS_CORS_ALLOWED_ORIGINS。 Production：用具体域名；这里
+   * localhost:* 是 dev-only。
    */
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration config = new CorsConfiguration();
-    config.addAllowedOrigin("http://localhost:3000");
+    for (String origin : allowedOrigins) {
+      String trimmed = origin.trim();
+      if (!trimmed.isEmpty()) config.addAllowedOrigin(trimmed);
+    }
     config.addAllowedMethod("*");
     config.addAllowedHeader("*");
     config.setAllowCredentials(true);
