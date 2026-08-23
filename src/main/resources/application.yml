@@ -43,3 +43,16 @@ spring:
     # Hibernate ddl-auto=none 也跳过校验，运行时由 UuidArrayType 等 UserType 处理 uuid[] 等列。
     # TODO Phase 6：用 testcontainers + 干净 saas_test 启 Flyway 做 schema 漂移检测；或者把 V00X 改成 idempotent (IF NOT EXISTS) 让 Flyway baseline-on-migrate=true 真的能跳过。
     enabled: false
+
+# /actuator/health 暴露给 Docker HEALTHCHECK 探针（"应用真的在服务"vs"端口开着"）。
+# probes (liveness/readiness) 开启：Kubernetes/容器编排能区分"应用还在跑但还没就绪"vs"真挂了"。
+# 只暴露 health 一个 endpoint，避免暴露 metrics/env/heapdump 等敏感面。
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      probes:
+        enabled: true

@@ -1,0 +1,40 @@
+# Maven build artifacts
+target/
+*.class
+*.jar
+.flattened-pom.xml
+dependency-reduced-pom.xml
+
+# Maven wrapper (Maven is invoked from inside the maven:3.9-* image)
+.mvn/
+mvnw
+mvnw.cmd
+
+# VCS
+.git/
+.gitignore
+
+# Local state
+.state/
+*.log
+
+# Env files (keep .env.example, exclude dev secrets)
+.env
+.env.local
+.env.*.local
+
+# Tooling noise
+.vscode/
+.idea/
+.DS_Store
+*.iml
+
+# Claude / superpowers
+.claude/
+.superpowers/
+CLAUDE.md
+.mcp.json
+
+# SpotBugs / Surefire leftovers
+spotbugsXml.xml
+spotless-index

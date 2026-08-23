@@ -39,6 +39,17 @@
             <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
         </dependency>
 
+        <!--
+          /actuator/health 健康探针: Docker HEALTHCHECK 探针 + CORS 之外的
+          唯一可用于"应用真的在服务 vs 端口开着"的语义信号。
+          Probes (liveness/readiness) 在 application.yml 里手动开。
+          spring-boot-starter-parent 锁定版本, 不显式声明。
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
         <!-- M09.Database — JPA + Flyway + Hibernate (ADR-0007) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
