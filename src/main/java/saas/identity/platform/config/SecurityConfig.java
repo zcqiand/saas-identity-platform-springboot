@@ -47,6 +47,14 @@ public class SecurityConfig {
                     // 让 health probe 路径免 auth, 不影响业务 endpoint.
                     .requestMatchers("/actuator/**")
                     .permitAll()
+                    // v0.1.13 起: Swagger UI 在线访问 (springdoc-openapi-starter-webmvc-ui).
+                    // 仅 metadata (OpenAPI doc), 无业务副作用, 跟 /actuator/** 一样
+                    // 性质; 公开让任何客户端能 introspect endpoint contract.
+                    // 业务 endpoint 仍走 .anyRequest().authenticated() 不放宽.
+                    .requestMatchers("/v3/api-docs", "/v3/api-docs.yaml",
+                                     "/v3/api-docs/**",
+                                     "/swagger-ui.html", "/swagger-ui/**")
+                    .permitAll()
                     // Dev 简化：任何 authenticated() 用户都能访问所有 endpoint。
                     // Production 要恢复：
                     //   .requestMatchers("/api/v1/admin/**").hasAuthority("SCOPE_platform_admin")

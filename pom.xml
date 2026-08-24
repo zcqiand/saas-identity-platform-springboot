@@ -74,6 +74,24 @@
             <artifactId>swagger-annotations-jakarta</artifactId>
             <version>2.2.22</version>
         </dependency>
+
+        <!--
+          v0.1.13 起: Swagger UI 在线访问。
+          springdoc-openapi-starter-webmvc-ui 自动从 swagger v3 注解 + Spring MVC
+          端点收集 OpenAPI 3.1 doc, 暴露:
+            - /v3/api-docs (OpenAPI JSON) 与 /v3/api-docs.yaml (YAML)
+            - /swagger-ui.html (重定向到 /swagger-ui/index.html)
+            - /swagger-ui/** (静态资源)
+          SSOT 仍是 saas-identity-platform-shared/generated/openapi/openapi.yaml
+          (openapi-generator 仓把 spec 拷生成本仓 controllers 接口, 注解直接合入
+          runtime OpenAPI doc, 不需要维护两份)。
+          2.6.0 对 Spring Boot 3.4 OK; 其它 springdoc 2.x 同主版本亦可。
+        -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.6.0</version>
+        </dependency>
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
