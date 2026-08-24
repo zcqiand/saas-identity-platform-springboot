@@ -137,11 +137,19 @@ docker ps --filter name="$CONTAINER_NAME"
 # 'unhealthy' 判定时机在 Docker daemon 不同版本上行为不一致, 86s
 # 内就被标 unhealthy。改用直接 HTTP 探针 (Spring Boot 3.x /actuator/health
 # 200+body UP 时是真 ready)。
+#
+# ⚠️ v0.1.10 的 bug: 写的是 127.0.0.1:8080 (容器内部端口), 但 deploy 脚本
+# 跑在 HOST 上, 容器端口映射是 127.0.0.1:${HOST_PORT}:8080 (HOST_PORT=8023).
+# host 上 wget 127.0.0.1:8080 = 连接 host 的 8080 (没服务), connect-refused, 120 次都失败。
+# Docker HEALTHCHECK (Dockerfile:38) 走的是容器 network namespace 内的 127.0.0.1:8080,
+# 所以日志里 02:52:26 Spring DispatcherServlet init 出现一次是 Docker HEALTHCHECK 命中,
+# 而非 deploy 脚本 wget。
+#
 # wget --tries=1 --timeout=3 -q: 不重试, 3s timeout, 静默。
 i=0
 while [ $i -lt 120 ]; do
-  if wget --tries=1 --timeout=3 -q "http://127.0.0.1:8080/actuator/health" -O /dev/null 2>/dev/null; then
-    echo "→ /actuator/health 200 after ${i}s"
+  if wget --tries=1 --timeout=3 -q "http://127.0.0.1:${HOST_PORT}/actuator/health" -O /dev/null 2>/dev/null; then
+    echo "→ /actuator/health 200 (host 127.0.0.1:${HOST_PORT}) after ${i}s"
     break
   fi
   # 容器实际死亡 (OOM / start-cmd failure / 立刻 crash) 提前终止循环, 立刻报失败。
