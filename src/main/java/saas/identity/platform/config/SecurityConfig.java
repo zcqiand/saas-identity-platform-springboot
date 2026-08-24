@@ -41,6 +41,12 @@ public class SecurityConfig {
                 authz
                     .requestMatchers("/api/v1/auth/**")
                     .permitAll()
+                    // v0.1.12 起: 容器内 Docker HEALTHCHECK 与外部 deploy 脚本都直接
+                    // wget /actuator/health; 不带 JWT 走不到 controller, 401 让
+                    // healthcheck 失败, deploy 脚本 120 次都进不了 '200'. permitAll
+                    // 让 health probe 路径免 auth, 不影响业务 endpoint.
+                    .requestMatchers("/actuator/**")
+                    .permitAll()
                     // Dev 简化：任何 authenticated() 用户都能访问所有 endpoint。
                     // Production 要恢复：
                     //   .requestMatchers("/api/v1/admin/**").hasAuthority("SCOPE_platform_admin")
