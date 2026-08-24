@@ -132,11 +132,15 @@ docker image prune -f
 echo "→ docker ps"
 docker ps --filter name="$CONTAINER_NAME"
 
-# 健康检查: 容器 healthcheck 30s 内应 healthy（springboot Dockerfile: wget /actuator/health,
+# 健康检查: 容器 healthcheck 应 healthy（springboot Dockerfile: wget /actuator/health,
 # Spring Boot 启动 + bean wiring 给 30s start-period 容忍）。
-echo "→ waiting for container health..."
+# 循环 120s 不是任意数:
+#   start-period=30s (Docker 内部), interval=30s, retries=3
+#   worst-case 健康总耗时 = 30 + 30*3 = 120s
+# CI v0.1.8 实测: 30 次循环太短, Spring Boot 15s 启动后仍卡 'starting',
+#   probe 还没开始算 fail, deploy 脚本先 exit 1。
 i=0
-while [ $i -lt 30 ]; do
+while [ $i -lt 120 ]; do
   STATUS=$(docker inspect --format='{{.State.Health.Status}}' "$CONTAINER_NAME" 2>/dev/null || echo "starting")
   if [ "$STATUS" = "healthy" ]; then
     echo "→ container healthy after ${i}s"
@@ -151,8 +155,8 @@ while [ $i -lt 30 ]; do
   sleep 1
 done
 
-if [ $i -ge 30 ]; then
-  echo "→ container failed to become healthy in 30s, logs:"
+if [ $i -ge 120 ]; then
+  echo "→ container failed to become healthy in 120s, logs:"
   docker logs --tail 30 "$CONTAINER_NAME"
   exit 1
 fi
