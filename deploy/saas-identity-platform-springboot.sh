@@ -132,22 +132,21 @@ docker image prune -f
 echo "→ docker ps"
 docker ps --filter name="$CONTAINER_NAME"
 
-# 健康检查: 容器 healthcheck 应 healthy（springboot Dockerfile: wget /actuator/health,
-# Spring Boot 启动 + bean wiring 给 30s start-period 容忍）。
-# 循环 120s 不是任意数:
-#   start-period=30s (Docker 内部), interval=30s, retries=3
-#   worst-case 健康总耗时 = 30 + 30*3 = 120s
-# CI v0.1.8 实测: 30 次循环太短, Spring Boot 15s 启动后仍卡 'starting',
-#   probe 还没开始算 fail, deploy 脚本先 exit 1。
+# 健康检查: 直接 wget /actuator/health 探 200, 不依赖 Docker HEALTHCHECK 语义。
+# v0.1.8/v0.1.9 实测 ${STATUS} 不可靠 —— start-period=30s 窗口边界与
+# 'unhealthy' 判定时机在 Docker daemon 不同版本上行为不一致, 86s
+# 内就被标 unhealthy。改用直接 HTTP 探针 (Spring Boot 3.x /actuator/health
+# 200+body UP 时是真 ready)。
+# wget --tries=1 --timeout=3 -q: 不重试, 3s timeout, 静默。
 i=0
 while [ $i -lt 120 ]; do
-  STATUS=$(docker inspect --format='{{.State.Health.Status}}' "$CONTAINER_NAME" 2>/dev/null || echo "starting")
-  if [ "$STATUS" = "healthy" ]; then
-    echo "→ container healthy after ${i}s"
+  if wget --tries=1 --timeout=3 -q "http://127.0.0.1:8080/actuator/health" -O /dev/null 2>/dev/null; then
+    echo "→ /actuator/health 200 after ${i}s"
     break
   fi
-  if [ "$STATUS" = "unhealthy" ]; then
-    echo "→ container unhealthy, logs:"
+  # 容器实际死亡 (OOM / start-cmd failure / 立刻 crash) 提前终止循环, 立刻报失败。
+  if ! docker inspect --format='{{.State.Running}}' "$CONTAINER_NAME" 2>/dev/null | grep -q true; then
+    echo "→ container not running, logs:"
     docker logs --tail 30 "$CONTAINER_NAME"
     exit 1
   fi
@@ -156,7 +155,7 @@ while [ $i -lt 120 ]; do
 done
 
 if [ $i -ge 120 ]; then
-  echo "→ container failed to become healthy in 120s, logs:"
+  echo "→ /actuator/health 仍未 200（120s 上限）, logs:"
   docker logs --tail 30 "$CONTAINER_NAME"
   exit 1
 fi
