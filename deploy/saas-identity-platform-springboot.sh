@@ -13,9 +13,8 @@
 #   - 容器内是 Java 17 (Spring Boot) 监听 :8080 → -p 127.0.0.1:8023:8080
 #   - 密钥走 ./springboot.env (SPRING_DATASOURCE_URL/USERNAME/PASSWORD + CORS),由 setup-vps.sh 渲染时
 #     不预生成（fail-fast 不便）,本脚本首启自举。
-#   - JWT_SIGNING_KEY **不**写入: SecurityConfig.DevJwtDecoder 仅 dev, prod 准备 = 删 DevJwtDecoder +
-#     设 SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI env。本脚本只覆盖环境变量,
-#     不动 Java 代码 —— prod 路径由独立 PR 处理。
+#   - JWT_SIGNING_KEY: v0.2.0 起 JwtIssuer(HS256) 构造 fail-fast 必填。缺失时本脚本
+#     生成随机密钥 append 进 env-file（持久化, 不覆盖已有）。消费方走 whoami 内省不本地验签。
 #
 # 前置: deploy 用户需在 docker 组中(sudo usermod -aG docker deploy)。
 #        springboot.env 必须由 setup-vps.sh 或本脚本首启生成(SPRING_DATASOURCE_URL 必填)。
@@ -105,6 +104,17 @@ if ! grep -q '^SAAS_CORS_ALLOWED_ORIGINS=' "$BASE/springboot.env"; then
   echo "→ append SAAS_CORS_ALLOWED_ORIGINS to existing $BASE/springboot.env"
   umask 077
   printf 'SAAS_CORS_ALLOWED_ORIGINS=https://%s,https://saas-react.xiangru.uk,https://saas-nextjs.xiangru.uk\n' "$NGINX_DOMAIN" >> "$BASE/springboot.env"
+fi
+
+# v0.2.0+: JwtIssuer(HS256 签 access token) 构造 fail-fast 要求 JWT_SIGNING_KEY(≥32B)。
+# v0.1.x 时代自举的 env 没这行 → 容器起来即崩（v0.2.0 deploy 挂即此因）。
+# 首次缺失时生成随机密钥持久化进 env-file（append-only, 已有则不覆盖 —— 重启/重部署
+# 签名密钥保持稳定, 已签发的 token 不失效）。消费方（lab 后端）走 whoami 内省,
+# 不本地验签 saas token, 无需与消费方共享密钥。
+if ! grep -q '^JWT_SIGNING_KEY=' "$BASE/springboot.env"; then
+  echo "→ append JWT_SIGNING_KEY (random, persisted) to existing $BASE/springboot.env"
+  umask 077
+  printf 'JWT_SIGNING_KEY=%s\n' "$(head -c 48 /dev/urandom | base64 | tr -d '\n')" >> "$BASE/springboot.env"
 fi
 
 echo "→ image: $IMAGE"
