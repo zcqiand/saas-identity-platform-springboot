@@ -73,13 +73,29 @@ public class OauthService {
     // text[] 字段 entity 读不到 → native query 取 redirect_uris + scopes
     AppOauthFields fields = loadAppOauthFields(app.getId());
 
-    if (!fields.redirectUris.contains(req.getRedirectUri())) {
+    // RFC 6749 §3.1.2：允许 query 参数差异（lab 前端回跳带 ?from=<业务路径>），
+    // 匹配 = 白名单条目是请求 redirectUri 的前缀且边界在 '?' 处。
+    String reqUri = req.getRedirectUri();
+    boolean uriOk =
+        fields.redirectUris.contains(reqUri)
+            || fields.redirectUris.stream()
+                .anyMatch(
+                    u ->
+                        reqUri.startsWith(u)
+                            && reqUri.length() > u.length()
+                            && reqUri.charAt(u.length()) == '?');
+    if (!uriOk) {
       throw new InvalidRedirectUriException(
-          "INVALID_REDIRECT_URI: " + req.getRedirectUri() + " not in app.redirect_uris");
+          "INVALID_REDIRECT_URI: " + reqUri + " not in app.redirect_uris");
     }
-    if (req.getScope() == null || !fields.scopes.contains(req.getScope())) {
+    // RFC 6749 §3.3：scope 是 space-separated 列表，每个都必须 ∈ apps.scopes（子集校验）。
+    // 曾用整串 contains 精确匹配，lab 发 "lab.read lab.write" 被拒。
+    String[] requested =
+        req.getScope() == null ? new String[0] : req.getScope().trim().split("\\s+");
+    if (requested.length == 0
+        || !java.util.Arrays.stream(requested).allMatch(fields.scopes::contains)) {
       throw new InvalidScopeException(
-          "INVALID_SCOPE: scope '" + req.getScope() + "' not in app.scopes");
+          "INVALID_SCOPE: scope '" + req.getScope() + "' not a subset of app.scopes");
     }
 
     String code = generateCode();
