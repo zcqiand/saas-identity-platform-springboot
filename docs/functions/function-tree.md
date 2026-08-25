@@ -71,9 +71,11 @@
 | M04.F01.I03    | OAuth 应用详情 | 页面 | 规划 |
 | M04.F01.I04    | 更新 OAuth 应用 | 按钮 | 规划 |
 | M04.F01.I05    | 删除 OAuth 应用 | 按钮 | 规划 |
-| M04.F02.I06    | 授权码签发 | 接口 | 规划 |
-| M04.F02.I07    | 令牌交换 | 接口 | 规划 |
-| M04.F02.I08    | 令牌刷新 | 接口 | 规划 |
+| M04.F02.I06    | 授权码签发 | 接口 | 已上线 |
+| M04.F02.I07    | 令牌交换 | 接口 | 已上线 |
+| M04.F02.I08    | 令牌刷新 | 接口 | 已上线 |
+
+> M04.F02 备注：v0.2.0 Phase 6 真 OAuth — apps.clientId/redirect_uris/scopes 校验 + oauth_codes 表 (V009) 存 saas-code-{ts}-{rand} (TTL 10min) + refresh_token (TTL 7d, 旋转换发)。JwtIssuer 服务 (HS256, JWT_SIGNING_KEY env, ≥32B), OauthService + OauthController (implements OauthApi) 协同。9 个单元测试 (Mockito) 全绿。
 | M05.F01.I01    | API Key 列表 | 页面 | 规划 |
 | M05.F01.I02    | 创建 API Key | 按钮 | 规划 |
 | M05.F01.I03    | 吊销 API Key | 按钮 | 规划 |

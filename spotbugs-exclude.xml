@@ -24,4 +24,13 @@
     <Match>
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
     </Match>
+    <!--
+      CT_CONSTRUCTOR_THROW: Spring @Component bean constructor 校验失败 throw
+      IllegalStateException, 容器不发布此 bean — 无 finalizer attack 暴露面。
+      例如 JwtIssuer 校验 JWT_SIGNING_KEY ≥32B 时 throw, 静态分析不能识别 Spring
+      生命周期, 静默忽略。
+    -->
+    <Match>
+        <Bug pattern="CT_CONSTRUCTOR_THROW"/>
+    </Match>
 </FindBugsFilter>
