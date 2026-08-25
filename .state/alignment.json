@@ -6,19 +6,8 @@
     "features": 14,
     "items": 45
   },
-  "warnings_total": 6,
-  "warnings": {
-    "已上线但无设计映射": [
-      "M04.F02.I06",
-      "M04.F02.I07",
-      "M04.F02.I08"
-    ],
-    "已上线但不在任何流程且非孤儿白名单": [
-      "M04.F02.I06",
-      "M04.F02.I07",
-      "M04.F02.I08"
-    ]
-  },
+  "warnings_total": 0,
+  "warnings": {},
   "unreachable_shipped": [],
   "function_map": {
     "M00.F01.I01": {
@@ -421,8 +410,12 @@
       "status": "已上线",
       "type": "接口",
       "requirements": [],
-      "flows": [],
-      "designs": [],
+      "flows": [
+        "docs\\design\\flow-function-map.md"
+      ],
+      "designs": [
+        "docs\\design\\design-function-map.md"
+      ],
       "tests": [
         "authorize_happyPath_returnsCode()",
         "authorize_inactiveApp_throws()",
@@ -435,8 +428,12 @@
       "status": "已上线",
       "type": "接口",
       "requirements": [],
-      "flows": [],
-      "designs": [],
+      "flows": [
+        "docs\\design\\flow-function-map.md"
+      ],
+      "designs": [
+        "docs\\design\\design-function-map.md"
+      ],
       "tests": [
         "token_alreadyConsumed_throws()",
         "token_authorizationCode_happyPath()",
@@ -450,8 +447,12 @@
       "status": "已上线",
       "type": "接口",
       "requirements": [],
-      "flows": [],
-      "designs": [],
+      "flows": [
+        "docs\\design\\flow-function-map.md"
+      ],
+      "designs": [
+        "docs\\design\\design-function-map.md"
+      ],
       "tests": [
         "token_refreshTokenReuse_throws()",
         "token_refreshToken_happyPath()"
