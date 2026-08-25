@@ -12,7 +12,7 @@
 # 镜像族系（与 nextjs 同侧）：
 #   - nextjs builder+runtime 用 node:24-slim（Debian slim）
 #   - react builder 用 node:24-alpine + runtime 用 nginx:alpine
-#   - springboot builder 用 maven:3.9-eclipse-temurin-17, runtime 用 eclipse-temurin:17-jre-jammy
+#   - springboot builder 用 maven:3.9-eclipse-temurin-21, runtime 用 eclipse-temurin:21-jre-jammy
 # runtime 选 jammy 而非 alpine 的原因：避免 musl libc + 偶尔出现的 native deps 冲突
 # （hypersistence-utils 是纯 Java，但 postgresql/nimbus-jose-jwt 都有过的 surprise）。
 # jammy = Ubuntu 22.04，比 Debian default 镜像瘦一圈，行为最接近原 'slim' 意图。
@@ -22,7 +22,7 @@
 
 
 # ---------- Stage 1: builder ----------
-FROM maven:3.9-eclipse-temurin-17 AS builder
+FROM maven:3.9-eclipse-temurin-21 AS builder
 WORKDIR /app
 
 # 缓存友好的层：先只复制 pom.xml 跑 dependency:go-offline，
@@ -36,7 +36,7 @@ RUN mvn -B -e -ntp -DskipTests package \
 
 
 # ---------- Stage 2: runtime ----------
-FROM eclipse-temurin:17-jre-jammy AS runtime
+FROM eclipse-temurin:21-jre-jammy AS runtime
 WORKDIR /app
 
 # slim 缺 wget —— Docker HEALTHCHECK 需要它探 /actuator/health
