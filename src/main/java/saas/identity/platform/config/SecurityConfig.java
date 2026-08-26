@@ -1,20 +1,14 @@
 package saas.identity.platform.config;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.nio.charset.StandardCharsets;
-import java.time.Instant;
-import java.util.Base64;
 import java.util.List;
-import java.util.Map;
+import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtException;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -97,70 +91,31 @@ public class SecurityConfig {
   }
 
   /**
-   * Dev JwtDecoder — 信任 MSW/dev-helper 发的 alg=none dev token（Authorization header: {@code Bearer
-   * eyJhbGciOiJub25lIn0.eyJ...dev-placeholder}）。
+   * JwtDecoder — HS256 真验签（RFC 7519）。 与 JwtIssuer 共享同一把 JWT_SIGNING_KEY， 因此 saas-msw /
+   * saas-nextjs-self 签出来的 token 在本仓 dev profile 也能验签通过。
    *
-   * <p>手动 parse payload（base64url → JSON），只校验 exp 不过期；trust signature / issuer / audience。 Spring
-   * 默认的 NimbusJwtDecoder 会拒 alg=none，因为 PG/asymmetric key 路径走不通。
+   * <p>v0.2.x Phase 2 起删除旧 DevJwtDecoder（alg=none 占位）路径，因为： 1) MSW 现在 真签 HS256（ADR-0012 v0.3.0 +
+   * Phase 1A），MSW 不再发 alg=none fixture； 2) HS256 真签发让 NimbusJwtDecoder 标准路径走通，不需要 dev 兜底； 3) 「dev
+   * profile 单独验签 路径」是 alg=none 时代的妥协，Phase 2 后不再需要。
    *
-   * <p>Production：删除这个 bean + 在 application.yml 配 {@code
-   * spring.security.oauth2.resourceserver.jwt.issuer-uri} 指向真实 OAuth2 server， Spring Boot 自动配置
-   * NimbusJwtDecoder 用 JWKS 验签。
-   *
-   * <p>Authorization header 解码示例（next.js dev token）：
-   *
-   * <pre>
-   *   header  = {"alg":"none"}
-   *   payload = {"sub":"...","tenant_id":"00000000-...","exp":1786631755}
-   *   sig     = dev-placeholder
-   * </pre>
+   * <p>Production：配 {@code spring.security.oauth2.resourceserver.jwt.issuer-uri} env 自动切 JWKS 验签；本
+   * bean 在 prod profile 可被覆盖（如多 IdP 场景）或直接删除。
    */
   @Bean
-  public JwtDecoder jwtDecoder() {
-    return new DevJwtDecoder();
-  }
-
-  static class DevJwtDecoder implements JwtDecoder {
-    // 命名 static 常量，避免每次 decode 都新建匿名 TypeReference 子类（也消除 SpotBugs
-    // SIC_INNER_SHOULD_BE_STATIC_ANON）。
-    private static final TypeReference<Map<String, Object>> MAP_TYPE = new TypeReference<>() {};
-
-    private final ObjectMapper mapper = new ObjectMapper();
-
-    @Override
-    public Jwt decode(String token) throws JwtException {
-      try {
-        String[] parts = token.split("\\.");
-        if (parts.length != 3) {
-          throw new JwtException("Malformed JWT: expected 3 segments, got " + parts.length);
-        }
-
-        // base64url decode header + payload
-        Map<String, Object> headers =
-            mapper.readValue(
-                new String(Base64.getUrlDecoder().decode(parts[0]), StandardCharsets.UTF_8),
-                MAP_TYPE);
-        Map<String, Object> claims =
-            mapper.readValue(
-                new String(Base64.getUrlDecoder().decode(parts[1]), StandardCharsets.UTF_8),
-                MAP_TYPE);
-
-        Instant now = Instant.now();
-        // dev token 可能已过期（前端写死的 exp ≈ 2026-08-13 14:36 UTC），
-        // 如果过期就把 Jwt.exp 延长到 +1h，避免 JwtTimestampValidator 拒绝。
-        // Production JwtDecoder 不会这么做。
-        Instant tokenExp =
-            claims.get("exp") instanceof Number n
-                ? Instant.ofEpochSecond(n.longValue())
-                : now.plusSeconds(3600);
-        Instant effectiveExp = tokenExp.isBefore(now) ? now.plusSeconds(3600) : tokenExp;
-
-        return new Jwt(token, now, effectiveExp, headers, claims);
-      } catch (JwtException e) {
-        throw e;
-      } catch (Exception e) {
-        throw new JwtException("Failed to decode dev JWT: " + e.getMessage(), e);
-      }
+  public JwtDecoder jwtDecoder(@Value("${JWT_SIGNING_KEY:}") String signingKey) {
+    if (signingKey == null || signingKey.isEmpty()) {
+      throw new IllegalStateException("JWT_SIGNING_KEY env not configured (Phase 2: HS256 真签验签必备)");
     }
+    if (signingKey.getBytes(java.nio.charset.StandardCharsets.UTF_8).length < 32) {
+      throw new IllegalStateException(
+          "JWT_SIGNING_KEY must be >=32 bytes for HS256 (got "
+              + signingKey.getBytes(java.nio.charset.StandardCharsets.UTF_8).length
+              + ")");
+    }
+    return NimbusJwtDecoder.withSecretKey(
+            new SecretKeySpec(
+                signingKey.getBytes(java.nio.charset.StandardCharsets.UTF_8), "HmacSHA256"))
+        .macAlgorithm(org.springframework.security.oauth2.jose.jws.MacAlgorithm.HS256)
+        .build();
   }
 }

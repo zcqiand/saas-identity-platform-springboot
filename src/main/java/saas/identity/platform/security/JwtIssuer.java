@@ -62,6 +62,40 @@ public class JwtIssuer {
     return issueAccessToken(userId, tenantId, this.ttlSeconds);
   }
 
+  /**
+   * 测试 helper：给 L4 单元测试签 HS256 token。 允许任意 sub/tenant_id（绕过 entity 校验），方便 fixture-driven 测试。 prod
+   * 路径不走这里（AuthService.issueAccessToken 才走 entity）。
+   */
+  public String issueAccessTokenForTest(String sub, String tenantId) {
+    return issueAccessTokenForTest(sub, tenantId, this.ttlSeconds, null);
+  }
+
+  /** 测试 helper (允许覆盖 ttl + scope). */
+  public String issueAccessTokenForTest(
+      String sub, String tenantId, long ttlSecondsOverride, String scope) {
+    try {
+      Instant now = Instant.now();
+      JWTClaimsSet.Builder builder =
+          new JWTClaimsSet.Builder()
+              .issuer(issuer)
+              .audience(audience)
+              .subject(sub)
+              .claim("tenant_id", tenantId)
+              .jwtID(UUID.randomUUID().toString())
+              .issueTime(Date.from(now))
+              .notBeforeTime(Date.from(now))
+              .expirationTime(Date.from(now.plusSeconds(ttlSecondsOverride)));
+      if (scope != null) {
+        builder.claim("scope", scope);
+      }
+      SignedJWT jwt = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), builder.build());
+      jwt.sign(signer);
+      return jwt.serialize();
+    } catch (JOSEException e) {
+      throw new IllegalStateException("Failed to sign access token (test helper)", e);
+    }
+  }
+
   /** 签 access token (允许覆盖 ttl, /token endpoint 用 3600s 默认值)。 */
   public String issueAccessToken(UUID userId, UUID tenantId, long ttlSecondsOverride) {
     try {

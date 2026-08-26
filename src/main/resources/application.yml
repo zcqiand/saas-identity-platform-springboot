@@ -1,8 +1,10 @@
 server:
   port: 8080
 
-# Spring Security OAuth2 resource server 配置完全移到 SecurityConfig.jwtDecoder()（dev 用 DevJwtDecoder）。
-# Production：删 SecurityConfig.jwtDecoder()，恢复下面这 4 行让 Spring Boot 自动配置 NimbusJwtDecoder。
+# Spring Security OAuth2 resource server 配置：SecurityConfig.jwtDecoder() 用 JWT_SIGNING_KEY
+# 构造 NimbusJwtDecoder.withSecretKey()（HS256 真验签，Phase 2 起）。
+# Production：把 JWT_SIGNING_KEY 替换为 issuer-uri，让 Spring Boot 自动配置 NimbusJwtDecoder 走 JWKS；
+# 同时 SecurityConfig.jwtDecoder() bean 用 @Profile("!prod") 限定或直接删除。
 # spring:
 #   security:
 #     oauth2:
