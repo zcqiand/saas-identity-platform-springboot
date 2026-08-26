@@ -1,0 +1,11 @@
+{
+  "version_lock": {
+    "java": "21",
+    "spring-boot": "3.4.0",
+    "flyway": "（随 spring-boot-starter-parent）",
+    "postgresql-driver": "（随 spring-boot-starter-parent）",
+    "springdoc-openapi": "（见 pom.xml）",
+    "junit5": "（随 starter-test）",
+    "maven": "3.9+"
+  }
+}
