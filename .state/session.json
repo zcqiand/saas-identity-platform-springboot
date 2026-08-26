@@ -1,6 +1,29 @@
 {
   "schema": 1,
-  "last_session_at": "2026-08-12",
-  "last_session_summary": "Phase A 初始化",
-  "open_items": []
+  "project": "saas-identity-platform-springboot",
+  "current_task": "gen-shared.sh 迁移拷贝加分叉 abort 防护上线(v0.2.4)— lab 撞号事故教训泛化",
+  "last_session_at": "2026-08-26",
+  "last_session_summary": "gen-shared.sh step 3 拷贝迁移前 cmp 目标:已存在且内容不同 -> FATAL + exit 1(shared v0.2.13 已同步把 V014 幂等化,当前无分叉不误触发)。前置调查发现本仓 flyway enabled:false 且 V009 与 shared V014 各建一次 oauth_codes -- 雷已在 shared 侧拆除。/handoff 二次门禁 --all exit 0(本仓 66 条目 0 软告警)",
+  "done": [
+    "scripts/gen-shared.sh step 3：每个 V*.sql 拷贝前若目标存在且 cmp 不同 -> FATAL abort(提示显式收敛),替代原盲 cp -- 2026-08-26 lab V014/V015 撞号事故(prod 502 约 40 分钟)的同款根因在本仓的结构性封死",
+    "关键事实核准(此前 session 全部失真,仓实际已到 v0.2.4 / Phase 6 OAuth IdP):flyway enabled:false(application.yml:38-45,schema 由 shared SQL + sync-db 单一来源管理,本仓只读);migration 目录是惰性副本非运行时执行;application.yml:44 有 TODO 计划重启 flyway(testcontainers + 幂等 V 文件),shared V014 幂等化正是该计划第一步",
+    "V009__init_oauth_codes.sql(本仓)与 shared V014 的 oauth_codes DDL 逐字段相同 -- 双份定义,靠 V014 幂等化保证将来共存不炸",
+    "gate L0-L5 全绿 66 条目 0 软告警;--all 15 项目全绿",
+    "commit 4f8fd4b + tag v0.2.4-20260826 + push origin/master"
+  ],
+  "next": [
+    "无阻塞。application.yml:44 TODO:重启 flyway 做 schema 漂移检测(需要 V00X 全幂等化 + testcontainers saas_test)"
+  ],
+  "open_questions": [
+    "V009(本仓独有,建 oauth_codes)与 shared V014(seed + 建同表)双份定义长期共存还是把 V009 挪进 shared 空号位?挪动会改 flyway checksum(对已应用库),目前 flyway 关着无害,重启 flyway 前必须先定"
+  ],
+  "dont": [
+    "不要恢复 flyway.enabled:true -- saas_dev 已被 AspNetCore + shared SQL 灌过,V001 裸 CREATE 必炸 already exists;重启 flyway 前先把全部 V00X 幂等化(见 application.yml:44 TODO)",
+    "不要删 scripts/gen-shared.sh 的 cmp 防护「简化脚本」-- 那是 lab 40 分钟 prod 502 事故的防线",
+    "不要动 V009/V014 的 oauth_codes DDL 内容 -- 两份靠逐字段相同 + IF NOT EXISTS 共存,改一份就分叉",
+    "env-file 缺 JWT_SIGNING_KEY 时 deploy 脚本会自举随机密钥(3887319 已修),prod 路径配 SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI"
+  ],
+  "last_gate_passed_at": "2026-08-26T17:30+08:00",
+  "active_branch": "master",
+  "ahead_of_origin": "0"
 }
