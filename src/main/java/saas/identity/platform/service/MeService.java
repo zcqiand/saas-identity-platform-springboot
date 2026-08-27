@@ -1,7 +1,5 @@
 package saas.identity.platform.service;
 
-import java.time.Instant;
-import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
@@ -10,21 +8,30 @@ import saas.identity.platform.entity.TenantMembershipEntity;
 import saas.identity.platform.entity.UserEntity;
 import saas.identity.platform.repository.TenantMembershipRepository;
 import saas.identity.platform.repository.UserRepository;
+import saas.identity.platform.security.JwtIssuer;
 import saas.identity.shared.dto.CurrentUser;
 import saas.identity.shared.dto.MembershipStatus;
 import saas.identity.shared.dto.SwitchTenantResponse;
 import saas.identity.shared.dto.TenantMembership;
 
-/** M00.F02 — 当前用户身份（whoami / 跨租户切换 / 我的租户）。 v0.4.0：从 InMemoryStore 迁到真实 DB。 */
+/**
+ * M00.F02 — 当前用户身份（whoami / 跨租户切换 / 我的租户）。 v0.4.0：从 InMemoryStore 迁到真实 DB。 switchTenant 走 JwtIssuer
+ * HS256 真签（2026-08-28 与 AuthService 同步迁移；对称 saas-aspnetcore MeController v0.2.0）。
+ */
 @Service
 public class MeService {
 
   private final UserRepository userRepository;
   private final TenantMembershipRepository membershipRepository;
+  private final JwtIssuer jwtIssuer;
 
-  public MeService(UserRepository userRepository, TenantMembershipRepository membershipRepository) {
+  public MeService(
+      UserRepository userRepository,
+      TenantMembershipRepository membershipRepository,
+      JwtIssuer jwtIssuer) {
     this.userRepository = userRepository;
     this.membershipRepository = membershipRepository;
+    this.jwtIssuer = jwtIssuer;
   }
 
   @Transactional(readOnly = true)
@@ -70,22 +77,9 @@ public class MeService {
     if (m.getStatus() == saas.identity.platform.enums.MembershipStatus.REMOVED) {
       throw new SecurityException("not a member of this tenant");
     }
-    long now = Instant.now().getEpochSecond();
-    String header = b64url("{\"alg\":\"none\",\"typ\":\"JWT\"}");
-    String payload =
-        b64url(
-            "{\"sub\":\""
-                + userId
-                + "\",\"tenant_id\":\""
-                + tenantId
-                + "\",\"iat\":"
-                + now
-                + ",\"exp\":"
-                + (now + 3600)
-                + "}");
     return new SwitchTenantResponse()
-        .accessToken(header + "." + payload + ".dev-placeholder")
-        .refreshToken("refresh-" + userId + "-" + now)
+        .accessToken(jwtIssuer.issueAccessToken(userId, tenantId))
+        .refreshToken(JwtIssuer.generateRefreshToken(userId))
         .expiresAt(java.time.OffsetDateTime.now().plusHours(1))
         .tenantId(tenantId);
   }
@@ -107,11 +101,5 @@ public class MeService {
       saas.identity.platform.enums.MembershipStatus s) {
     if (s == null) return MembershipStatus.ACTIVE;
     return MembershipStatus.valueOf(s.name());
-  }
-
-  private String b64url(String s) {
-    return Base64.getUrlEncoder()
-        .withoutPadding()
-        .encodeToString(s.getBytes(java.nio.charset.StandardCharsets.UTF_8));
   }
 }

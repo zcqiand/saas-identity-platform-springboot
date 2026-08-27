@@ -1,8 +1,10 @@
 package saas.identity.platform.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -18,6 +20,7 @@ import saas.identity.platform.enums.UserStatus;
 import saas.identity.platform.harness.Fn;
 import saas.identity.platform.repository.TenantRepository;
 import saas.identity.platform.repository.UserRepository;
+import saas.identity.platform.security.JwtIssuer;
 import saas.identity.shared.dto.LoginRequest;
 import saas.identity.shared.dto.LoginResponse;
 import saas.identity.shared.dto.OidcCallbackRequest;
@@ -28,7 +31,10 @@ class AuthServiceTest {
 
   private final UserRepository userRepository = mock(UserRepository.class);
   private final TenantRepository tenantRepository = mock(TenantRepository.class);
-  private final AuthService service = new AuthService(userRepository, tenantRepository);
+  // 与 SecurityConfig.jwtDecoder 同 key：login 签出的 token 必须能被本仓 decoder 验过
+  private final JwtIssuer jwt =
+      new JwtIssuer("unit-test-signing-key-0123456789abcdef0123", "ut-issuer", "ut-aud", 3600);
+  private final AuthService service = new AuthService(userRepository, tenantRepository, jwt);
 
   private UserEntity activeUser(UUID tenantId, UUID userId) {
     UserEntity u = new UserEntity();
@@ -56,7 +62,17 @@ class AuthServiceTest {
 
     LoginResponse resp =
         service.login(new LoginRequest().tenantCode(tenantId).username("alice").password("secret"));
-    assertNotNull(resp.getAccessToken());
+    // 回归 2026-08-28 线上 401：login 必须发 HS256 真签 token（alg=none + .dev-placeholder
+    // 会被 SecurityConfig.jwtDecoder 拒 → 前端拿到假 token 调业务接口全 401）
+    String token = resp.getAccessToken();
+    assertNotNull(token);
+    assertEquals(3, token.split("\\.").length, "HS256 JWT 应为三段");
+    String headerJson =
+        new String(
+            java.util.Base64.getUrlDecoder().decode(token.split("\\.")[0]),
+            java.nio.charset.StandardCharsets.UTF_8);
+    assertTrue(headerJson.contains("HS256"), "alg 必须是 HS256，实际 header=" + headerJson);
+    assertFalse(token.endsWith("dev-placeholder"), "不得再发 dev-placeholder 假签");
     assertEquals(userId, resp.getUserId());
     assertEquals(tenantId, resp.getCurrentTenantId());
   }

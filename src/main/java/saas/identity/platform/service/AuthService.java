@@ -1,13 +1,12 @@
 package saas.identity.platform.service;
 
-import java.time.Instant;
-import java.util.Base64;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import saas.identity.platform.entity.UserEntity;
 import saas.identity.platform.repository.TenantRepository;
 import saas.identity.platform.repository.UserRepository;
+import saas.identity.platform.security.JwtIssuer;
 import saas.identity.shared.dto.LoginRequest;
 import saas.identity.shared.dto.LoginResponse;
 
@@ -15,18 +14,22 @@ import saas.identity.shared.dto.LoginResponse;
  * M03.F01 + M03.F02 + M03.F03 — 认证（密码登录 / OIDC / 登出 / refresh）。 v0.4.0 (M09)：从内存 List 迁到
  * UserRepository 真实 DB。
  *
- * <p>密码：dev 期 passwordHash 存 "plain:{password}"；Phase 5 接 argon2。 JWT：dev 期 base64url payload
- * 不验签；Phase 5 接 jose RS256。
+ * <p>密码：dev 期 passwordHash 存 "plain:{password}"；Phase 5 接 argon2。 JWT：v0.2.x Phase 2 起走 JwtIssuer
+ * HS256 真签（与 SecurityConfig.jwtDecoder 对称；旧 alg=none + .dev-placeholder 假签会被本仓 decoder 拒 → 线上所有业务接口
+ * 401，2026-08-28 修复）。对称 saas-aspnetcore AuthController（v0.2.0 起同款）。
  */
 @Service
 public class AuthService {
 
   private final UserRepository userRepository;
   private final TenantRepository tenantRepository;
+  private final JwtIssuer jwtIssuer;
 
-  public AuthService(UserRepository userRepository, TenantRepository tenantRepository) {
+  public AuthService(
+      UserRepository userRepository, TenantRepository tenantRepository, JwtIssuer jwtIssuer) {
     this.userRepository = userRepository;
     this.tenantRepository = tenantRepository;
+    this.jwtIssuer = jwtIssuer;
   }
 
   @Transactional
@@ -69,9 +72,8 @@ public class AuthService {
         || user.getStatus() == saas.identity.platform.enums.UserStatus.DISABLED) {
       throw new SecurityException("user " + user.getStatus());
     }
-    long now = Instant.now().getEpochSecond();
-    String accessToken = issueAccessToken(user.getId(), user.getTenantId(), now);
-    String refreshToken = "refresh-" + user.getId() + "-" + now;
+    String accessToken = jwtIssuer.issueAccessToken(user.getId(), user.getTenantId());
+    String refreshToken = JwtIssuer.generateRefreshToken(user.getId());
     return new LoginResponse()
         .accessToken(accessToken)
         .refreshToken(refreshToken)
@@ -92,12 +94,17 @@ public class AuthService {
     if (refreshToken == null) {
       throw new SecurityException("missing refresh_token");
     }
-    // refreshToken 形如 "refresh-<uuid>-<epoch>"；UUID 自身含 '-'，按前缀 + 末段剥离
-    String prefix = "refresh-";
-    if (!refreshToken.startsWith(prefix)) {
+    // refreshToken 形如 "refresh-<uuid>-<epoch>"（旧格式）或 JwtIssuer.generateRefreshToken 的
+    // "saas-rt-<uuid>-<ts-ms>-<rand>"（新格式）；UUID 自身含 '-'，按前缀 + 末段剥离
+    String tokenBody =
+        refreshToken.startsWith("saas-rt-")
+            ? refreshToken.substring("saas-rt-".length())
+            : refreshToken.startsWith("refresh-")
+                ? refreshToken.substring("refresh-".length())
+                : null;
+    if (tokenBody == null) {
       throw new SecurityException("invalid refresh_token");
     }
-    String tokenBody = refreshToken.substring(prefix.length()); // "<uuid>-<epoch>"
     int lastDash = tokenBody.lastIndexOf('-');
     if (lastDash <= 0) {
       throw new SecurityException("invalid refresh_token");
@@ -113,10 +120,9 @@ public class AuthService {
     if (user == null) throw new SecurityException("invalid refresh_token");
     UUID bodyTenantId = body.getTenantId();
     UUID tenantId = bodyTenantId != null ? bodyTenantId : user.getTenantId();
-    long now = Instant.now().getEpochSecond();
     return new saas.identity.shared.dto.TokenResponse()
-        .accessToken(issueAccessToken(user.getId(), tenantId, now))
-        .refreshToken("refresh-" + user.getId() + "-" + now)
+        .accessToken(jwtIssuer.issueAccessToken(user.getId(), tenantId))
+        .refreshToken(JwtIssuer.generateRefreshToken(user.getId()))
         .tokenType("Bearer")
         .expiresIn(3600)
         .scope("");
@@ -130,27 +136,5 @@ public class AuthService {
         .tokenType("Bearer")
         .expiresIn(3600)
         .scope("");
-  }
-
-  private String issueAccessToken(UUID userId, UUID tenantId, long now) {
-    String header = b64url("{\"alg\":\"none\",\"typ\":\"JWT\"}");
-    String payload =
-        b64url(
-            "{\"sub\":\""
-                + userId
-                + "\",\"tenant_id\":\""
-                + tenantId
-                + "\",\"iat\":"
-                + now
-                + ",\"exp\":"
-                + (now + 3600)
-                + "}");
-    return header + "." + payload + ".dev-placeholder";
-  }
-
-  private String b64url(String s) {
-    return Base64.getUrlEncoder()
-        .withoutPadding()
-        .encodeToString(s.getBytes(java.nio.charset.StandardCharsets.UTF_8));
   }
 }

@@ -1,6 +1,7 @@
 package saas.identity.platform.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
@@ -18,6 +19,7 @@ import saas.identity.platform.enums.UserStatus;
 import saas.identity.platform.harness.Fn;
 import saas.identity.platform.repository.TenantMembershipRepository;
 import saas.identity.platform.repository.UserRepository;
+import saas.identity.platform.security.JwtIssuer;
 import saas.identity.shared.dto.CurrentUser;
 import saas.identity.shared.dto.SwitchTenantResponse;
 
@@ -27,7 +29,10 @@ class MeServiceTest {
   private final UserRepository userRepository = mock(UserRepository.class);
   private final TenantMembershipRepository membershipRepository =
       mock(TenantMembershipRepository.class);
-  private final MeService service = new MeService(userRepository, membershipRepository);
+  // 与 SecurityConfig.jwtDecoder 同 key：switchTenant 签出的 token 必须能被本仓 decoder 验过
+  private final JwtIssuer jwt =
+      new JwtIssuer("unit-test-signing-key-0123456789abcdef0123", "ut-issuer", "ut-aud", 3600);
+  private final MeService service = new MeService(userRepository, membershipRepository, jwt);
 
   private UserEntity user(UUID userId, UUID tenantId) {
     UserEntity u = new UserEntity();
@@ -99,7 +104,11 @@ class MeServiceTest {
     when(membershipRepository.findByUserIdAndTenantId(userId, tenantId))
         .thenReturn(Optional.of(membership(userId, tenantId, MembershipStatus.ACTIVE)));
     SwitchTenantResponse resp = service.switchTenant(userId, tenantId);
-    assertNotNull(resp.getAccessToken());
+    // 回归 2026-08-28 线上 401：switchTenant 必须发 HS256 真签 token（同 login）
+    String token = resp.getAccessToken();
+    assertNotNull(token);
+    assertEquals(3, token.split("\\.").length, "HS256 JWT 应为三段");
+    assertFalse(token.endsWith("dev-placeholder"), "不得再发 dev-placeholder 假签");
     assertEquals(tenantId, resp.getTenantId());
   }
 
