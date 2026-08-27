@@ -9,15 +9,15 @@
 # CI 同时 push :latest + :<tag> 两份镜像,回滚只要手动指定旧 tag 再跑一次本脚本。
 #
 # 与姊妹仓 saas-identity-platform-nextjs.sh 的差异:
-#   - 数据库：PostgreSQL 远程, SPRING_DATASOURCE_URL 从 springboot.env 注入（无本地 ./data 卷）
+#   - 数据库：PostgreSQL 远程, DATABASE_URL 从 springboot.env 注入（无本地 ./data 卷）
 #   - 容器内是 Java 17 (Spring Boot) 监听 :8080 → -p 127.0.0.1:8023:8080
-#   - 密钥走 ./springboot.env (SPRING_DATASOURCE_URL/USERNAME/PASSWORD + CORS),由 setup-vps.sh 渲染时
+#   - 密钥走 ./springboot.env (DATABASE_URL/USERNAME/PASSWORD + CORS),由 setup-vps.sh 渲染时
 #     不预生成（fail-fast 不便）,本脚本首启自举。
 #   - JWT_SIGNING_KEY: v0.2.0 起 JwtIssuer(HS256) 构造 fail-fast 必填。缺失时本脚本
 #     生成随机密钥 append 进 env-file（持久化, 不覆盖已有）。消费方走 whoami 内省不本地验签。
 #
 # 前置: deploy 用户需在 docker 组中(sudo usermod -aG docker deploy)。
-#        springboot.env 必须由 setup-vps.sh 或本脚本首启生成(SPRING_DATASOURCE_URL 必填)。
+#        springboot.env 必须由 setup-vps.sh 或本脚本首启生成(DATABASE_URL 必填)。
 
 set -eu
 
@@ -47,9 +47,9 @@ if [ ! -f "$BASE/springboot.env" ]; then
     echo "→ bootstrapping $BASE/springboot.env from env DATABASE_URL/USER/PASSWORD"
     umask 077
     {
-      printf 'SPRING_DATASOURCE_URL=%s\n' "$DATABASE_URL"
-      printf 'SPRING_DATASOURCE_USERNAME=%s\n' "$DATABASE_USER"
-      printf 'SPRING_DATASOURCE_PASSWORD=%s\n' "$DATABASE_PASSWORD"
+      printf 'DATABASE_URL=%s\n' "$DATABASE_URL"
+      printf 'DATABASE_USER=%s\n' "$DATABASE_USER"
+      printf 'DATABASE_PASSWORD=%s\n' "$DATABASE_PASSWORD"
       printf 'SERVER_PORT=8080\n'
       # 默认 CORS 白名单：react SPA + saas-nextjs + 本仓域名。运维可在 setup-vps 之后手工追加 origin。
       printf 'SAAS_CORS_ALLOWED_ORIGINS=https://%s,https://saas-react.xiangru.uk,https://saas-nextjs.xiangru.uk\n' "$NGINX_DOMAIN"
@@ -61,9 +61,9 @@ if [ ! -f "$BASE/springboot.env" ]; then
     exit 1
   fi
 fi
-# 校验 springboot.env 里有 SPRING_DATASOURCE_URL（即使 env-file 已存在, 内容可能是上一次失败留下的）
-if ! grep -q '^SPRING_DATASOURCE_URL=' "$BASE/springboot.env"; then
-  echo "ERROR: $BASE/springboot.env has no SPRING_DATASOURCE_URL line" >&2
+# 校验 springboot.env 里有 DATABASE_URL（即使 env-file 已存在, 内容可能是上一次失败留下的）
+if ! grep -q '^DATABASE_URL=' "$BASE/springboot.env"; then
+  echo "ERROR: $BASE/springboot.env has no DATABASE_URL line" >&2
   exit 1
 fi
 

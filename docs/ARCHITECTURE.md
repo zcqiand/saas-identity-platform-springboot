@@ -558,7 +558,7 @@ shared 仓 tag v<X>-<YYYYMMDD>  →  本仓 拉新 openapi.yaml  →  本仓 tag
 | 父仓 [ADR-0005](../../../docs/adr/0005-defense-in-depth-for-protected-paths.md) | 受保护路径纵深防御 | `.claude/hooks/` 不让改 + pre_bash_guard 拦 |
 | 父仓 [ADR-0007](../../../docs/adr/0007-shared-sql-ssot.md) | shared 仓扩到双 SSOT | 本仓 schema = shared SQL 镜像；ORM 只反射（见 §3.6） |
 | 父仓 [ADR-0012](../../../docs/adr/0012-msw-as-http-server.md) | msw 仓升级为独立 HTTP 服务 | 本仓 prod 走 HS256 JWT 验签；msw 仅 dev 走 `alg=none` 兜底（见 §3.1） |
-| 隐含 ADR-0014 | env-driven 单 URL | 本仓 `.env.example` 提供 `SAAS_DB` / `JWT_*` / `SAAS_CORS_ALLOWED_ORIGINS` 模板 |
+| 隐含 ADR-0014 | env-driven 单 URL | 本仓 `.env.example` 提供 `DATABASE_NAME` / `JWT_*` / `SAAS_CORS_ALLOWED_ORIGINS` 模板 |
 | 隐含 ADR-0011 | lab-vue M98 白名单镜像 | （saas 仓不涉及 lab-vue 豁免） |
 | shared 仓 ADR-0010 | shared SQL DDL 是 schema 真源 | 本仓 `db/migration/V*.sql` = 只读 cp 镜像 |
 

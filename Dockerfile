@@ -5,7 +5,7 @@
 #   runtime  → eclipse-temurin:17-jre-slim + app.jar，监听 SERVER_PORT=8080
 #
 # 数据库：PostgreSQL（远程）。容器内不持有 DB 文件 —— 运行期必须通过
-#         SPRING_DATASOURCE_URL 环境变量注入连接串（由 VPS springboot.env 注入）。
+#         DATABASE_URL 环境变量注入连接串（由 VPS springboot.env 注入）。
 #
 # 端口：容器内 Spring Boot 监听 :8080；VPS nginx 反代到 publish 出的端口（默认 8023）。
 #

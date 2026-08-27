@@ -109,5 +109,5 @@ log "  1) cert: /etc/nginx/ssl/${CERT_BASENAME}.{crt,key}（复用 saas-nextjs �
 log "  2) ssh-copy-id -i ~/.ssh/id_ed25519_gh-deploy.pub deploy@\$(hostname -I | awk '{print \$1}')（saas-nextjs 已做可跳过）"
 log "  3) saas-springboot repo GitHub Secrets: DOCKER_USERNAME / DOCKER_PASSWORD / VPS_HOST / VPS_USER / VPS_SSH_KEY"
 log "  4) 首次 deploy 前, 在 deploy 上下文提供 DATABASE_URL/USER/PASSWORD env，deploy 脚本会自举 springboot.env"
-log "     或 deploy 后手工编辑 \$BASE/springboot.env（SPRING_DATASOURCE_URL/USERNAME/PASSWORD + SAAS_CORS_ALLOWED_ORIGINS）"
+log "     或 deploy 后手工编辑 \$BASE/springboot.env（DATABASE_URL/USERNAME/PASSWORD + SAAS_CORS_ALLOWED_ORIGINS）"
 log "  5) prod 路径: 后续需要删 SecurityConfig.DevJwtDecoder + 设 SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI env"
