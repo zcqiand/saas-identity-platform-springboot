@@ -2,6 +2,17 @@
 
 格式参照 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)。
 
+## [0.2.10] — 2026-08-28
+
+- fix(entity): ApiKeyEntity.scopes `@Type(StringArrayType)` → `ListArrayType`。StringArrayType
+  只支持 `String[]` 属性，用在 `List<String>` 上读回时 hypersistence `ArrayUtil.unwrapArray` →
+  `Array.newInstance(null)` NPE → 线上 GET/POST `/api/v1/tenants/{id}/api-keys` 500
+  （users/roles 同链路正常，仅 api-keys 中招）。AppEntity 时代（b67419b）曾把同类 NPE
+  误诊为「hypersistence 数组 bug」用 `@Transient` 绕过，本案证伪：是 UserType 与属性类型不匹配。
+- test: 新增 `ArrayUserTypeMappingGuardTest` 映射守卫——扫描全部 entity，断言数组
+  UserType（StringArrayType/UUIDArrayType）不挂在 List 属性、ListArrayType 不挂数组属性。
+  旧代码实测红。堵住「单测全 mock、H2 镜像不了 text[]」的映射层盲区。
+
 ## [0.2.9] — 2026-08-28
 
 - fix(auth): AuthService（login/refresh）与 MeService（switchTenant）迁移到 JwtIssuer HS256

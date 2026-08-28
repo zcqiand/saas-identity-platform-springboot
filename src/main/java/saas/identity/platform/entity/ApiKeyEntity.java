@@ -1,6 +1,6 @@
 package saas.identity.platform.entity;
 
-import io.hypersistence.utils.hibernate.type.array.StringArrayType;
+import io.hypersistence.utils.hibernate.type.array.ListArrayType;
 import jakarta.persistence.*;
 import jakarta.persistence.Convert;
 import java.time.OffsetDateTime;
@@ -41,7 +41,10 @@ public class ApiKeyEntity {
   @Column(name = "status", columnDefinition = "api_key_status", nullable = false)
   private ApiKeyStatus status = ApiKeyStatus.ACTIVE;
 
-  @Type(StringArrayType.class)
+  // ListArrayType（而非 StringArrayType）：StringArrayType 只支持 String[] 属性，
+  // 用在 List<String> 上会在读回时 ArrayUtil.unwrapArray → Array.newInstance(null) NPE
+  // （线上 GET api-keys 500 即此；AppEntity 的 @Transient 是同类问题的绕过，这里走正修）。
+  @Type(ListArrayType.class)
   @Column(name = "scopes", columnDefinition = "text[]", nullable = false)
   private List<String> scopes = List.of();
 
