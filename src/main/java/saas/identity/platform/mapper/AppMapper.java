@@ -1,7 +1,6 @@
 package saas.identity.platform.mapper;
 
 import java.util.List;
-import java.util.UUID;
 import saas.identity.platform.entity.AppEntity;
 import saas.identity.platform.enums.AppStatus;
 import saas.identity.shared.dto.App;
@@ -39,7 +38,7 @@ public final class AppMapper {
   // at method scope.
   public static AppEntity fromCreateRequest(CreateAppRequest req) {
     AppEntity e = new AppEntity();
-    e.setId(UUID.randomUUID());
+    // 不预置 id：id 非空被 Spring Data 判为 detached → merge → StaleObjectStateException
     e.setCode(req.getCode());
     e.setName(req.getName());
     String desc = req.getDescription();

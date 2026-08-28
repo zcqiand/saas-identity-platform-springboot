@@ -21,6 +21,14 @@ spring:
     username: ${DATABASE_USER:postgres}
     password: ${DATABASE_PASSWORD:qiand68+++}
     driver-class-name: org.postgresql.Driver
+    # stringtype=unspecified：AttributeConverter 输出的 String 以 unknown 类型绑定，
+    # PG 按目标列解析成原生 enum（tenant_status/api_key_status/…）。否则 varchar →
+    # enum 列 42804（2026-08-28 线上 POST api-keys/tenants/roles 500 即此）。
+    # 注意：DATABASE_URL 覆盖时不走本 hikari 属性——deploy 环境 url 需自带该参数或用
+    # HIKARI_DATA_SOURCE_PROPERTIES 注入（当前 VPS env 未覆盖，走默认 url，生效）。
+    hikari:
+      data-source-properties:
+        stringtype: unspecified
 
   jpa:
     hibernate:

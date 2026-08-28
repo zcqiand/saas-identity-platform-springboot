@@ -25,7 +25,7 @@ public final class RoleMapper {
 
   public static RoleEntity fromCreateRequest(UUID tenantId, CreateRoleRequest req) {
     RoleEntity e = new RoleEntity();
-    e.setId(UUID.randomUUID());
+    // 不预置 id：id 非空被 Spring Data 判为 detached → merge → StaleObjectStateException
     e.setTenantId(tenantId);
     e.setCode(req.getCode());
     e.setName(req.getName());

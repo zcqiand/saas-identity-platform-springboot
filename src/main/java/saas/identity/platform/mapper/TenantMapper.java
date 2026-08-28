@@ -2,7 +2,6 @@ package saas.identity.platform.mapper;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import saas.identity.platform.entity.TenantEntity;
 import saas.identity.shared.dto.CreateTenantRequest;
 import saas.identity.shared.dto.Tenant;
@@ -29,7 +28,7 @@ public final class TenantMapper {
 
   public static TenantEntity fromCreateRequest(CreateTenantRequest req) {
     TenantEntity e = new TenantEntity();
-    e.setId(UUID.randomUUID());
+    // 不预置 id：id 非空被 Spring Data 判为 detached → merge → StaleObjectStateException
     e.setCode(req.getCode());
     e.setName(req.getName());
     e.setStatus(saas.identity.platform.enums.TenantStatus.ACTIVE);

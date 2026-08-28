@@ -93,7 +93,7 @@ public class AdminAppMenusController implements AdminAppMenusApi {
   private static saas.identity.platform.entity.MenuEntity fromCreateRequest(
       String appIdOrCode, CreateMenuRequest body) {
     var e = new saas.identity.platform.entity.MenuEntity();
-    e.setId(UUID.randomUUID());
+    // 不预置 id：id 非空被 Spring Data 判为 detached → merge → StaleObjectStateException
     // appId 由 resolveApp 设上
     e.setCode(body.getCode());
     e.setName(body.getName());

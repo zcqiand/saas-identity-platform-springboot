@@ -39,7 +39,8 @@ public class TenantApiKeyService {
     String prefix = ApiKeyMapper.generatePrefix();
     String secret = ApiKeyMapper.generateSecret();
     ApiKeyEntity e = new ApiKeyEntity();
-    e.setId(UUID.randomUUID());
+    // 不预置 id：id 非空会被 Spring Data 判为 detached → merge → UPDATE 0 行
+    // → StaleObjectStateException（线上 POST 500）。@GeneratedValue 在 persist 时生成。
     e.setTenantId(tenantId);
     e.setName(body.getName());
     e.setPrefix(prefix);
@@ -74,7 +75,7 @@ public class TenantApiKeyService {
     String prefix = ApiKeyMapper.generatePrefix();
     String secret = ApiKeyMapper.generateSecret();
     ApiKeyEntity fresh = new ApiKeyEntity();
-    fresh.setId(UUID.randomUUID());
+    // 同 create：不预置 id，走 @GeneratedValue
     fresh.setTenantId(old.getTenantId());
     fresh.setName(old.getName());
     fresh.setPrefix(prefix);

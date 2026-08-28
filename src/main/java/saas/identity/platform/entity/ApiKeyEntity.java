@@ -37,6 +37,10 @@ public class ApiKeyEntity {
   @Column(name = "secret_hash", length = 255, nullable = false)
   private String secretHash;
 
+  // PG 原生 enum 列 + AttributeConverter 的绑定由 application.yml 的
+  // hikari data-source-properties stringtype=unspecified 处理（converter 输出以
+  // unknown 类型发送，PG 按目标列解析）。NAMED_ENUM 与 converter 不兼容（启动期
+  // PostgreSQLEnumJdbcType.addAuxiliaryDatabaseObjects NPE），不要再加回来。
   @Convert(converter = ApiKeyStatusConverter.class)
   @Column(name = "status", columnDefinition = "api_key_status", nullable = false)
   private ApiKeyStatus status = ApiKeyStatus.ACTIVE;

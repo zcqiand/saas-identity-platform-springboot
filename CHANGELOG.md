@@ -2,6 +2,22 @@
 
 格式参照 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)。
 
+## [0.2.11] — 2026-08-28
+
+- fix(service): 删除 create/rotate 路径的手动 `setId(UUID.randomUUID())`（api-keys /
+  tenants / roles / apps / menus 共 5 处）。entity 已有 `@GeneratedValue(UUID)`，
+  预置 id 会被 Spring Data 判为 detached → `merge()` → UPDATE 0 行 →
+  `StaleObjectStateException` → 线上 POST 500。本地实测 tenant/role create 同炸，
+  属系统性问题。
+- fix(datasource): Hikari `stringtype=unspecified` —— `AttributeConverter` 输出的
+  String 以 unknown 类型绑定，PG 按目标列解析成原生 enum。此前 varchar →
+  `tenant_status`/`api_key_status` 列 42804（id 修好后露出的第二层写路径 500）。
+  注意 `NAMED_ENUM` + converter 组合启动即崩（`PostgreSQLEnumJdbcType` NPE），不可用。
+- test: `TenantApiKeyServiceIsNewTest` isNew 语义守卫（旧代码实测红）——create/rotate
+  传入 repository 的 entity id 必须为 null；entity 主键必须保持 `@GeneratedValue`。
+- 本地 E2E（连 saas_dev）：POST api-key / tenant / role 全 200；api-key 完整
+  生命周期 create→list→rotate→revoke 全 200（rotate 撤旧发新语义正确）。
+
 ## [0.2.10] — 2026-08-28
 
 - fix(entity): ApiKeyEntity.scopes `@Type(StringArrayType)` → `ListArrayType`。StringArrayType
