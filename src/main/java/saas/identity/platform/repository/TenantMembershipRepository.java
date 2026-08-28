@@ -24,7 +24,7 @@ public interface TenantMembershipRepository extends JpaRepository<TenantMembersh
       value =
           "SELECT DISTINCT unnest(role_ids) "
               + "FROM tenant_memberships "
-              + "WHERE user_id = :userId AND status = 'active'",
+              + "WHERE user_id = :userId AND status = 'active'::membership_status",
       nativeQuery = true)
   List<UUID> findRoleIdsByUserId(@Param("userId") UUID userId);
 }
