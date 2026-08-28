@@ -2,6 +2,31 @@
 
 格式参照 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)。
 
+## [0.2.16] — 2026-08-28
+
+- fix(service): MeService.getMyMenus `unnest()` 查询改走 JdbcTemplate 直连，绕开
+  Spring Data `@Query nativeQuery=true` + `List<UUID>` 在 prod PG driver 上的
+  JDBC 类型映射失败（v0.2.12/v0.2.13/v0.2.14/v0.2.15 共 4 次 deploy 全部 500，
+  mock 单测全绿）。复制 OauthService 已验证的 JdbcTemplate 模式：
+    `queryForList(UUID.class, ...) ` 查 role_ids
+    `query(... createArrayOf("uuid", ...))` 查 menu_ids
+  MeService 构造 +1 JdbcTemplate 形参，单测 jdbc=null 时回退 Spring Data
+  仓库（保持 mock 注入兼容）。MeServiceGetMyMenusTest/MeServiceTest 都补参数。
+- 教训：mock 单测全绿 ≠ prod 通，**prod PG driver 对 `unnest(uuid[])` 经 Spring Data
+  映射 List<UUID> 的兼容性与 JDBC 直连不同**。新加 native query 必须有 prod 烟测，
+  不能依赖单测。HikariCP 也无相关配置可救。
+
+## [0.2.15] — 2026-08-28
+
+- chore(repo): findRoleIdsByUserId 简化去掉 status='active' 过滤（v0.2.13 显式
+  cast 仍 500 → 应用层由 role_menu_grants 二次过滤隐式排除 removed 成员的
+  role_id）。**该版本并未解决 500，留作调查轨迹**。
+
+## [0.2.13] — 2026-08-28
+
+- fix(repo): findRoleIdsByUserId 'active'::membership_status 显式 cast — **无效**，
+  仍 500。
+
 ## [0.2.12] — 2026-08-28
 
 - fix(service): MeService.getMyMenus 真实现（M09.F03.I02/I03/I04）。
