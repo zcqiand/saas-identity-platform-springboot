@@ -1,29 +1,35 @@
 {
   "schema": 1,
   "project": "saas-identity-platform-springboot",
-  "current_task": "gen-shared.sh 迁移拷贝加分叉 abort 防护上线(v0.2.4)— lab 撞号事故教训泛化",
-  "last_session_at": "2026-08-26",
-  "last_session_summary": "gen-shared.sh step 3 拷贝迁移前 cmp 目标:已存在且内容不同 -> FATAL + exit 1(shared v0.2.13 已同步把 V014 幂等化,当前无分叉不误触发)。前置调查发现本仓 flyway enabled:false 且 V009 与 shared V014 各建一次 oauth_codes -- 雷已在 shared 侧拆除。/handoff 二次门禁 --all exit 0(本仓 66 条目 0 软告警)",
+  "current_task": "线上 api-keys 三层 500 修复完毕(v0.2.10/v0.2.11)，读+写全路径 200",
+  "last_session_at": "2026-08-28",
+  "last_session_summary": "用户报线上 GET /tenants/{id}/api-keys 500。systematic-debugging 本地连 saas_dev 复现剥出三层独立 bug: (1) ApiKeyEntity.scopes 用 StringArrayType 挂 List<String> 属性, 读回 ArrayUtil.unwrapArray NPE → 换 ListArrayType(v0.2.10); (2) create/rotate 手动 setId(UUID.randomUUID()) 被 Spring Data 判 detached → merge → StaleObjectStateException, 系统性, tenants/roles/apps/menus 共 5 处同犯 → 全删, 由 @GeneratedValue 生成(v0.2.11); (3) AttributeConverter 输出以 varchar 绑 PG 原生 enum 列 42804 → Hikari stringtype=unspecified(v0.2.11)。NAMED_ENUM+converter 组合启动即崩(PostgreSQLEnumJdbcType NPE), 已试过不可用。新增守卫: ArrayUserTypeMappingGuardTest(映射层) + TenantApiKeyServiceIsNewTest(isNew 语义), 均旧代码实测红。线上验证 GET/POST api-key + revoke + POST tenant 全 200, 探针数据已清理",
   "done": [
-    "scripts/gen-shared.sh step 3：每个 V*.sql 拷贝前若目标存在且 cmp 不同 -> FATAL abort(提示显式收敛),替代原盲 cp -- 2026-08-26 lab V014/V015 撞号事故(prod 502 约 40 分钟)的同款根因在本仓的结构性封死",
-    "关键事实核准(此前 session 全部失真,仓实际已到 v0.2.4 / Phase 6 OAuth IdP):flyway enabled:false(application.yml:38-45,schema 由 shared SQL + sync-db 单一来源管理,本仓只读);migration 目录是惰性副本非运行时执行;application.yml:44 有 TODO 计划重启 flyway(testcontainers + 幂等 V 文件),shared V014 幂等化正是该计划第一步",
-    "V009__init_oauth_codes.sql(本仓)与 shared V014 的 oauth_codes DDL 逐字段相同 -- 双份定义,靠 V014 幂等化保证将来共存不炸",
-    "gate L0-L5 全绿 66 条目 0 软告警;--all 15 项目全绿",
-    "commit 4f8fd4b + tag v0.2.4-20260826 + push origin/master"
+    "v0.2.10(c7a2931): ApiKeyEntity.scopes StringArrayType→ListArrayType, GET api-keys 线上 200",
+    "v0.2.11(7d7256e): 删 5 处手动 setId(TenantApiKeyService/TenantMapper/RoleMapper/AppMapper/AdminAppMenusController) + application.yml hikari stringtype=unspecified",
+    "两个守卫测试: ArrayUserTypeMappingGuardTest + TenantApiKeyServiceIsNewTest(含 entity @GeneratedValue 断言), 63 测试全绿",
+    "两 tag CI(test+docker+VPS deploy) success; 线上 E2E: GET/POST api-keys, rotate, revoke, POST admin/tenants 全 200",
+    "gate --all 15 仓全绿; 教训存 memory: hypersistence-array-usertype-mismatch + springboot-write-path-double-bug"
   ],
   "next": [
-    "无阻塞。application.yml:44 TODO:重启 flyway 做 schema 漂移检测(需要 V00X 全幂等化 + testcontainers saas_test)"
+    "无阻塞。AppEntity.redirectUris/scopes/grantTypes 仍是 @Transient 绕过(b67419b 误诊遗留), 可按 ApiKeyEntity 模式换 ListArrayType 恢复真映射 — OauthService Phase 5 接真 OIDC 前做",
+    "oidcCallback(AuthService)仍返回 mock token 'oidc-access-token-<uuid>' — Phase 5 接真 OIDC 时处理"
   ],
   "open_questions": [
-    "V009(本仓独有,建 oauth_codes)与 shared V014(seed + 建同表)双份定义长期共存还是把 V009 挪进 shared 空号位?挪动会改 flyway checksum(对已应用库),目前 flyway 关着无害,重启 flyway 前必须先定"
+    "SecurityConfig 仍是 dev 简化(.anyRequest().authenticated(), 无 platform_admin scope 区分) — prod 收紧时机待定",
+    "密码仍是 plain:{password} 明文比对(seed dev123456) — Phase 5 接 argon2",
+    "VPS springboot.env 的 DATABASE_URL 若被运维改成显式 URL, stringtype=unspecified 会失效(hikari data-source-properties 只对默认 url 生效) — 需 URL 自带或 HIKARI_DATA_SOURCE_PROPERTIES 注入, 当前 VPS 未覆盖"
   ],
   "dont": [
-    "不要恢复 flyway.enabled:true -- saas_dev 已被 AspNetCore + shared SQL 灌过,V001 裸 CREATE 必炸 already exists;重启 flyway 前先把全部 V00X 幂等化(见 application.yml:44 TODO)",
-    "不要删 scripts/gen-shared.sh 的 cmp 防护「简化脚本」-- 那是 lab 40 分钟 prod 502 事故的防线",
-    "不要动 V009/V014 的 oauth_codes DDL 内容 -- 两份靠逐字段相同 + IF NOT EXISTS 共存,改一份就分叉",
-    "env-file 缺 JWT_SIGNING_KEY 时 deploy 脚本会自举随机密钥(3887319 已修),prod 路径配 SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI"
+    "不要给 PG 原生 enum 列 + AttributeConverter 的字段加 @JdbcTypeCode(SqlTypes.NAMED_ENUM) — 与 converter 组合启动即崩(PostgreSQLEnumJdbcType.addAuxiliaryDatabaseObjects NPE), 本次实测",
+    "不要在 entity 已有 @GeneratedValue(UUID) 时手动 setId 再 save — Spring Data 判 detached 走 merge 必炸 StaleObjectStateException",
+    "不要把 StringArrayType/UUIDArrayType 挂在 List 属性上 — 读回必 NPE, List 属性用 ListArrayType(ArrayUserTypeMappingGuardTest 会拦)",
+    "不要动 flyway(V001 裸 CREATE 撞 saas_dev already exists) — 见 application.yml TODO, 前置是 V00X 全幂等化",
+    "不要把 swagger-annotations-jakarta 版本单独升/降 — 必须与 springdoc 传递的 swagger-core 同版本(SpringdocCompatibilityTest 层2 会拦)",
+    "排「线上 500 但代码看不出问题」: 本地起实例连 saas_dev(SPRING_DATASOURCE_URL) 复现, 看 dispatcherServlet ERROR stack trace — 一次只剥一层, 本次三层 bug 是叠着的",
+    "本地起 dev server 后收工前必须杀进程(端口反查 netstat → taskkill), 端口用 18081 避开 18080 残留"
   ],
-  "last_gate_passed_at": "2026-08-26T17:30+08:00",
+  "last_gate_passed_at": "2026-08-28T09:40+08:00",
   "active_branch": "master",
   "ahead_of_origin": "0"
 }

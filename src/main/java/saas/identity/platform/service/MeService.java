@@ -1,15 +1,28 @@
 package saas.identity.platform.service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import saas.identity.platform.entity.AppEntity;
+import saas.identity.platform.entity.MenuEntity;
 import saas.identity.platform.entity.TenantMembershipEntity;
 import saas.identity.platform.entity.UserEntity;
+import saas.identity.platform.repository.AppRepository;
+import saas.identity.platform.repository.MenuRepository;
+import saas.identity.platform.repository.RoleMenuGrantRepository;
 import saas.identity.platform.repository.TenantMembershipRepository;
 import saas.identity.platform.repository.UserRepository;
 import saas.identity.platform.security.JwtIssuer;
 import saas.identity.shared.dto.CurrentUser;
+import saas.identity.shared.dto.EffectiveMenuNode;
 import saas.identity.shared.dto.MembershipStatus;
 import saas.identity.shared.dto.SwitchTenantResponse;
 import saas.identity.shared.dto.TenantMembership;
@@ -17,20 +30,32 @@ import saas.identity.shared.dto.TenantMembership;
 /**
  * M00.F02 — 当前用户身份（whoami / 跨租户切换 / 我的租户）。 v0.4.0：从 InMemoryStore 迁到真实 DB。 switchTenant 走 JwtIssuer
  * HS256 真签（2026-08-28 与 AuthService 同步迁移；对称 saas-aspnetcore MeController v0.2.0）。
+ *
+ * <p>M09.F03.I02/I03/I04 — getMyMenus 真实现：从 membership.roleIds 收集 → role_menu_grants.menuIds →
+ * menus 表 → 父链补全 → 按 app.code 分组输出 Map<appCode, List<EffectiveMenuNode>>。
  */
 @Service
 public class MeService {
 
   private final UserRepository userRepository;
   private final TenantMembershipRepository membershipRepository;
+  private final RoleMenuGrantRepository grantRepository;
+  private final MenuRepository menuRepository;
+  private final AppRepository appRepository;
   private final JwtIssuer jwtIssuer;
 
   public MeService(
       UserRepository userRepository,
       TenantMembershipRepository membershipRepository,
+      RoleMenuGrantRepository grantRepository,
+      MenuRepository menuRepository,
+      AppRepository appRepository,
       JwtIssuer jwtIssuer) {
     this.userRepository = userRepository;
     this.membershipRepository = membershipRepository;
+    this.grantRepository = grantRepository;
+    this.menuRepository = menuRepository;
+    this.appRepository = appRepository;
     this.jwtIssuer = jwtIssuer;
   }
 
@@ -82,6 +107,107 @@ public class MeService {
         .refreshToken(JwtIssuer.generateRefreshToken(userId))
         .expiresAt(java.time.OffsetDateTime.now().plusHours(1))
         .tenantId(tenantId);
+  }
+
+  /**
+   * M09.F03.I02/I03/I04 — 当前用户有效菜单（按 app.code 分组）。
+   *
+   * <p>链路：userId → membership.roleIds (DISTINCT unnest) → role_menu_grants.menuIds (DISTINCT
+   * unnest) → menus 表 + 父链补全 → 按 appId 分桶 → 映射 app.code → 输出 Map<appCode, List<EffectiveMenuNode>>。
+   */
+  @Transactional(readOnly = true)
+  public Map<String, List<EffectiveMenuNode>> getMyMenus(UUID userId) {
+    List<UUID> roleIds = membershipRepository.findRoleIdsByUserId(userId);
+    if (roleIds.isEmpty()) {
+      return Map.of();
+    }
+    List<UUID> grantedMenuIds = grantRepository.findMenuIdsByRoleIds(roleIds);
+    if (grantedMenuIds.isEmpty()) {
+      return Map.of();
+    }
+    // 父链补全：granted 的每个 menu 的祖先链一并加载（深度受 menu 树硬约束）
+    Set<UUID> allMenuIds = new LinkedHashSet<>(grantedMenuIds);
+    List<MenuEntity> granted = menuRepository.findAllById(new ArrayList<>(allMenuIds));
+    boolean changed = true;
+    while (changed) {
+      Set<UUID> missing = new HashSet<>();
+      for (MenuEntity m : granted) {
+        UUID parent = m.getParentId();
+        if (parent != null && !allMenuIds.contains(parent)) {
+          missing.add(parent);
+        }
+      }
+      if (missing.isEmpty()) break;
+      allMenuIds.addAll(missing);
+      granted = menuRepository.findAllById(new ArrayList<>(allMenuIds));
+      changed = true;
+    }
+    // 按 appId 分桶
+    Map<UUID, List<MenuEntity>> byApp = new HashMap<>();
+    for (MenuEntity m : granted) {
+      byApp.computeIfAbsent(m.getAppId(), k -> new ArrayList<>()).add(m);
+    }
+    // 装配树（按菜单节点父子）
+    Map<UUID, EffectiveMenuNode> nodeIndex = new HashMap<>();
+    for (MenuEntity m : granted) {
+      nodeIndex.put(m.getId(), toDto(m));
+    }
+    for (MenuEntity m : granted) {
+      EffectiveMenuNode self = nodeIndex.get(m.getId());
+      UUID parentId = m.getParentId();
+      if (parentId != null && nodeIndex.containsKey(parentId)) {
+        nodeIndex.get(parentId).addChildrenItem(self);
+      }
+    }
+    // 按 app 输出（key = app.code）
+    Map<String, List<EffectiveMenuNode>> result = new HashMap<>();
+    for (Map.Entry<UUID, List<MenuEntity>> e : byApp.entrySet()) {
+      UUID appId = e.getKey();
+      String code = appRepository.findById(appId).map(AppEntity::getCode).orElse(appId.toString());
+      Set<UUID> appMenuIds = new HashSet<>();
+      for (MenuEntity m : e.getValue()) appMenuIds.add(m.getId());
+      List<EffectiveMenuNode> appRoots = new ArrayList<>();
+      for (MenuEntity m : e.getValue()) {
+        UUID parentId = m.getParentId();
+        if (parentId == null || !appMenuIds.contains(parentId)) {
+          appRoots.add(nodeIndex.get(m.getId()));
+        }
+      }
+      appRoots.sort(byCode());
+      appRoots.forEach(r -> r.getChildren().sort(byCode()));
+      result.put(code, appRoots);
+    }
+    return result;
+  }
+
+  private static Comparator<EffectiveMenuNode> byCode() {
+    return Comparator.comparing(
+            (EffectiveMenuNode n) -> n.getSortOrder(),
+            java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder()))
+        .thenComparing(
+            (EffectiveMenuNode n) -> n.getCode(),
+            java.util.Comparator.nullsLast(String::compareTo));
+  }
+
+  private static EffectiveMenuNode toDto(MenuEntity m) {
+    EffectiveMenuNode n = new EffectiveMenuNode();
+    n.setId(m.getId());
+    n.setAppId(m.getAppId());
+    n.setParentId(m.getParentId());
+    n.setCode(m.getCode());
+    n.setName(m.getName());
+    n.setPath(m.getPath());
+    n.setIcon(m.getIcon());
+    n.setType(toDtoType(m.getType()));
+    n.setSortOrder(m.getSortOrder());
+    n.setChildren(new ArrayList<>());
+    return n;
+  }
+
+  private static saas.identity.shared.dto.MenuType toDtoType(
+      saas.identity.platform.enums.MenuType t) {
+    if (t == null) return null;
+    return saas.identity.shared.dto.MenuType.fromValue(t.toDbValue());
   }
 
   private TenantMembership toMembershipDto(TenantMembershipEntity m) {

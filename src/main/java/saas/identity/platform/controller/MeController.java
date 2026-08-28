@@ -51,10 +51,10 @@ public class MeController implements MeApi {
     return ResponseEntity.ok(service.switchTenant(currentUserId(), UUID.fromString(tenantId)));
   }
 
-  // M03.F03 stub: 当前用户的有效菜单树（按 appId 分组）。Phase 2 待 MeService
-  // 加 getMyMenus(userId) 实际实现（读 role_menu_grants + menus + 父级合并）。
+  // M09.F03.I02-I03-I04: 真实现 = membership.roleIds → role_menu_grants.menuIds →
+  // menus 树 + 父链容器保留 + 按 app.code 分组输出。 2026-08-28 prod 503 修复：此前 stub Map.of()。
   @Override
   public ResponseEntity<Map<String, List<EffectiveMenuNode>>> meGetMyMenus() {
-    return ResponseEntity.ok(Map.of());
+    return ResponseEntity.ok(service.getMyMenus(currentUserId()));
   }
 }

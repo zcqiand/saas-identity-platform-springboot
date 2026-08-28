@@ -4,19 +4,21 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Generated;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import java.util.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import org.springframework.lang.Nullable;
 
-/** CreateRoleRequest */
+/** AppPublicInfo */
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     date = "2026-08-28T16:38:49.530507900+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
-public class CreateRoleRequest {
+public class AppPublicInfo {
+
+  private UUID id;
 
   private String code;
 
@@ -26,19 +28,46 @@ public class CreateRoleRequest {
   private @Nullable String description;
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
-  private List<String> permissionIds = new ArrayList<>();
+  private @Nullable String icon;
 
-  public CreateRoleRequest() {
+  private AppStatus status;
+
+  public AppPublicInfo() {
     super();
   }
 
   /** Constructor with only required parameters */
-  public CreateRoleRequest(String code, String name) {
+  public AppPublicInfo(UUID id, String code, String name, AppStatus status) {
+    this.id = id;
     this.code = code;
     this.name = name;
+    this.status = status;
   }
 
-  public CreateRoleRequest code(String code) {
+  public AppPublicInfo id(UUID id) {
+    this.id = id;
+    return this;
+  }
+
+  /**
+   * Get id
+   *
+   * @return id
+   */
+  @NotNull
+  @Valid
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("id")
+  public UUID getId() {
+    return id;
+  }
+
+  @JsonProperty("id")
+  public void setId(UUID id) {
+    this.id = id;
+  }
+
+  public AppPublicInfo code(String code) {
     this.code = code;
     return this;
   }
@@ -49,7 +78,7 @@ public class CreateRoleRequest {
    * @return code
    */
   @NotNull
-  @Size(min = 1, max = 64)
+  @Size(min = 2, max = 64)
   @Schema(name = "code", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("code")
   public String getCode() {
@@ -61,7 +90,7 @@ public class CreateRoleRequest {
     this.code = code;
   }
 
-  public CreateRoleRequest name(String name) {
+  public AppPublicInfo name(String name) {
     this.name = name;
     return this;
   }
@@ -72,7 +101,7 @@ public class CreateRoleRequest {
    * @return name
    */
   @NotNull
-  @Size(min = 1, max = 255)
+  @Size(min = 2, max = 255)
   @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("name")
   public String getName() {
@@ -84,7 +113,7 @@ public class CreateRoleRequest {
     this.name = name;
   }
 
-  public CreateRoleRequest description(@Nullable String description) {
+  public AppPublicInfo description(@Nullable String description) {
     this.description = description;
     return this;
   }
@@ -105,33 +134,48 @@ public class CreateRoleRequest {
     this.description = description;
   }
 
-  public CreateRoleRequest permissionIds(List<String> permissionIds) {
-    this.permissionIds = permissionIds;
-    return this;
-  }
-
-  public CreateRoleRequest addPermissionIdsItem(String permissionIdsItem) {
-    if (this.permissionIds == null) {
-      this.permissionIds = new ArrayList<>();
-    }
-    this.permissionIds.add(permissionIdsItem);
+  public AppPublicInfo icon(@Nullable String icon) {
+    this.icon = icon;
     return this;
   }
 
   /**
-   * Get permissionIds
+   * Get icon
    *
-   * @return permissionIds
+   * @return icon
    */
-  @Schema(name = "permissionIds", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("permissionIds")
-  public List<String> getPermissionIds() {
-    return permissionIds;
+  @Schema(name = "icon", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("icon")
+  public @Nullable String getIcon() {
+    return icon;
   }
 
-  @JsonProperty("permissionIds")
-  public void setPermissionIds(List<String> permissionIds) {
-    this.permissionIds = permissionIds;
+  @JsonProperty("icon")
+  public void setIcon(@Nullable String icon) {
+    this.icon = icon;
+  }
+
+  public AppPublicInfo status(AppStatus status) {
+    this.status = status;
+    return this;
+  }
+
+  /**
+   * Get status
+   *
+   * @return status
+   */
+  @NotNull
+  @Valid
+  @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("status")
+  public AppStatus getStatus() {
+    return status;
+  }
+
+  @JsonProperty("status")
+  public void setStatus(AppStatus status) {
+    this.status = status;
   }
 
   @Override
@@ -142,26 +186,30 @@ public class CreateRoleRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CreateRoleRequest createRoleRequest = (CreateRoleRequest) o;
-    return Objects.equals(this.code, createRoleRequest.code)
-        && Objects.equals(this.name, createRoleRequest.name)
-        && Objects.equals(this.description, createRoleRequest.description)
-        && Objects.equals(this.permissionIds, createRoleRequest.permissionIds);
+    AppPublicInfo appPublicInfo = (AppPublicInfo) o;
+    return Objects.equals(this.id, appPublicInfo.id)
+        && Objects.equals(this.code, appPublicInfo.code)
+        && Objects.equals(this.name, appPublicInfo.name)
+        && Objects.equals(this.description, appPublicInfo.description)
+        && Objects.equals(this.icon, appPublicInfo.icon)
+        && Objects.equals(this.status, appPublicInfo.status);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(code, name, description, permissionIds);
+    return Objects.hash(id, code, name, description, icon, status);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CreateRoleRequest {\n");
+    sb.append("class AppPublicInfo {\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    code: ").append(toIndentedString(code)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
-    sb.append("    permissionIds: ").append(toIndentedString(permissionIds)).append("\n");
+    sb.append("    icon: ").append(toIndentedString(icon)).append("\n");
+    sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -38,6 +38,9 @@ npx --yes @openapitools/openapi-generator-cli generate \
 # Move generated dto + api into the springboot source tree.
 mkdir -p "$DEST/saas/identity/shared/dto" "$DEST/saas/identity/platform/api"
 rm -rf "$DEST/saas/identity/shared/dto"/* "$DEST/saas/identity/platform/api"/*
+# 清掉老路径（b67419b 之前 codegen 产物放 saas.identity.shared.api，现已迁到 platform/api，
+# 残留会让 javac 报 duplicate class）。
+rm -rf "$DEST/saas/identity/shared/api"
 cp -r "$ROOT/.openapi-tmp/java/src/main/java/saas/identity/shared/dto/." "$DEST/saas/identity/shared/dto/"
 cp -r "$ROOT/.openapi-tmp/java/src/main/java/saas/identity/shared/api/." "$DEST/saas/identity/platform/api/"
 rm -rf "$ROOT/.openapi-tmp"

@@ -9,7 +9,7 @@ import java.util.*;
 /** Gets or Sets MenuType */
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-08-13T23:52:54.053972+08:00[Asia/Shanghai]",
+    date = "2026-08-28T16:38:49.530507900+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
 public enum MenuType {
   GROUP("group"),

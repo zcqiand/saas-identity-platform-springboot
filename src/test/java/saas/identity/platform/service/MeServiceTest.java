@@ -17,6 +17,9 @@ import saas.identity.platform.entity.UserEntity;
 import saas.identity.platform.enums.MembershipStatus;
 import saas.identity.platform.enums.UserStatus;
 import saas.identity.platform.harness.Fn;
+import saas.identity.platform.repository.AppRepository;
+import saas.identity.platform.repository.MenuRepository;
+import saas.identity.platform.repository.RoleMenuGrantRepository;
 import saas.identity.platform.repository.TenantMembershipRepository;
 import saas.identity.platform.repository.UserRepository;
 import saas.identity.platform.security.JwtIssuer;
@@ -32,7 +35,14 @@ class MeServiceTest {
   // 与 SecurityConfig.jwtDecoder 同 key：switchTenant 签出的 token 必须能被本仓 decoder 验过
   private final JwtIssuer jwt =
       new JwtIssuer("unit-test-signing-key-0123456789abcdef0123", "ut-issuer", "ut-aud", 3600);
-  private final MeService service = new MeService(userRepository, membershipRepository, jwt);
+  private final MeService service =
+      new MeService(
+          userRepository,
+          membershipRepository,
+          mock(RoleMenuGrantRepository.class),
+          mock(MenuRepository.class),
+          mock(AppRepository.class),
+          jwt);
 
   private UserEntity user(UUID userId, UUID tenantId) {
     UserEntity u = new UserEntity();

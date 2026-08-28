@@ -2,12 +2,18 @@
   "schema": 1,
   "project": "saas-identity-platform-springboot",
   "functions": {
-    "modules": 7,
-    "features": 14,
-    "items": 45
+    "modules": 8,
+    "features": 15,
+    "items": 48
   },
-  "warnings_total": 0,
-  "warnings": {},
+  "warnings_total": 3,
+  "warnings": {
+    "开发中但无需求文档引用": [
+      "M09.F03.I02",
+      "M09.F03.I03",
+      "M09.F03.I04"
+    ]
+  },
   "unreachable_shipped": [],
   "function_map": {
     "M00.F01.I01": {
@@ -479,7 +485,9 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "create_returnsResponseWithSecret()"
+        "create_mustNotPresetId()",
+        "create_returnsResponseWithSecret()",
+        "entityMustUseGeneratedId()"
       ],
       "entry": []
     },
@@ -504,6 +512,7 @@
       "flows": [],
       "designs": [],
       "tests": [
+        "rotate_mustNotPresetIdOnFreshKey()",
         "rotate_revokesOldAndCreatesNew()"
       ],
       "entry": []
@@ -555,6 +564,40 @@
         "getRetention_defaultsTo90()",
         "getRetention_returnsStored()",
         "setRetention_createsIfMissing()"
+      ],
+      "entry": []
+    },
+    "M09.F03.I02": {
+      "name": "角色授权菜单 ID 查询（membership.roleIds → role_menu_grants.menuIds）",
+      "status": "开发中",
+      "type": "接口",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": []
+    },
+    "M09.F03.I03": {
+      "name": "菜单树装配（menuIds → menus 表 + 父链补全）",
+      "status": "开发中",
+      "type": "接口",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": []
+    },
+    "M09.F03.I04": {
+      "name": "app 分组映射（按 app.code 输出 Map<appCode, List<EffectiveMenuNode>>）",
+      "status": "开发中",
+      "type": "接口",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [
+        "getMyMenus_groupNotGranted_keptAsContainerIfChildGranted()",
+        "getMyMenus_noRoles_returnsEmptyMap()",
+        "getMyMenus_returnsTreeGroupedByAppCode()"
       ],
       "entry": []
     }

@@ -2,6 +2,22 @@
 
 格式参照 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)。
 
+## [0.2.12] — 2026-08-28
+
+- fix(service): MeService.getMyMenus 真实现（M09.F03.I02/I03/I04）。
+  线上 `/api/v1/me/menus` 此前返 `Map.of()`（空），前端拿到 200 + 空树 → 菜单不渲染。
+  真链路：userId → membership.roleIds (DISTINCT unnest) → role_menu_grants.menuIds (DISTINCT unnest) →
+  menus 表 + 父链补全 → 按 app.code 分组输出 `Map<appCode, List<EffectiveMenuNode>>`。
+  role_ids / menu_ids 都是 `@Transient` 数组列（hypersistence StringArrayType 误诊未解），
+  走 repository `@Query(nativeQuery=true)` 直接 `unnest()`，绕开 entity 映射。
+  MeController.meGetMyMenus 同步从 stub 改为真调用。
+- test: 新增 `MeServiceGetMyMenusTest` 3 个用例 — 返回树按 app.code 分组、无角色返空 map、
+  group 节点不在 grant 中也保留作容器（父链补全，msw mock 语义镜像）。同时给 MeServiceTest
+  补齐 5 参构造调用（grantRepository/menuRepository/appRepository mocks）。
+- chore(gen-shared): step 2/2 拷贝 codegen 前同步 `rm -rf src/main/java/saas/identity/shared/api`，
+  b67419b 之前 codegen 产物放 saas.identity.shared.api 现已迁到 platform/api，
+  残留会让 javac 报 duplicate class。
+
 ## [0.2.11] — 2026-08-28
 
 - fix(service): 删除 create/rotate 路径的手动 `setId(UUID.randomUUID())`（api-keys /

@@ -17,32 +17,33 @@ import jakarta.validation.constraints.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import saas.identity.shared.dto.AuthorizeCodeRequest;
 import saas.identity.shared.dto.ErrorResponse;
-import saas.identity.shared.dto.OAuthAuthorize200Response;
+import saas.identity.shared.dto.LoginRequest;
+import saas.identity.shared.dto.LoginResponse;
+import saas.identity.shared.dto.OidcCallbackRequest;
 import saas.identity.shared.dto.TokenRequest;
 import saas.identity.shared.dto.TokenResponse;
 
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-08-13T23:52:54.053972+08:00[Asia/Shanghai]",
+    date = "2026-08-28T16:38:49.530507900+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
 @Validated
-@Tag(name = "oauth", description = "the oauth API")
-public interface OauthApi {
+@Tag(name = "auth", description = "the auth API")
+public interface AuthApi {
 
-  String PATH_O_AUTH_AUTHORIZE = "/api/v1/oauth/authorize";
+  String PATH_AUTH_LOGIN = "/api/v1/auth/login";
 
   /**
-   * POST /api/v1/oauth/authorize
+   * POST /api/v1/auth/login
    *
-   * @param authorizeCodeRequest (required)
+   * @param loginRequest (required)
    * @return The request has succeeded. (status code 200) or An unexpected error response. (status
    *     code 200)
    */
   @Operation(
-      operationId = "oAuthAuthorize",
-      tags = {"oauth"},
+      operationId = "authLogin",
+      tags = {"auth"},
       responses = {
         @ApiResponse(
             responseCode = "200",
@@ -50,7 +51,7 @@ public interface OauthApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = OAuthAuthorize200Response.class))
+                  schema = @Schema(implementation = LoginResponse.class))
             }),
         @ApiResponse(
             responseCode = "default",
@@ -63,27 +64,45 @@ public interface OauthApi {
       })
   @RequestMapping(
       method = RequestMethod.POST,
-      value = OauthApi.PATH_O_AUTH_AUTHORIZE,
+      value = AuthApi.PATH_AUTH_LOGIN,
       produces = {"application/json"},
       consumes = {"application/json"})
-  ResponseEntity<OAuthAuthorize200Response> oAuthAuthorize(
-      @Parameter(name = "AuthorizeCodeRequest", description = "", required = true)
-          @Valid
-          @RequestBody
-          AuthorizeCodeRequest authorizeCodeRequest);
+  ResponseEntity<LoginResponse> authLogin(
+      @Parameter(name = "LoginRequest", description = "", required = true) @Valid @RequestBody
+          LoginRequest loginRequest);
 
-  String PATH_O_AUTH_TOKEN = "/api/v1/oauth/token";
+  String PATH_AUTH_LOGOUT = "/api/v1/auth/logout";
 
   /**
-   * POST /api/v1/oauth/token
+   * POST /api/v1/auth/logout
    *
-   * @param tokenRequest (required)
+   * @return There is no content to send for this request, but the headers may be useful. (status
+   *     code 204)
+   */
+  @Operation(
+      operationId = "authLogout",
+      tags = {"auth"},
+      responses = {
+        @ApiResponse(
+            responseCode = "204",
+            description =
+                "There is no content to send for this request, but the headers may be useful. ")
+      })
+  @RequestMapping(method = RequestMethod.POST, value = AuthApi.PATH_AUTH_LOGOUT)
+  ResponseEntity<Void> authLogout();
+
+  String PATH_AUTH_OIDC_CALLBACK = "/api/v1/auth/oidc/callback";
+
+  /**
+   * POST /api/v1/auth/oidc/callback
+   *
+   * @param oidcCallbackRequest (required)
    * @return The request has succeeded. (status code 200) or An unexpected error response. (status
    *     code 200)
    */
   @Operation(
-      operationId = "oAuthToken",
-      tags = {"oauth"},
+      operationId = "authOidcCallback",
+      tags = {"auth"},
       responses = {
         @ApiResponse(
             responseCode = "200",
@@ -104,10 +123,51 @@ public interface OauthApi {
       })
   @RequestMapping(
       method = RequestMethod.POST,
-      value = OauthApi.PATH_O_AUTH_TOKEN,
+      value = AuthApi.PATH_AUTH_OIDC_CALLBACK,
       produces = {"application/json"},
       consumes = {"application/json"})
-  ResponseEntity<TokenResponse> oAuthToken(
+  ResponseEntity<TokenResponse> authOidcCallback(
+      @Parameter(name = "OidcCallbackRequest", description = "", required = true)
+          @Valid
+          @RequestBody
+          OidcCallbackRequest oidcCallbackRequest);
+
+  String PATH_AUTH_REFRESH_TOKEN = "/api/v1/auth/refresh";
+
+  /**
+   * POST /api/v1/auth/refresh
+   *
+   * @param tokenRequest (required)
+   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
+   *     code 200)
+   */
+  @Operation(
+      operationId = "authRefreshToken",
+      tags = {"auth"},
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "The request has succeeded.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = TokenResponse.class))
+            }),
+        @ApiResponse(
+            responseCode = "default",
+            description = "An unexpected error response.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            })
+      })
+  @RequestMapping(
+      method = RequestMethod.POST,
+      value = AuthApi.PATH_AUTH_REFRESH_TOKEN,
+      produces = {"application/json"},
+      consumes = {"application/json"})
+  ResponseEntity<TokenResponse> authRefreshToken(
       @Parameter(name = "TokenRequest", description = "", required = true) @Valid @RequestBody
           TokenRequest tokenRequest);
 }
