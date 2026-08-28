@@ -44,15 +44,22 @@ fi
 # "先有 DATABASE_URL 临时上线"的场景。
 if [ ! -f "$BASE/springboot.env" ]; then
   if [ -n "${DATABASE_URL:-}" ] && [ -n "${DATABASE_USER:-}" ] && [ -n "${DATABASE_PASSWORD:-}" ]; then
-    echo "→ bootstrapping $BASE/springboot.env from env DATABASE_URL/USER/PASSWORD"
+    echo "→ bootstrapping $BASE/springboot.env from env DATABASE_URL/USER/PASSWORD (key 集合 = .env.production)"
     umask 077
     {
       printf 'DATABASE_URL=%s\n' "$DATABASE_URL"
       printf 'DATABASE_USER=%s\n' "$DATABASE_USER"
       printf 'DATABASE_PASSWORD=%s\n' "$DATABASE_PASSWORD"
+      printf 'DATABASE_NAME=saas_prod\n'
       printf 'SERVER_PORT=8080\n'
       # 默认 CORS 白名单：react SPA + saas-nextjs + 本仓域名。运维可在 setup-vps 之后手工追加 origin。
       printf 'SAAS_CORS_ALLOWED_ORIGINS=https://%s,https://saas-react.xiangru.uk,https://saas-nextjs.xiangru.uk\n' "$NGINX_DOMAIN"
+      # JWT 三件套显式写(JwtIssuer @Value 默认值兜底是反模式,禁;值=契约文件值)
+      printf 'JWT_ISSUER=saas-identity-platform\n'
+      printf 'JWT_AUDIENCE=saas-identity-platform-clients\n'
+      printf 'JWT_TTL_SECONDS=3600\n'
+      # JWT_SIGNING_KEY 首启随机生成,append-only 持久化(见下方 v0.2.0 段注释)
+      printf 'JWT_SIGNING_KEY=%s\n' "$(head -c 48 /dev/urandom | base64 | tr -d '\n')"
     } > "$BASE/springboot.env"
     chown deploy:deploy "$BASE/springboot.env" 2>/dev/null || true
     chmod 600 "$BASE/springboot.env"
@@ -115,6 +122,25 @@ if ! grep -q '^JWT_SIGNING_KEY=' "$BASE/springboot.env"; then
   echo "→ append JWT_SIGNING_KEY (random, persisted) to existing $BASE/springboot.env"
   umask 077
   printf 'JWT_SIGNING_KEY=%s\n' "$(head -c 48 /dev/urandom | base64 | tr -d '\n')" >> "$BASE/springboot.env"
+fi
+
+# 2026-08-28 key 对齐: 老 env-file 逐 key append-if-missing 到 .env.production 全集
+# (key 集合契约由 suite L0.5 check_deploy_parity 锁死;JwtIssuer @Value 默认值兜底
+# 是反模式 —— 显式写值,漂移在 deploy 期暴露而不是运行期静默吃默认)。
+if [ -f "$BASE/springboot.env" ]; then
+  append_if_missing() {
+    key="$1"; val="$2"
+    if ! grep -q "^${key}=" "$BASE/springboot.env"; then
+      echo "→ append ${key} to existing $BASE/springboot.env"
+      umask 077
+      printf '%s=%s\n' "$key" "$val" >> "$BASE/springboot.env"
+    fi
+  }
+  append_if_missing DATABASE_NAME 'saas_prod'
+  append_if_missing SERVER_PORT '8080'
+  append_if_missing JWT_ISSUER 'saas-identity-platform'
+  append_if_missing JWT_AUDIENCE 'saas-identity-platform-clients'
+  append_if_missing JWT_TTL_SECONDS '3600'
 fi
 
 echo "→ image: $IMAGE"
