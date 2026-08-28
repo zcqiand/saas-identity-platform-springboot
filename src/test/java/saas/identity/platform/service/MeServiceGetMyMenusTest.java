@@ -41,7 +41,13 @@ class MeServiceGetMyMenusTest {
 
   private MeService service() {
     return new MeService(
-        userRepository, membershipRepository, grantRepository, menuRepository, appRepository, jwt);
+        userRepository,
+        membershipRepository,
+        grantRepository,
+        menuRepository,
+        appRepository,
+        jwt,
+        null);
   }
 
   private AppEntity app(UUID appId, String code) {

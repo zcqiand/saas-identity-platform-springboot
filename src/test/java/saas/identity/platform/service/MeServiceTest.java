@@ -42,7 +42,8 @@ class MeServiceTest {
           mock(RoleMenuGrantRepository.class),
           mock(MenuRepository.class),
           mock(AppRepository.class),
-          jwt);
+          jwt,
+          null);
 
   private UserEntity user(UUID userId, UUID tenantId) {
     UserEntity u = new UserEntity();

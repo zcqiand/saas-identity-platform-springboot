@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import saas.identity.platform.entity.AppEntity;
@@ -43,6 +44,7 @@ public class MeService {
   private final MenuRepository menuRepository;
   private final AppRepository appRepository;
   private final JwtIssuer jwtIssuer;
+  private final JdbcTemplate jdbc;
 
   public MeService(
       UserRepository userRepository,
@@ -50,13 +52,15 @@ public class MeService {
       RoleMenuGrantRepository grantRepository,
       MenuRepository menuRepository,
       AppRepository appRepository,
-      JwtIssuer jwtIssuer) {
+      JwtIssuer jwtIssuer,
+      JdbcTemplate jdbc) {
     this.userRepository = userRepository;
     this.membershipRepository = membershipRepository;
     this.grantRepository = grantRepository;
     this.menuRepository = menuRepository;
     this.appRepository = appRepository;
     this.jwtIssuer = jwtIssuer;
+    this.jdbc = jdbc;
   }
 
   @Transactional(readOnly = true)
@@ -117,11 +121,31 @@ public class MeService {
    */
   @Transactional(readOnly = true)
   public Map<String, List<EffectiveMenuNode>> getMyMenus(UUID userId) {
-    List<UUID> roleIds = membershipRepository.findRoleIdsByUserId(userId);
-    if (roleIds.isEmpty()) {
-      return Map.of();
+    // 用 JdbcTemplate 直连（OauthService 同款 — unnest() 经 Spring Data @Query 映射 List<UUID>
+    // 线上 500，复用 OauthService 已验证模式）。jdbc 为 null 时回退 Spring Data 仓库（单测场景）。
+    List<UUID> roleIds;
+    List<UUID> grantedMenuIds;
+    if (jdbc != null) {
+      roleIds =
+          jdbc.queryForList(
+              "SELECT DISTINCT unnest(role_ids) FROM tenant_memberships WHERE user_id = ?",
+              UUID.class,
+              userId);
+      if (roleIds.isEmpty()) {
+        return Map.of();
+      }
+      grantedMenuIds =
+          jdbc.query(
+              "SELECT DISTINCT unnest(menu_ids) FROM role_menu_grants WHERE role_id = ANY(?)",
+              ps -> ps.setArray(1, ps.getConnection().createArrayOf("uuid", roleIds.toArray())),
+              (rs, rowNum) -> (UUID) rs.getObject(1));
+    } else {
+      roleIds = membershipRepository.findRoleIdsByUserId(userId);
+      if (roleIds.isEmpty()) {
+        return Map.of();
+      }
+      grantedMenuIds = grantRepository.findMenuIdsByRoleIds(roleIds);
     }
-    List<UUID> grantedMenuIds = grantRepository.findMenuIdsByRoleIds(roleIds);
     if (grantedMenuIds.isEmpty()) {
       return Map.of();
     }
