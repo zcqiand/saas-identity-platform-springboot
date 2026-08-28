@@ -5,6 +5,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -25,7 +26,25 @@ public class SecurityConfig {
       "${saas.cors.allowed-origins:http://localhost:3000,http://localhost:5173,http://localhost:3001}")
   private List<String> allowedOrigins;
 
+  /**
+   * 公开 OAuth IdP 端点过滤器链 — 在主链之前生效（@Order 更小优先级更高）。 2026-08-28 lab-nextjs 登录页 502 修复：原主链把
+   * /api/v1/oauth/** 配 permitAll，但 Spring Security 6.x 的 `BearerTokenAuthenticationFilter`（来自
+   * `.oauth2ResourceServer(jwt)`）会在 AuthorizationFilter 之前判缺 Bearer → 401，AuthorizationFilter 的
+   * permitAll 永远拿不到机会。 拆独立链： 这条链只匹配 /api/v1/oauth/**，完全不带 oauth2ResourceServer，无 Bearer 校验。
+   */
   @Bean
+  @Order(1)
+  public SecurityFilterChain oauthFilterChain(HttpSecurity http) throws Exception {
+    http.securityMatcher("/api/v1/oauth/**")
+        .csrf(csrf -> csrf.disable())
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(authz -> authz.anyRequest().permitAll());
+    return http.build();
+  }
+
+  @Bean
+  @Order(2)
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.csrf(csrf -> csrf.disable())
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -34,12 +53,6 @@ public class SecurityConfig {
             authz ->
                 authz
                     .requestMatchers("/api/v1/auth/**")
-                    .permitAll()
-                    // v0.2.x 起: OAuth IdP 端点（Phase 6）。authorize/token 的调用方是
-                    // OAuth client（lab 后端），调用前不可能持有 saas token —— 匿名可访问，
-                    // 身份靠 client_id/redirect_uri/scope/code 校验（OauthService）。
-                    // 对齐 saas-aspnetcore（OAuth 路由无 [Authorize]）。
-                    .requestMatchers("/api/v1/oauth/**")
                     .permitAll()
                     // v0.1.12 起: 容器内 Docker HEALTHCHECK 与外部 deploy 脚本都直接
                     // wget /actuator/health; 不带 JWT 走不到 controller, 401 让
