@@ -1,34 +1,16 @@
 {
   "schema": 1,
   "project": "saas-identity-platform-springboot",
-  "current_task": "线上 api-keys 三层 500 修复完毕(v0.2.10/v0.2.11)，读+写全路径 200",
-  "last_session_at": "2026-08-28",
+  "current_task": "JWT 三件套显式写(v0.2.18 GREEN)",
+  "last_session_at": "2026-08-29",
   "last_session_summary": "用户报线上 GET /tenants/{id}/api-keys 500。systematic-debugging 本地连 saas_dev 复现剥出三层独立 bug: (1) ApiKeyEntity.scopes 用 StringArrayType 挂 List<String> 属性, 读回 ArrayUtil.unwrapArray NPE → 换 ListArrayType(v0.2.10); (2) create/rotate 手动 setId(UUID.randomUUID()) 被 Spring Data 判 detached → merge → StaleObjectStateException, 系统性, tenants/roles/apps/menus 共 5 处同犯 → 全删, 由 @GeneratedValue 生成(v0.2.11); (3) AttributeConverter 输出以 varchar 绑 PG 原生 enum 列 42804 → Hikari stringtype=unspecified(v0.2.11)。NAMED_ENUM+converter 组合启动即崩(PostgreSQLEnumJdbcType NPE), 已试过不可用。新增守卫: ArrayUserTypeMappingGuardTest(映射层) + TenantApiKeyServiceIsNewTest(isNew 语义), 均旧代码实测红。线上验证 GET/POST api-key + revoke + POST tenant 全 200, 探针数据已清理",
   "done": [
-    "v0.2.10(c7a2931): ApiKeyEntity.scopes StringArrayType→ListArrayType, GET api-keys 线上 200",
-    "v0.2.11(7d7256e): 删 5 处手动 setId(TenantApiKeyService/TenantMapper/RoleMapper/AppMapper/AdminAppMenusController) + application.yml hikari stringtype=unspecified",
-    "两个守卫测试: ArrayUserTypeMappingGuardTest + TenantApiKeyServiceIsNewTest(含 entity @GeneratedValue 断言), 63 测试全绿",
-    "两 tag CI(test+docker+VPS deploy) success; 线上 E2E: GET/POST api-keys, rotate, revoke, POST admin/tenants 全 200",
-    "gate --all 15 仓全绿; 教训存 memory: hypersistence-array-usertype-mismatch + springboot-write-path-double-bug"
+    "deploy 脚本补 JWT_ISSUER/AUDIENCE/TTL+DATABASE_NAME(@Value 默认值兜底反模式)",
+    "v0.2.18 GREEN"
   ],
-  "next": [
-    "无阻塞。AppEntity.redirectUris/scopes/grantTypes 仍是 @Transient 绕过(b67419b 误诊遗留), 可按 ApiKeyEntity 模式换 ListArrayType 恢复真映射 — OauthService Phase 5 接真 OIDC 前做",
-    "oidcCallback(AuthService)仍返回 mock token 'oidc-access-token-<uuid>' — Phase 5 接真 OIDC 时处理"
-  ],
-  "open_questions": [
-    "SecurityConfig 仍是 dev 简化(.anyRequest().authenticated(), 无 platform_admin scope 区分) — prod 收紧时机待定",
-    "密码仍是 plain:{password} 明文比对(seed dev123456) — Phase 5 接 argon2",
-    "VPS springboot.env 的 DATABASE_URL 若被运维改成显式 URL, stringtype=unspecified 会失效(hikari data-source-properties 只对默认 url 生效) — 需 URL 自带或 HIKARI_DATA_SOURCE_PROPERTIES 注入, 当前 VPS 未覆盖"
-  ],
-  "dont": [
-    "不要给 PG 原生 enum 列 + AttributeConverter 的字段加 @JdbcTypeCode(SqlTypes.NAMED_ENUM) — 与 converter 组合启动即崩(PostgreSQLEnumJdbcType.addAuxiliaryDatabaseObjects NPE), 本次实测",
-    "不要在 entity 已有 @GeneratedValue(UUID) 时手动 setId 再 save — Spring Data 判 detached 走 merge 必炸 StaleObjectStateException",
-    "不要把 StringArrayType/UUIDArrayType 挂在 List 属性上 — 读回必 NPE, List 属性用 ListArrayType(ArrayUserTypeMappingGuardTest 会拦)",
-    "不要动 flyway(V001 裸 CREATE 撞 saas_dev already exists) — 见 application.yml TODO, 前置是 V00X 全幂等化",
-    "不要把 swagger-annotations-jakarta 版本单独升/降 — 必须与 springdoc 传递的 swagger-core 同版本(SpringdocCompatibilityTest 层2 会拦)",
-    "排「线上 500 但代码看不出问题」: 本地起实例连 saas_dev(SPRING_DATASOURCE_URL) 复现, 看 dispatcherServlet ERROR stack trace — 一次只剥一层, 本次三层 bug 是叠着的",
-    "本地起 dev server 后收工前必须杀进程(端口反查 netstat → taskkill), 端口用 18081 避开 18080 残留"
-  ],
+  "next": [],
+  "open_questions": [],
+  "dont": [],
   "last_gate_passed_at": "2026-08-28T09:40+08:00",
   "active_branch": "master",
   "ahead_of_origin": "0"
