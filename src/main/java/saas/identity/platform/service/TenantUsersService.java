@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import saas.identity.platform.entity.UserEntity;
 import saas.identity.platform.mapper.TenantUserMapper;
+import saas.identity.platform.repository.TenantMembershipRepository;
 import saas.identity.platform.repository.UserRepository;
 import saas.identity.shared.dto.CreateUserRequest;
 import saas.identity.shared.dto.TenantUsersListUsers200Response;
@@ -27,9 +28,12 @@ public class TenantUsersService {
   private static final int PAGE_SIZE_MAX = 100;
 
   private final UserRepository userRepository;
+  private final TenantMembershipRepository membershipRepository;
 
-  public TenantUsersService(UserRepository userRepository) {
+  public TenantUsersService(
+      UserRepository userRepository, TenantMembershipRepository membershipRepository) {
     this.userRepository = userRepository;
+    this.membershipRepository = membershipRepository;
   }
 
   // M01.F01.I01
@@ -46,7 +50,19 @@ public class TenantUsersService {
             : userRepository.findByTenantIdAndStatus(
                 tenantId, TenantUserMapper.toEntityStatus(status), pageable);
 
-    List<User> items = result.getContent().stream().map(TenantUserMapper::toDto).toList();
+    // 2026-08-30 contract-test：UserEntity.roleIds 是 @Transient，authoritative 在 memberships
+    // 这里为每个 user 单查 membership（page size 20 默认 → 21 次查询）；Phase 5 与 UserEntity 一起优化批量取。
+    List<User> items =
+        result.getContent().stream()
+            .map(
+                user ->
+                    TenantUserMapper.toDto(
+                        user,
+                        membershipRepository
+                            .findByUserIdAndTenantId(user.getId(), tenantId)
+                            .map(m -> m.getRoleIds())
+                            .orElse(List.of())))
+            .toList();
     return new TenantUsersListUsers200Response(items, p, ps, result.getTotalElements());
   }
 
@@ -56,6 +72,21 @@ public class TenantUsersService {
     UserEntity entity = TenantUserMapper.fromCreateRequest(tenantId, body);
     UserEntity saved = userRepository.save(entity);
     return TenantUserMapper.toDto(saved);
+  }
+
+  // M01.F01.I04 — GET /tenants/{t}/users/{u}
+  @Transactional(readOnly = true)
+  public User getUser(UUID tenantId, UUID userId) {
+    UserEntity entity =
+        userRepository
+            .findByTenantIdAndId(tenantId, userId)
+            .orElseThrow(() -> new IllegalArgumentException("user not found: " + userId));
+    List<UUID> roleIds =
+        membershipRepository
+            .findByUserIdAndTenantId(userId, tenantId)
+            .map(m -> m.getRoleIds())
+            .orElse(List.of());
+    return TenantUserMapper.toDto(entity, roleIds);
   }
 
   // M01.F01.I05

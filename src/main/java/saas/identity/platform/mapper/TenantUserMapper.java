@@ -16,6 +16,16 @@ public final class TenantUserMapper {
   private TenantUserMapper() {}
 
   public static User toDto(UserEntity e) {
+    return toDto(e, null);
+  }
+
+  /**
+   * 2026-08-30 contract-test：UserEntity.roleIds 是 @Transient 占位（Hibernate 数组映射陷阱
+   * 修不完前先用 @Transient 兜底）。authoritative 在 tenant_memberships.role_ids —— 本重载让 Service
+   * 注入从 membership 拉到的 roleIds，避免空数组返回前端。Phase 5：删 @Transient + UserEntity.roleIds
+   * 列 + 本重载，统一走 entity。
+   */
+  public static User toDto(UserEntity e, List<UUID> roleIdsOverride) {
     if (e == null) return null;
     User u = new User();
     u.setId(e.getId());
@@ -24,7 +34,7 @@ public final class TenantUserMapper {
     u.setEmail(e.getEmail());
     u.setDisplayName(e.getDisplayName());
     u.setStatus(toDtoStatus(e.getStatus()));
-    u.setRoleIds(toRoleIdsString(e.getRoleIds()));
+    u.setRoleIds(toRoleIdsString(roleIdsOverride != null ? roleIdsOverride : e.getRoleIds()));
     u.setCreatedAt(e.getCreatedAt());
     u.setUpdatedAt(e.getUpdatedAt());
     return u;

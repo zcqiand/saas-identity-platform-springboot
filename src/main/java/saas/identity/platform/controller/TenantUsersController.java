@@ -46,14 +46,7 @@ public class TenantUsersController implements TenantUsersApi {
   @Override
   public ResponseEntity<User> tenantUsersGetUser(String tenantId, String userId) {
     tenantGuard.verifyPathTenant(tenantId);
-    User u = new User();
-    u.setId(UUID.fromString(userId));
-    u.setTenantId(UUID.fromString(tenantId));
-    u.setUsername("alice");
-    u.setEmail("alice@example.com");
-    u.setStatus(UserStatus.ACTIVE);
-    u.setRoleIds(java.util.List.of());
-    return ResponseEntity.ok(u);
+    return ResponseEntity.ok(service.getUser(UUID.fromString(tenantId), UUID.fromString(userId)));
   }
 
   @Override
