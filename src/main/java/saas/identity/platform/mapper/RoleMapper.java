@@ -11,13 +11,14 @@ public final class RoleMapper {
 
   private RoleMapper() {}
 
-  public static Role toDto(RoleEntity e) {
+  public static Role toDto(RoleEntity e, List<String> permissionIds) {
     Role r = new Role();
     r.setId(e.getId());
     r.setTenantId(e.getTenantId());
     r.setCode(e.getCode());
     r.setName(e.getName());
     r.setDescription(e.getDescription());
+    r.setPermissionIds(permissionIds == null ? List.of() : permissionIds);
     r.setCreatedAt(e.getCreatedAt());
     r.setUpdatedAt(e.getUpdatedAt());
     return r;
@@ -39,6 +40,6 @@ public final class RoleMapper {
   }
 
   public static List<Role> toDtoList(List<RoleEntity> entities) {
-    return entities.stream().map(RoleMapper::toDto).toList();
+    return entities.stream().map(e -> toDto(e, List.of())).toList();
   }
 }
