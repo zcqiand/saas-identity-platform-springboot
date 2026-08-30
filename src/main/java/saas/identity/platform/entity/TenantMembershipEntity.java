@@ -1,10 +1,12 @@
 package saas.identity.platform.entity;
 
+import io.hypersistence.utils.hibernate.type.array.ListArrayType;
 import jakarta.persistence.*;
 import jakarta.persistence.Convert;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
+import org.hibernate.annotations.Type;
 import saas.identity.platform.enums.MembershipStatus;
 import saas.identity.platform.enums.MembershipStatusConverter;
 
@@ -29,7 +31,14 @@ public class TenantMembershipEntity {
   @Column(name = "tenant_id", columnDefinition = "uuid", nullable = false)
   private UUID tenantId;
 
-  @Transient private List<UUID> roleIds = List.of();
+  // 2026-08-30：合同测试抓到 @Transient 致 PG `role_ids` 列永不被读 → /me/tenants 返 []。
+  // 改用 hypersistence-utils UUIDArrayType（ApiKeyEntity.scopes 走同样套路 @Type(ListArrayType)）。
+  // 空数组在 3.9.0 触发 ArrayUtil.unwrapArray NPE —— V016 alice 实际有 a00000000001，
+  // DevDataFixer 兜底空数组（与 UserEntity.roleIds 注释同约定）。Phase 5 与 UserEntity 一起
+  // 升级 hypersistence-utils 彻底解决。
+  @Type(ListArrayType.class)
+  @Column(name = "role_ids", columnDefinition = "uuid[]", nullable = false)
+  private List<UUID> roleIds = List.of();
 
   @Convert(converter = MembershipStatusConverter.class)
   @Column(name = "status", columnDefinition = "membership_status", nullable = false)
