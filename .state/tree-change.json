@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "approved": true,
+  "base_sha": "627bcb7670f0767c",
+  "summary": "M09.F03 + I02/I03/I04 状态 开发中 → 已上线 — saas-springbot MeService.getMyMenus 早在 2026-08-28 prod 503 修复时已实装 (ahead-of-plan)。I01 不在本仓 tree (跨仓 shared 是 canonical)",
+  "changes": [
+    {
+      "id": "M09.F03",
+      "action": "变更",
+      "new_status": "已上线",
+      "reason": "MeService.getMyMenus 已实施 (2026-08-28 prod 503 修复), msw fixture 对齐, contract-test 88/0/8 实跑绿"
+    },
+    {
+      "id": "M09.F03.I02",
+      "action": "变更",
+      "new_status": "已上线",
+      "reason": "MeService.getMyMenus:122-205 membership.roleIds → role_menu_grants.menuIds 真 JOIN"
+    },
+    {
+      "id": "M09.F03.I03",
+      "action": "变更",
+      "new_status": "已上线",
+      "reason": "MeService.getMyMenus:152-203 菜单树装配 + 父链补全 + 按 app 分组"
+    },
+    {
+      "id": "M09.F03.I04",
+      "action": "变更",
+      "new_status": "已上线",
+      "reason": "MeService.getMyMenus:187-204 按 app.code 分组输出 Map<appCode, List<EffectiveMenuNode>>"
+    }
+  ],
+  "sync_files": [
+    "docs/functions/function-tree.md"
+  ]
+}

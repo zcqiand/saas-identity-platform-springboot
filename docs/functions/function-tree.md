@@ -31,7 +31,7 @@
 | M04.F01  | OAuth 应用 CRUD（平台级） | 页面 | 规划 |
 | M04.F02  | 授权码签发与令牌交换/刷新 | 接口 | 规划 |
 | M05.F01  | API Key 生命周期（tenant-scoped） | 页面 | 规划 |
-| M09.F03  | 当前用户有效菜单（按 app.code 分组） | 接口 | 开发中 |
+| M09.F03  | 当前用户有效菜单（按 app.code 分组） | 接口 | 已上线 |
 | M06.F01  | 审计事件查询（tenant-scoped） | 查询 | 规划 |
 | M06.F02  | 审计留存策略 | 接口 | 规划 |
 
@@ -86,6 +86,6 @@
 | M06.F01.I02    | 按用户查审计事件 | 查询 | 规划 |
 | M06.F01.I03    | 导出审计事件 | 按钮 | 规划 |
 | M06.F02.I04    | 留存策略设置 | 接口 | 规划 |
-| M09.F03.I02    | 角色授权菜单 ID 查询（membership.roleIds → role_menu_grants.menuIds） | 接口 | 开发中 |
-| M09.F03.I03    | 菜单树装配（menuIds → menus 表 + 父链补全） | 接口 | 开发中 |
-| M09.F03.I04    | app 分组映射（按 app.code 输出 Map<appCode, List<EffectiveMenuNode>>） | 接口 | 开发中 |
+| M09.F03.I02    | 角色授权菜单 ID 查询（membership.roleIds → role_menu_grants.menuIds） | 接口 | 已上线 |
+| M09.F03.I03    | 菜单树装配（menuIds → menus 表 + 父链补全） | 接口 | 已上线 |
+| M09.F03.I04    | app 分组映射（按 app.code 输出 Map<appCode, List<EffectiveMenuNode>>） | 接口 | 已上线 |
