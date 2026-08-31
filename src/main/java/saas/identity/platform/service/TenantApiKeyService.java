@@ -123,4 +123,20 @@ public class TenantApiKeyService {
     }
     return resp;
   }
+
+  /**
+   * M05.F01.I05 物理删除（区别于 I03 revoke 软删：直接删 DB 行，无审计事件）。 与 I03 revoke 并存：revoke 保留行（status=revoked +
+   * revokedAt）；本 op 行消失。 幂等：重复删已不存在的 keyId 抛 NoSuchElementException，GlobalExceptionHandler → 404。
+   */
+  // @entry M05.F01.I05
+  @Transactional
+  @SuppressWarnings("null") // e 非空（orElseThrow 已保证）；Spring Data delete 签名标注 @NonNull 是历史包袱
+  public void delete(UUID tenantId, UUID keyId) {
+    ApiKeyEntity e =
+        apiKeyRepository
+            .findByTenantIdAndId(tenantId, keyId)
+            .orElseThrow(() -> new NoSuchElementException("api key not found"));
+    apiKeyRepository.delete(e);
+    // 不写 audit event（物理删不留痕；与 revoke 写 api_key_revoked 形成对照）
+  }
 }

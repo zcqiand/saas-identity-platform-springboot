@@ -45,7 +45,7 @@ public final class TenantUserMapper {
     e.setUsername(req.getUsername());
     e.setEmail(req.getEmail());
     e.setDisplayName(req.getDisplayName());
-    e.setStatus(saas.identity.platform.enums.UserStatus.INVITED);
+    e.setStatus(saas.identity.platform.enums.UserStatus.ACTIVE);
     e.setRoleIds(req.getRoleIds() == null ? List.of() : toRoleIdsUuid(req.getRoleIds()));
     // Phase 5：换 argon2.hash(req.getPassword())
     e.setPasswordHash(req.getPassword() == null ? null : "plain:" + req.getPassword());

@@ -4,23 +4,13 @@
   "functions": {
     "modules": 8,
     "features": 15,
-    "items": 48
+    "items": 49
   },
-  "warnings_total": 8,
+  "warnings_total": 2,
   "warnings": {
-    "已上线但无设计映射": [
-      "M09.F03.I02",
-      "M09.F03.I03",
-      "M09.F03.I04"
-    ],
     "已上线但无测试引用": [
       "M09.F03.I02",
       "M09.F03.I03"
-    ],
-    "已上线但不在任何流程且非孤儿白名单": [
-      "M09.F03.I02",
-      "M09.F03.I03",
-      "M09.F03.I04"
     ]
   },
   "unreachable_shipped": [],
@@ -141,11 +131,15 @@
     },
     "M01.F01.I02": {
       "name": "邀请/创建用户",
-      "status": "规划",
-      "type": "按钮",
+      "status": "已上线",
+      "type": "接口",
       "requirements": [],
-      "flows": [],
-      "designs": [],
+      "flows": [
+        "docs\\design\\flow-function-map.md"
+      ],
+      "designs": [
+        "docs\\design\\design-function-map.md"
+      ],
       "tests": [
         "createUser_returnsUser()"
       ],
@@ -526,6 +520,23 @@
       ],
       "entry": []
     },
+    "M05.F01.I05": {
+      "name": "物理删除 API Key（区别于 I03 revoke 软删）",
+      "status": "已上线",
+      "type": "接口",
+      "requirements": [],
+      "flows": [
+        "docs\\design\\flow-function-map.md"
+      ],
+      "designs": [
+        "docs\\design\\design-function-map.md"
+      ],
+      "tests": [
+        "delete_removesRow()",
+        "delete_throwsIfMissing()"
+      ],
+      "entry": []
+    },
     "M06.F01.I01": {
       "name": "审计事件列表",
       "status": "规划",
@@ -581,8 +592,12 @@
       "status": "已上线",
       "type": "接口",
       "requirements": [],
-      "flows": [],
-      "designs": [],
+      "flows": [
+        "docs\\design\\flow-function-map.md"
+      ],
+      "designs": [
+        "docs\\design\\design-function-map.md"
+      ],
       "tests": [],
       "entry": []
     },
@@ -591,8 +606,12 @@
       "status": "已上线",
       "type": "接口",
       "requirements": [],
-      "flows": [],
-      "designs": [],
+      "flows": [
+        "docs\\design\\flow-function-map.md"
+      ],
+      "designs": [
+        "docs\\design\\design-function-map.md"
+      ],
       "tests": [],
       "entry": []
     },
@@ -601,8 +620,12 @@
       "status": "已上线",
       "type": "接口",
       "requirements": [],
-      "flows": [],
-      "designs": [],
+      "flows": [
+        "docs\\design\\flow-function-map.md"
+      ],
+      "designs": [
+        "docs\\design\\design-function-map.md"
+      ],
       "tests": [
         "getMyMenus_groupNotGranted_keptAsContainerIfChildGranted()",
         "getMyMenus_noRoles_returnsEmptyMap()",

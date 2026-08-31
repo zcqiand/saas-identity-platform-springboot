@@ -32,4 +32,12 @@ flowchart TD
 
 ### 孤儿功能
 
-（无 — 本批次登记的 M04.F02.I06-I08 均已归入 FLOW-OAUTH-01）
+| 子项 ID | 名称 | 类型 | 已上线原因（不在流程图） |
+|---|---|---|---|
+| M01.F01.I02 | 创建用户（POST /tenants/:t/users，TenantUserMapper status='active' 默认） | 接口 | 跨端契约对齐 oracle（saas-msw）+ 共享 PG 真后端；当前无 UI 入口（与 INVITED 路径 /users/invitations 并存） |
+| M05.F01.I05 | 物理删 API Key（DELETE /tenants/:t/api-keys/:k，幂等返 204 / 404） | 接口 | 跨端契约对齐 oracle；与 I03 revoke 软删并存；admin 工具化操作 |
+| M09.F03.I02 | 角色授权菜单 ID 查询（membership.roleIds → role_menu_grants.menuIds） | 接口 | GET /me/menus 装配链路第一步；不独立暴露，归属 M09.F03 「当前用户有效菜单」装配流程 |
+| M09.F03.I03 | 菜单树装配（menuIds → menus 表 + 父链补全） | 接口 | GET /me/menus 装配链路第二步；同上 |
+| M09.F03.I04 | app 分组映射（按 app.code 输出 Map<appCode, List<EffectiveMenuNode>>） | 接口 | GET /me/menus 装配链路第三步；同上 |
+
+（本批次 FLOW-OAUTH-01 登记的 M04.F02.I06-I08 均已归入授权码流程。）

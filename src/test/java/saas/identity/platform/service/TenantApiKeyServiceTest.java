@@ -102,4 +102,29 @@ class TenantApiKeyServiceTest {
     // 两次 save：旧 key revoke + 新 key create
     verify(apiKeyRepository, org.mockito.Mockito.times(2)).save(any(ApiKeyEntity.class));
   }
+
+  // === M05.F01.I05 物理删除（区别于 I03 revoke 软删） ===
+
+  @Test
+  @Fn({"M05.F01.I05"})
+  @SuppressWarnings("null") // existing 非空（Optional.of 已保证）；Spring Data delete 签名标注 @NonNull 是历史包袱
+  void delete_removesRow() {
+    UUID tid = UUID.randomUUID();
+    UUID kid = UUID.randomUUID();
+    ApiKeyEntity existing = entity(tid, kid);
+    when(apiKeyRepository.findByTenantIdAndId(tid, kid)).thenReturn(Optional.of(existing));
+    service.delete(tid, kid);
+    verify(apiKeyRepository).delete(existing);
+    // 不写 audit 事件（物理删不留痕）
+    verify(auditWriter, org.mockito.Mockito.never()).write(any(), any(), any(), any(), any());
+  }
+
+  @Test
+  @Fn({"M05.F01.I05"})
+  void delete_throwsIfMissing() {
+    UUID tid = UUID.randomUUID();
+    UUID kid = UUID.randomUUID();
+    when(apiKeyRepository.findByTenantIdAndId(tid, kid)).thenReturn(Optional.empty());
+    assertThrows(java.util.NoSuchElementException.class, () -> service.delete(tid, kid));
+  }
 }

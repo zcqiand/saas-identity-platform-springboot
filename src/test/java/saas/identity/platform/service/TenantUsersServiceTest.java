@@ -72,7 +72,7 @@ class TenantUsersServiceTest {
     body.setPassword("p");
     User u = service.createUser(tid, body);
     assertEquals("alice", u.getUsername());
-    assertEquals(UserStatus.INVITED, u.getStatus());
+    assertEquals(UserStatus.ACTIVE, u.getStatus());
     assertEquals(tid, u.getTenantId());
   }
 

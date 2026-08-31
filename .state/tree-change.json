@@ -1,32 +1,14 @@
 {
   "schema": 1,
   "approved": true,
-  "base_sha": "627bcb7670f0767c",
-  "summary": "M09.F03 + I02/I03/I04 状态 开发中 → 已上线 — saas-springbot MeService.getMyMenus 早在 2026-08-28 prod 503 修复时已实装 (ahead-of-plan)。I01 不在本仓 tree (跨仓 shared 是 canonical)",
+  "base_sha": "baa807dfdd4b74dc",
+  "summary": "springboot 本地 function-tree 补登：M05.F01.I05 (DELETE api-key 物理删，tenantApiKeysDeleteApiKey + Service.delete 已落地)",
   "changes": [
     {
-      "id": "M09.F03",
-      "action": "变更",
-      "new_status": "已上线",
-      "reason": "MeService.getMyMenus 已实施 (2026-08-28 prod 503 修复), msw fixture 对齐, contract-test 88/0/8 实跑绿"
-    },
-    {
-      "id": "M09.F03.I02",
-      "action": "变更",
-      "new_status": "已上线",
-      "reason": "MeService.getMyMenus:122-205 membership.roleIds → role_menu_grants.menuIds 真 JOIN"
-    },
-    {
-      "id": "M09.F03.I03",
-      "action": "变更",
-      "new_status": "已上线",
-      "reason": "MeService.getMyMenus:152-203 菜单树装配 + 父链补全 + 按 app 分组"
-    },
-    {
-      "id": "M09.F03.I04",
-      "action": "变更",
-      "new_status": "已上线",
-      "reason": "MeService.getMyMenus:187-204 按 app.code 分组输出 Map<appCode, List<EffectiveMenuNode>>"
+      "id": "M05.F01.I05",
+      "action": "新增",
+      "name": "物理删除 DELETE /tenants/{t}/api-keys/{k}（区别于 I03 revoke 软删）",
+      "reason": "写端点第二期：tenantApiKeysDeleteApiKey(tenantApiKeyService.delete) 已实现 + 2 单元测试 (delete_removesRow / delete_throwsIfMissing) 已绿 + trace 已挂 M05.F01.I05。需本地 tree 登记否则 L5 红。"
     }
   ],
   "sync_files": [

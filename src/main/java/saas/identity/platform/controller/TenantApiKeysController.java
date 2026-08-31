@@ -73,4 +73,12 @@ public class TenantApiKeysController implements TenantApiKeysApi {
     tenantGuard.verifyPathTenant(tenantId);
     return ResponseEntity.ok(service.rotate(UUID.fromString(tenantId), UUID.fromString(keyId)));
   }
+
+  // @entry M05.F01.I05
+  @Override
+  public ResponseEntity<Void> tenantApiKeysDeleteApiKey(String tenantId, String keyId) {
+    tenantGuard.verifyPathTenant(tenantId);
+    service.delete(UUID.fromString(tenantId), UUID.fromString(keyId));
+    return ResponseEntity.noContent().build();
+  }
 }
