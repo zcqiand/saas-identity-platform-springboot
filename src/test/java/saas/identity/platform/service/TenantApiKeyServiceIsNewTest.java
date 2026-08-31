@@ -31,7 +31,8 @@ class TenantApiKeyServiceIsNewTest {
   @Fn({"M05.F01.I02"})
   void create_mustNotPresetId() {
     ApiKeyRepository repo = mock(ApiKeyRepository.class);
-    TenantApiKeyService service = new TenantApiKeyService(repo);
+    AuditWriter auditWriter = mock(AuditWriter.class);
+    TenantApiKeyService service = new TenantApiKeyService(repo, auditWriter);
     when(repo.save(any(ApiKeyEntity.class))).thenAnswer(inv -> inv.getArgument(0));
 
     service.create(UUID.randomUUID(), new CreateApiKeyRequest().name("k"));
@@ -47,7 +48,8 @@ class TenantApiKeyServiceIsNewTest {
   @Fn({"M05.F01.I04"})
   void rotate_mustNotPresetIdOnFreshKey() {
     ApiKeyRepository repo = mock(ApiKeyRepository.class);
-    TenantApiKeyService service = new TenantApiKeyService(repo);
+    AuditWriter auditWriter = mock(AuditWriter.class);
+    TenantApiKeyService service = new TenantApiKeyService(repo, auditWriter);
     UUID tid = UUID.randomUUID();
     UUID kid = UUID.randomUUID();
     ApiKeyEntity old = new ApiKeyEntity();

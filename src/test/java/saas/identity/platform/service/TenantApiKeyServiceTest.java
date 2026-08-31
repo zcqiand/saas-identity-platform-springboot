@@ -29,7 +29,9 @@ import saas.identity.shared.dto.CreateApiKeyResponse;
 class TenantApiKeyServiceTest {
 
   private final ApiKeyRepository apiKeyRepository = mock(ApiKeyRepository.class);
-  private final TenantApiKeyService service = new TenantApiKeyService(apiKeyRepository);
+  private final AuditWriter auditWriter = mock(AuditWriter.class);
+  private final TenantApiKeyService service =
+      new TenantApiKeyService(apiKeyRepository, auditWriter);
 
   private ApiKeyEntity entity(UUID tenantId, UUID keyId) {
     ApiKeyEntity e = new ApiKeyEntity();

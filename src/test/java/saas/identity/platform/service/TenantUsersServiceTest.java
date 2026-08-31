@@ -32,7 +32,10 @@ import saas.identity.shared.dto.UserStatus;
 class TenantUsersServiceTest {
 
   private final UserRepository userRepository = mock(UserRepository.class);
-  private final TenantUsersService service = new TenantUsersService(userRepository);
+  private final saas.identity.platform.repository.TenantMembershipRepository membershipRepository =
+      mock(saas.identity.platform.repository.TenantMembershipRepository.class);
+  private final TenantUsersService service =
+      new TenantUsersService(userRepository, membershipRepository);
 
   @Test
   @Fn({"M01.F01.I01"})

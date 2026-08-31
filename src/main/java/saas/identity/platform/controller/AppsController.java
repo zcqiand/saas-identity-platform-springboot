@@ -12,7 +12,7 @@ import saas.identity.shared.dto.AppStatus;
 /**
  * /api/v1/apps/{code} - M04.F01 公共读侧：按 appCode 返回应用公开信息.
  *
- * 2026-08-30 contract-test M96.F02.I06: 字节对齐 msw/aspnetcore/nextjs. 字段:
+ * <p>2026-08-30 contract-test M96.F02.I06: 字节对齐 msw/aspnetcore/nextjs. 字段:
  * id/code/name/description/icon/status (不带 OAuth 集成字段).
  */
 @RestController

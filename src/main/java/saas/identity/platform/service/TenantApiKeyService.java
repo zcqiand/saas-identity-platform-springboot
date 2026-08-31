@@ -23,9 +23,11 @@ import saas.identity.shared.dto.CreateApiKeyResponse;
 public class TenantApiKeyService {
 
   private final ApiKeyRepository apiKeyRepository;
+  private final AuditWriter auditWriter;
 
-  public TenantApiKeyService(ApiKeyRepository apiKeyRepository) {
+  public TenantApiKeyService(ApiKeyRepository apiKeyRepository, AuditWriter auditWriter) {
     this.apiKeyRepository = apiKeyRepository;
+    this.auditWriter = auditWriter;
   }
 
   @Transactional(readOnly = true)
@@ -48,7 +50,17 @@ public class TenantApiKeyService {
     e.setStatus(saas.identity.platform.enums.ApiKeyStatus.ACTIVE);
     e.setScopes(body.getScopes() != null ? body.getScopes() : java.util.List.of());
     e.setExpiresAt(body.getExpiresAt());
-    return ApiKeyMapper.toCreateResponse(apiKeyRepository.save(e), secret);
+    CreateApiKeyResponse resp = ApiKeyMapper.toCreateResponse(apiKeyRepository.save(e), secret);
+    // M06.F03.I01 副作用：发 api_key_created 事件（独立事务，best-effort）
+    if (resp.getApiKey().getId() != null) {
+      auditWriter.write(
+          tenantId,
+          AuditWriter.currentActorUserId(),
+          "api_key_created",
+          null,
+          java.util.Map.of("apiKeyId", resp.getApiKey().getId().toString()));
+    }
+    return resp;
   }
 
   @Transactional
@@ -59,7 +71,16 @@ public class TenantApiKeyService {
             .orElseThrow(() -> new NoSuchElementException("api key not found"));
     e.setStatus(saas.identity.platform.enums.ApiKeyStatus.REVOKED);
     e.setRevokedAt(OffsetDateTime.now());
-    return ApiKeyMapper.toDto(apiKeyRepository.save(e));
+    ApiKey dto = ApiKeyMapper.toDto(apiKeyRepository.save(e));
+    if (e.getId() != null) {
+      auditWriter.write(
+          tenantId,
+          AuditWriter.currentActorUserId(),
+          "api_key_revoked",
+          null,
+          java.util.Map.of("apiKeyId", e.getId().toString()));
+    }
+    return dto;
   }
 
   @Transactional
@@ -83,6 +104,23 @@ public class TenantApiKeyService {
     fresh.setStatus(saas.identity.platform.enums.ApiKeyStatus.ACTIVE);
     fresh.setScopes(old.getScopes());
     fresh.setExpiresAt(old.getExpiresAt());
-    return ApiKeyMapper.toCreateResponse(apiKeyRepository.save(fresh), secret);
+    CreateApiKeyResponse resp = ApiKeyMapper.toCreateResponse(apiKeyRepository.save(fresh), secret);
+    if (old.getId() != null) {
+      auditWriter.write(
+          tenantId,
+          AuditWriter.currentActorUserId(),
+          "api_key_revoked",
+          null,
+          java.util.Map.of("apiKeyId", old.getId().toString()));
+    }
+    if (fresh.getId() != null) {
+      auditWriter.write(
+          tenantId,
+          AuditWriter.currentActorUserId(),
+          "api_key_created",
+          null,
+          java.util.Map.of("apiKeyId", fresh.getId().toString()));
+    }
+    return resp;
   }
 }

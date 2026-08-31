@@ -1,17 +1,28 @@
 {
   "schema": 1,
   "project": "saas-identity-platform-springboot",
-  "current_task": "JWT 三件套显式写(v0.2.18 GREEN)",
-  "last_session_at": "2026-08-29",
-  "last_session_summary": "用户报线上 GET /tenants/{id}/api-keys 500。systematic-debugging 本地连 saas_dev 复现剥出三层独立 bug: (1) ApiKeyEntity.scopes 用 StringArrayType 挂 List<String> 属性, 读回 ArrayUtil.unwrapArray NPE → 换 ListArrayType(v0.2.10); (2) create/rotate 手动 setId(UUID.randomUUID()) 被 Spring Data 判 detached → merge → StaleObjectStateException, 系统性, tenants/roles/apps/menus 共 5 处同犯 → 全删, 由 @GeneratedValue 生成(v0.2.11); (3) AttributeConverter 输出以 varchar 绑 PG 原生 enum 列 42804 → Hikari stringtype=unspecified(v0.2.11)。NAMED_ENUM+converter 组合启动即崩(PostgreSQLEnumJdbcType NPE), 已试过不可用。新增守卫: ArrayUserTypeMappingGuardTest(映射层) + TenantApiKeyServiceIsNewTest(isNew 语义), 均旧代码实测红。线上验证 GET/POST api-key + revoke + POST tenant 全 200, 探针数据已清理",
+  "current_task": "M06.F03 AuditWriter + AuditActionConverter + ApiKey 写路径 audit emit 已合入，mvn test 66/66/3 PASS，gate L0-L5 全 PASS",
+  "last_session_at": "2026-08-31",
   "done": [
-    "deploy 脚本补 JWT_ISSUER/AUDIENCE/TTL+DATABASE_NAME(@Value 默认值兜底反模式)",
-    "v0.2.18 GREEN"
+    "service/AuditWriter.java (新): @Service + @Transactional(REQUIRES_NEW) + saveAndFlush，actor 从 SecurityContextHolder.getContext().getAuthentication().getName() 解 UUID；best-effort 失败吞异常 + LogWarning",
+    "config/AuditActionConverter.java (新): @Component Converter<String, AuditAction> 用 saas.identity.shared.dto.AuditAction.fromValue 解决 @RequestParam 不走 Jackson 的 400 INVALID_REQUEST",
+    "service/TenantApiKeyService.java: 构造注入 AuditWriter；create/revoke/rotate 全调 auditWriter.write(... \"api_key_created\" / \"api_key_revoked\", metadata={apiKeyId}); id==null 时跳过审计以兼容单测 mock（@GeneratedValue 未跑）",
+    "test fixtures: TenantApiKeyServiceTest / TenantApiKeyServiceIsNewTest / TenantUsersServiceTest 构造 ctor 同步更新（pre-existing 的 TenantUsersServiceTest 漏第二个 ctor 参数，顺手修了）",
+    "mvn spotless:apply 自动格式化；mvn test 66/66 PASS（pre-existing 3 skipped = UserRepositoryDataJpaTest 需真 PG）"
   ],
-  "next": [],
-  "open_questions": [],
-  "dont": [],
-  "last_gate_passed_at": "2026-08-28T09:40+08:00",
+  "next": [
+    "本地 /tmp/springboot-run7.log 是带 env 的真跑实例；要 commit/push 前杀掉",
+    "M06.F03 AuditWriter 在 prod 跑通后，user_created / role_assigned / oauth_token_issued 等其他 8 个 AuditAction 是下一批范围"
+  ],
+  "open_questions": [
+    "TenantApiKeyService.id==null 跳过审计是测试兼容性补丁，prod 路径 id 永远非空所以行为一致；但要不要加 unit test 显式断言「id==null → skip audit」？本批没加"
+  ],
+  "dont": [
+    "不要再用 saas.identity.platform.enums.AuditAction.valueOf(\"api_key_created\")：那是 PascalCase enum，字符串是 snake_case，必须走 dto.AuditAction.fromValue(action).name() 转一道",
+    "不要再让 auditWriter.write() 在 metadata.apiKeyId=null 时崩：单测场景常见，best-effort swallow 是契约",
+    "不要再依赖 spring-boot:run 自动 recompile：手动 mvn compile 后才能 spring-boot:run 看到改动"
+  ],
+  "last_gate_passed_at": "2026-08-31T10:39+08:00",
   "active_branch": "master",
   "ahead_of_origin": "0"
 }

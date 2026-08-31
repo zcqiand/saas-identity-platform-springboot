@@ -17,7 +17,10 @@ public class RoleMenuGrantEntity {
   @Column(name = "tenant_id", columnDefinition = "uuid", nullable = false)
   private UUID tenantId;
 
-  @Transient private List<UUID> menuIds = List.of();
+  // 2026-08-30: 之前 @Transient 不读 DB —— 改 @JdbcTypeCode 读 PG uuid[] 列
+  @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.ARRAY)
+  @Column(name = "menu_ids", columnDefinition = "uuid[]")
+  private List<UUID> menuIds = List.of();
 
   @Column(name = "updated_at", columnDefinition = "timestamptz", nullable = false)
   private OffsetDateTime updatedAt;

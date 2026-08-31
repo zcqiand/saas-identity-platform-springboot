@@ -17,7 +17,7 @@ public final class RoleMapper {
     r.setTenantId(e.getTenantId());
     r.setCode(e.getCode());
     r.setName(e.getName());
-    r.setDescription(e.getDescription());
+    // 2026-08-30 contract-test I07/I08: 不返 description(msw/nextjs 不返, 字节对齐)
     r.setPermissionIds(permissionIds == null ? List.of() : permissionIds);
     r.setCreatedAt(e.getCreatedAt());
     r.setUpdatedAt(e.getUpdatedAt());

@@ -25,8 +25,8 @@ import saas.identity.shared.dto.UpdateRoleRequest;
  * M02.F01 + M02.F02 — 角色 CRUD + 权限矩阵。 v0.4.0：从 InMemoryStore 迁到 RoleRepository /
  * RolePermissionRepository。
  *
- * <p>2026-08-30：list/get/update/setPermissions 都补 PermissionIds（contract-test
- * M96.F02.I07/I08 必填；join RolePermission → permissions.id）。
+ * <p>2026-08-30：list/get/update/setPermissions 都补 PermissionIds（contract-test M96.F02.I07/I08
+ * 必填；join RolePermission → permissions.id）。
  */
 @Service
 public class TenantRoleService {

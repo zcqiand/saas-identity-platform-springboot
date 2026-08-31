@@ -6,9 +6,18 @@
     "features": 15,
     "items": 48
   },
-  "warnings_total": 3,
+  "warnings_total": 8,
   "warnings": {
-    "开发中但无需求文档引用": [
+    "已上线但无设计映射": [
+      "M09.F03.I02",
+      "M09.F03.I03",
+      "M09.F03.I04"
+    ],
+    "已上线但无测试引用": [
+      "M09.F03.I02",
+      "M09.F03.I03"
+    ],
+    "已上线但不在任何流程且非孤儿白名单": [
       "M09.F03.I02",
       "M09.F03.I03",
       "M09.F03.I04"
@@ -569,7 +578,7 @@
     },
     "M09.F03.I02": {
       "name": "角色授权菜单 ID 查询（membership.roleIds → role_menu_grants.menuIds）",
-      "status": "开发中",
+      "status": "已上线",
       "type": "接口",
       "requirements": [],
       "flows": [],
@@ -579,7 +588,7 @@
     },
     "M09.F03.I03": {
       "name": "菜单树装配（menuIds → menus 表 + 父链补全）",
-      "status": "开发中",
+      "status": "已上线",
       "type": "接口",
       "requirements": [],
       "flows": [],
@@ -589,7 +598,7 @@
     },
     "M09.F03.I04": {
       "name": "app 分组映射（按 app.code 输出 Map<appCode, List<EffectiveMenuNode>>）",
-      "status": "开发中",
+      "status": "已上线",
       "type": "接口",
       "requirements": [],
       "flows": [],

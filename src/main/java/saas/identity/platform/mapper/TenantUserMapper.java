@@ -20,10 +20,9 @@ public final class TenantUserMapper {
   }
 
   /**
-   * 2026-08-30 contract-test：UserEntity.roleIds 是 @Transient 占位（Hibernate 数组映射陷阱
-   * 修不完前先用 @Transient 兜底）。authoritative 在 tenant_memberships.role_ids —— 本重载让 Service
-   * 注入从 membership 拉到的 roleIds，避免空数组返回前端。Phase 5：删 @Transient + UserEntity.roleIds
-   * 列 + 本重载，统一走 entity。
+   * 2026-08-30 contract-test：UserEntity.roleIds 是 @Transient 占位（Hibernate 数组映射陷阱 修不完前先用 @Transient
+   * 兜底）。authoritative 在 tenant_memberships.role_ids —— 本重载让 Service 注入从 membership 拉到的
+   * roleIds，避免空数组返回前端。Phase 5：删 @Transient + UserEntity.roleIds 列 + 本重载，统一走 entity。
    */
   public static User toDto(UserEntity e, List<UUID> roleIdsOverride) {
     if (e == null) return null;

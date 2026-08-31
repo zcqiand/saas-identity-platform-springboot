@@ -15,9 +15,8 @@ import saas.identity.shared.dto.RoleMenuGrant;
 /**
  * M09.F01 + M09.F02 — 角色 ↔ 菜单 授权。 v0.4.0：从 InMemoryStore 迁到 RoleMenuGrantRepository。
  *
- * <p>2026-08-30：Phase 6 接 DTO — service 直接返回 RoleMenuGrant（不再 Map），配套新增
- * TenantRoleMenusController 把端点暴露出去（contract-test M96.F02.I09 要求 GET
- * /tenants/{t}/roles/{r}/menus 在 4 后端都返回 200 + 完整 4 字段）。
+ * <p>2026-08-30：Phase 6 接 DTO — service 直接返回 RoleMenuGrant（不再 Map），配套新增 TenantRoleMenusController
+ * 把端点暴露出去（contract-test M96.F02.I09 要求 GET /tenants/{t}/roles/{r}/menus 在 4 后端都返回 200 + 完整 4 字段）。
  */
 @Service
 public class TenantRoleMenuService {
