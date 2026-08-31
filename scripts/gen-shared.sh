@@ -36,13 +36,14 @@ npx --yes @openapitools/openapi-generator-cli generate \
   --additional-properties useTags=true,interfaceOnly=true,skipDefaultInterface=true,useBeanValidation=true,useSpringBoot3=true,dateLibrary=java8
 
 # Move generated dto + api into the springboot source tree.
-mkdir -p "$DEST/saas/identity/shared/dto" "$DEST/saas/identity/platform/api"
-rm -rf "$DEST/saas/identity/shared/dto"/* "$DEST/saas/identity/platform/api"/*
-# 清掉老路径（b67419b 之前 codegen 产物放 saas.identity.shared.api，现已迁到 platform/api，
-# 残留会让 javac 报 duplicate class）。
-rm -rf "$DEST/saas/identity/shared/api"
+mkdir -p "$DEST/saas/identity/shared/dto" "$DEST/saas/identity/shared/api"
+rm -rf "$DEST/saas/identity/shared/dto"/* "$DEST/saas/identity/shared/api"/*
+# 清掉老路径(b67419b 之前 codegen 产物错误 cp 到 saas/identity/platform/api/, 让 java package
+# saas.identity.shared.api 与目录 saas/identity/platform/api/ 不匹配, javac 找不到所有
+# AdminAppMenusApi 等 controller 接口 — start-family.sh 实测发现. 现已迁回 saas/identity/shared/api/)
+rm -rf "$DEST/saas/identity/platform/api"
 cp -r "$ROOT/.openapi-tmp/java/src/main/java/saas/identity/shared/dto/." "$DEST/saas/identity/shared/dto/"
-cp -r "$ROOT/.openapi-tmp/java/src/main/java/saas/identity/shared/api/." "$DEST/saas/identity/platform/api/"
+cp -r "$ROOT/.openapi-tmp/java/src/main/java/saas/identity/shared/api/." "$DEST/saas/identity/shared/api/"
 rm -rf "$ROOT/.openapi-tmp"
 
 # M09.Database (ADR-0007) — DB SQL SSOT 落地
