@@ -5,6 +5,8 @@ import jakarta.persistence.Convert;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import saas.identity.platform.enums.UserStatus;
 import saas.identity.platform.enums.UserStatusConverter;
 
@@ -66,21 +68,18 @@ public class UserEntity {
       columnDefinition = "timestamptz",
       nullable = false,
       updatable = false)
+  // 2026-09-01 contract-test：@PrePersist 在某些路径不可靠（并发/save 竞吃），导致 PG 落
+  // `-infinity`。Hibernate @CreationTimestamp / @UpdateTimestamp 在 INSERT/UPDATE 时由 Hibernate
+  // 显式生成值，替代 @PrePersist/@PreUpdate 兜底。
+  @CreationTimestamp
   private OffsetDateTime createdAt;
 
   @Column(name = "updated_at", columnDefinition = "timestamptz", nullable = false)
+  @UpdateTimestamp
   private OffsetDateTime updatedAt;
 
-  @PrePersist
-  void onCreate() {
-    if (createdAt == null) createdAt = OffsetDateTime.now();
-    if (updatedAt == null) updatedAt = createdAt;
-  }
-
-  @PreUpdate
-  void onUpdate() {
-    updatedAt = OffsetDateTime.now();
-  }
+  // @PrePersist/@PreUpdate 由 Hibernate @CreationTimestamp/@UpdateTimestamp 替代（2026-09-01
+  // contract-test：@PrePersist 不可靠导致 PG 落 -infinity）。
 
   // ===== getters / setters =====
 

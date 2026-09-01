@@ -50,6 +50,9 @@ public class TenantApiKeyService {
     e.setStatus(saas.identity.platform.enums.ApiKeyStatus.ACTIVE);
     e.setScopes(body.getScopes() != null ? body.getScopes() : java.util.List.of());
     e.setExpiresAt(body.getExpiresAt());
+    // 2026-09-01 contract-test：@PrePersist/@CreationTimestamp 不可靠（PG 偶发落 -infinity），
+    // service 层显式置 createdAt 兜底。
+    e.setCreatedAt(OffsetDateTime.now());
     CreateApiKeyResponse resp = ApiKeyMapper.toCreateResponse(apiKeyRepository.save(e), secret);
     // M06.F03.I01 副作用：发 api_key_created 事件（独立事务，best-effort）
     if (resp.getApiKey().getId() != null) {
@@ -104,6 +107,8 @@ public class TenantApiKeyService {
     fresh.setStatus(saas.identity.platform.enums.ApiKeyStatus.ACTIVE);
     fresh.setScopes(old.getScopes());
     fresh.setExpiresAt(old.getExpiresAt());
+    // 2026-09-01 同 create()，service 层兜底 createdAt。
+    fresh.setCreatedAt(OffsetDateTime.now());
     CreateApiKeyResponse resp = ApiKeyMapper.toCreateResponse(apiKeyRepository.save(fresh), secret);
     if (old.getId() != null) {
       auditWriter.write(

@@ -31,6 +31,10 @@ public final class RoleMapper {
     e.setCode(req.getCode());
     e.setName(req.getName());
     e.setDescription(req.getDescription());
+    // 2026-09-01 contract-test：@PrePersist/@CreationTimestamp 不可靠兜底。
+    var now = java.time.OffsetDateTime.now();
+    e.setCreatedAt(now);
+    e.setUpdatedAt(now);
     return e;
   }
 

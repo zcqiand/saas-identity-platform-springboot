@@ -6,6 +6,7 @@ import jakarta.persistence.Convert;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 import saas.identity.platform.enums.ApiKeyStatus;
 import saas.identity.platform.enums.ApiKeyStatusConverter;
@@ -57,6 +58,10 @@ public class ApiKeyEntity {
       columnDefinition = "timestamptz",
       nullable = false,
       updatable = false)
+  // 2026-09-01 contract-test：@PrePersist 在某些路径下不可靠（并发/save 竞吃），导致
+  // PG 落 `-infinity` 触发「INVALID_GRANT」-like 序列化故障。Hibernate @CreationTimestamp
+  // 在 INSERT 时由 Hibernate 显式生成值（即使 entity 字段为 null），替代 @PrePersist 兜底。
+  @CreationTimestamp
   private OffsetDateTime createdAt;
 
   @Column(name = "last_used_at", columnDefinition = "timestamptz")
@@ -68,10 +73,8 @@ public class ApiKeyEntity {
   @Column(name = "revoked_at", columnDefinition = "timestamptz")
   private OffsetDateTime revokedAt;
 
-  @PrePersist
-  void onCreate() {
-    if (createdAt == null) createdAt = OffsetDateTime.now();
-  }
+  // @PrePersist 由 Hibernate @CreationTimestamp 替代（2026-09-01 contract-test：@PrePersist
+  // 不可靠导致 PG 落 -infinity）。
 
   public UUID getId() {
     return id;

@@ -1,18 +1,21 @@
 package saas.identity.platform.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import saas.identity.platform.entity.TenantMembershipEntity;
 import saas.identity.platform.entity.UserEntity;
 import saas.identity.platform.mapper.TenantUserMapper;
 import saas.identity.platform.repository.TenantMembershipRepository;
 import saas.identity.platform.repository.UserRepository;
 import saas.identity.shared.dto.CreateUserRequest;
 import saas.identity.shared.dto.TenantUsersListUsers200Response;
+import saas.identity.shared.dto.UpdateUserRequest;
 import saas.identity.shared.dto.User;
 import saas.identity.shared.dto.UserStatus;
 
@@ -80,7 +83,7 @@ public class TenantUsersService {
     UserEntity entity =
         userRepository
             .findByTenantIdAndId(tenantId, userId)
-            .orElseThrow(() -> new IllegalArgumentException("user not found: " + userId));
+            .orElseThrow(() -> new NoSuchElementException("user not found: " + userId));
     List<UUID> roleIds =
         membershipRepository
             .findByUserIdAndTenantId(userId, tenantId)
@@ -95,7 +98,107 @@ public class TenantUsersService {
     UserEntity existing =
         userRepository
             .findByTenantIdAndId(tenantId, userId)
-            .orElseThrow(() -> new IllegalArgumentException("user not found: " + userId));
+            .orElseThrow(() -> new NoSuchElementException("user not found: " + userId));
     userRepository.delete(existing);
+  }
+
+  // M01.F01.I04 — PATCH（2026-09-01 contract-test I39：controller 层原是内存 stub，
+  // 写不落库 → GET 读回旧值）。displayName/email/status/roleIds 全可选，null 跳过。
+  @Transactional
+  public User updateUser(UUID tenantId, UUID userId, UpdateUserRequest body) {
+    UserEntity entity =
+        userRepository
+            .findByTenantIdAndId(tenantId, userId)
+            .orElseThrow(() -> new NoSuchElementException("user not found: " + userId));
+    if (body.getDisplayName() != null) entity.setDisplayName(body.getDisplayName());
+    if (body.getEmail() != null) entity.setEmail(body.getEmail());
+    if (body.getStatus() != null) {
+      entity.setStatus(TenantUserMapper.toEntityStatus(body.getStatus()));
+    }
+    UserEntity saved = userRepository.save(entity);
+    // DTO roleIds 是 List<String>（OpenAPI string[]），entity 侧 List<UUID>
+    List<UUID> roleIds =
+        body.getRoleIds() != null
+            ? body.getRoleIds().stream().map(UUID::fromString).toList()
+            : membershipRepository
+                .findByUserIdAndTenantId(userId, tenantId)
+                .map(m -> m.getRoleIds())
+                .orElse(List.of());
+    if (body.getRoleIds() != null) {
+      membershipRepository
+          .findByUserIdAndTenantId(userId, tenantId)
+          .ifPresent(
+              m -> {
+                m.setRoleIds(roleIds);
+                membershipRepository.save(m);
+              });
+    }
+    return TenantUserMapper.toDto(saved, roleIds);
+  }
+
+  // M01.F02.I01 — PUT roles（2026-09-01 contract-test I40）：users.roleIds 冗余列 +
+  // memberships.roleIds authoritative 双写（家族约定，GET 从 memberships 取真值）。
+  @Transactional
+  public User assignRoles(UUID tenantId, UUID userId, List<UUID> roleIds) {
+    UserEntity entity =
+        userRepository
+            .findByTenantIdAndId(tenantId, userId)
+            .orElseThrow(() -> new NoSuchElementException("user not found: " + userId));
+    entity.setRoleIds(roleIds);
+    UserEntity saved = userRepository.save(entity);
+    TenantMembershipEntity membership =
+        membershipRepository
+            .findByUserIdAndTenantId(userId, tenantId)
+            .orElseGet(
+                () -> {
+                  TenantMembershipEntity m = new TenantMembershipEntity();
+                  m.setUserId(userId);
+                  m.setTenantId(tenantId);
+                  return m;
+                });
+    membership.setRoleIds(roleIds);
+    membershipRepository.save(membership);
+    return TenantUserMapper.toDto(saved, roleIds);
+  }
+
+  // M01.F02.I02 — 邀请（2026-09-01 contract-test I42）：落库 status=invited 的占位行
+  // + membership（roleIds 进 memberships，authoritative）。
+  @Transactional
+  public User inviteUser(UUID tenantId, String email, List<UUID> roleIds) {
+    UserEntity entity = new UserEntity();
+    entity.setTenantId(tenantId);
+    entity.setUsername(email);
+    entity.setEmail(email);
+    entity.setStatus(saas.identity.platform.enums.UserStatus.INVITED);
+    entity.setPasswordHash("plain:invited");
+    entity.setRoleIds(roleIds == null ? List.of() : roleIds);
+    // 2026-09-01 contract-test：@PrePersist/@CreationTimestamp 不可靠兜底。
+    entity.setCreatedAt(java.time.OffsetDateTime.now());
+    entity.setUpdatedAt(java.time.OffsetDateTime.now());
+    UserEntity saved = userRepository.save(entity);
+    TenantMembershipEntity membership = new TenantMembershipEntity();
+    membership.setUserId(saved.getId());
+    membership.setTenantId(tenantId);
+    membership.setRoleIds(roleIds == null ? List.of() : roleIds);
+    membership.setStatus(saas.identity.platform.enums.MembershipStatus.INVITED);
+    membershipRepository.save(membership);
+    return TenantUserMapper.toDto(saved, roleIds == null ? List.of() : roleIds);
+  }
+
+  // M01.F02.I03 — status 往返（2026-09-01 contract-test I41）
+  @Transactional
+  public User changeUserStatus(UUID tenantId, UUID userId, UserStatus status) {
+    UserEntity entity =
+        userRepository
+            .findByTenantIdAndId(tenantId, userId)
+            .orElseThrow(() -> new NoSuchElementException("user not found: " + userId));
+    entity.setStatus(TenantUserMapper.toEntityStatus(status));
+    UserEntity saved = userRepository.save(entity);
+    List<UUID> roleIds =
+        membershipRepository
+            .findByUserIdAndTenantId(userId, tenantId)
+            .map(m -> m.getRoleIds())
+            .orElse(List.of());
+    return TenantUserMapper.toDto(saved, roleIds);
   }
 }

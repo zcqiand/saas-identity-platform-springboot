@@ -49,6 +49,10 @@ public final class TenantUserMapper {
     e.setRoleIds(req.getRoleIds() == null ? List.of() : toRoleIdsUuid(req.getRoleIds()));
     // Phase 5：换 argon2.hash(req.getPassword())
     e.setPasswordHash(req.getPassword() == null ? null : "plain:" + req.getPassword());
+    // 2026-09-01 contract-test：@PrePersist/@CreationTimestamp 不可靠兜底。
+    var now = java.time.OffsetDateTime.now();
+    e.setCreatedAt(now);
+    e.setUpdatedAt(now);
     return e;
   }
 

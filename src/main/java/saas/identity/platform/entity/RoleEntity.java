@@ -3,6 +3,8 @@ package saas.identity.platform.entity;
 import jakarta.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.UUID;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 /** V003 — tenant-scoped role（TypeSpec Role）。 */
 @Entity
@@ -36,21 +38,17 @@ public class RoleEntity {
       columnDefinition = "timestamptz",
       nullable = false,
       updatable = false)
+  // 2026-09-01 contract-test：@PrePersist 不可靠（参见 ApiKeyEntity 注释）；用 Hibernate
+  // @CreationTimestamp / @UpdateTimestamp 替代。
+  @CreationTimestamp
   private OffsetDateTime createdAt;
 
   @Column(name = "updated_at", columnDefinition = "timestamptz", nullable = false)
+  @UpdateTimestamp
   private OffsetDateTime updatedAt;
 
-  @PrePersist
-  void onCreate() {
-    if (createdAt == null) createdAt = OffsetDateTime.now();
-    if (updatedAt == null) updatedAt = createdAt;
-  }
-
-  @PreUpdate
-  void onUpdate() {
-    updatedAt = OffsetDateTime.now();
-  }
+  // @PrePersist/@PreUpdate 由 Hibernate @CreationTimestamp/@UpdateTimestamp 替代（2026-09-01
+  // contract-test：@PrePersist 不可靠导致 PG 落 -infinity）。
 
   public UUID getId() {
     return id;
