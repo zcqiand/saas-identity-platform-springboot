@@ -59,6 +59,88 @@ live mode 全量跑 I10，springboot 在 `users[].createdAt` 字段返回 `-2922
 仍然不会红** —— 所以**这条 bug 在 ADR 通过后会被合约侧盖住，必须在此工单锁死修复日期**，
 否则 Hibernate 行为变化时再暴露没人会发现。
 
+### 本会话新发现（2026-09-01 live 实证后追加）
+
+- 三轮修法都未根除：
+  1. `UserEntity`/`RoleEntity`/`ApiKeyEntity` 改 `@PrePersist` → `@CreationTimestamp`/`@UpdateTimestamp`
+  2. `TenantApiKeyService` / `TenantUsersService` 显式 `e.setCreatedAt(OffsetDateTime.now())`
+  3. `RoleMapper` / `TenantUserMapper` 同样 setter
+- **直接调用时 createdAt 是有效值；只有 contract-test 4 后端并发触发时（~50%）才出现 `-infinity`**。
+- 触发概率说明问题在「共享连接批 flush」或「并发写入下 `@CreationTimestamp` 触发条件」层面，**不是单点 setter 缺失**。
+- 实证调研发现：所有 13 个 entity 时间列类型为 `OffsetDateTime`，DB 列是 `TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP`，正常路径不可能落 `-infinity`。**真凶不在 entity / DTO 层**。
+- 建议下一步**先开 SQL 日志**（`application.yml` 加 `logging.level.org.hibernate.SQL: DEBUG` + `spring.jpa.show-sql: true`），重跑 contract-test I10，**对比拿到 `-infinity` 时的真 `INSERT INTO users(...) VALUES (...)`**，**再**动手改 Hibernate / entity 类型（候选：全部 entity `OffsetDateTime` → `Instant`，mapper 加 `Instant → OffsetDateTime` 转换）。
+
+### 推荐修法（按「先看 SQL → 再改 Hibernate → 最后改 DTO」三步）
+
+- [ ] **第一步（必须先做）**：`src/main/resources/application.yml` 加 SQL 日志:
+      ```yaml
+      logging:
+        level:
+          org.hibernate.SQL: DEBUG
+          org.hibernate.orm.jdbc.bind: TRACE
+      spring.jpa.show-sql: true
+      ```
+      重跑 contract-test I10 拿到真 INSERT SQL。
+- [ ] **第二步（看 SQL 后）**：根据真 SQL 决定 A / B / C 路径：
+  - **A. SQL 里 createdAt 是 `NULL` 字面量**：PG `DEFAULT CURRENT_TIMESTAMP` 也未生效。改 entity 字段 `insertable = false, updatable = false`，让 PG DEFAULT 接手。
+  - **B. SQL 里 createdAt 是 `-infinity` 字面量**：Hibernate 绑了 `OffsetDateTime.MIN` 静态值。多半是 `@PrePersist` / `@CreationTimestamp` 之间的 race。修法 = 全 entity `OffsetDateTime` → `Instant`，mapper 层加转换。**这是「技术选型变更」，需开 ADR**（建议 `docs/adr/0016-offsetdatetime-vs-instant.md`）。
+  - **C. SQL 一切正常但查出来 `-infinity`**：DB 那行确实被另进程写入了 `-infinity`（PG `::timestamptz '-infinity'` 是合法的）。修法 = DB 触发器或 SELECT 包装 `CASE WHEN created_at = '-infinity'::timestamptz THEN NOW() ELSE created_at END`。
+- [ ] **第三步（防御性 + 序列化层）**：`application.yml` 加 Jackson 配置 + 新建 `JacksonConfig.java` 自定义 `JavaTimeModule`，对 `OffsetDateTime.MIN` 加 override 输出 `null`。
+
+### [BUG] audit `?action=api_key_created` 5 页内找不到 `metadata.apiKeyId=xxx` 事件
+
+- **状态**: 待定位
+- **首次发现**: 2026-09-01 live mode 全量 contract-test run
+- **关联 ADR**: 无（建议补 `0017-audit-insert-best-effort.md`）
+- **关联合约测试**: `M96.F02.I18 写端点副作用 — api_key_created/revoked 事件进 audit_events`
+
+### 症状（活证据）
+
+live mode 全量跑 I18，springboot 端 `GET /tenants/{t}/audit-events?action=api_key_created&pageSize=100` 翻 5 页（500 行）找不到 `metadata.apiKeyId=5cbafcf1-...` 的事件。同测试在 aspnetcore 端绿。说明 springboot 端 audit 写入路径有断链。
+
+### 已知事实
+
+- `TenantApiKeysController.tenantApiKeysCreateApiKey()` 直接调 `service.create()`，**无 AOP / Interceptor 写 audit**（✓ 设计如此）。
+- `TenantApiKeyService.create()` line 58-65 调 `auditWriter.write(tenantId, ..., "api_key_created", null, Map.of("apiKeyId", resp.getApiKey().getId().toString()))`。action 字符串是 `"api_key_created"`（snake_case 小写），metadata key 是 `"apiKeyId"`（camelCase）。**两端命名都和 contract-test 期望对齐**。
+- `AuditWriter.write()` line 47-54 有个早期 return 防御：
+  ```text
+  if (metadata != null && metadata.get("apiKeyId") == null) { return; }
+  ```
+  这个检查**只对 metadata key 名为 `apiKeyId` 时生效**，但与上面 service 调用对得上。**理论上不该 swallow**。
+- `AuditWriter` 在 action 字符串与 enum 桥接上有 `valueOf(...)` 双重转换（`AuditAction.fromValue(s).name()` → `valueOf` 映射到本地 enum），任何一处对不上就静默 swallow。
+- `TenantAuditController` 接 `@RequestParam AuditAction action`，**Spring 默认 binding 用 `name()`（UPPER_SNAKE）**，与 contract-test 发的 `?action=api_key_created`（lower_snake）**可能 binding 失败**，controller 收到 `action == null` → 查全表（500 行可能仍翻不到具体行）。
+- `AuditEventEntity.metadata` 是 `Map<String, Object>` + `JdbcTypeCode(SqlTypes.JSON)` + `jsonb NOT NULL DEFAULT '{}'`，Hibernate 用 Jackson serialize。Jackson 默认保留 camelCase key 名不 snake_case 化（✓ 与 service 写入对齐）。
+- `metadata` 列有 GIN 索引（`V007__indexes.sql:23` `idx_audit_events_metadata_gin ON audit_events USING gin (metadata)`）。
+- unit test `TenantApiKeyServiceTest` 用 `mock(AuditWriter.class)`，**完全没 verify `auditWriter.write(...)` 是否真的被调用**——走过等于"测了"是假绿。
+
+### 三条候选根因方向（按概率从高到低）
+
+1. **TenantAuditController.action 参数 binding 失败**：Spring 默认 `@RequestParam AuditAction action` 用 `name()` 匹配，contract-test 发的是 `api_key_created`（小写下划线）→ 收 `null` → 不按 action 过滤 → 翻全表 500 行没找到。
+2. **AuditWriter.write line 47-54 early-return swallow**：如果某次调用 metadata.get("apiKeyId") 在序列化前已经被 Jackson 转 snake_case（不太可能但要排）。
+3. **AuditAction 双重 enum 桥接失败**：`AuditAction.fromValue("api_key_created").name()` 必须返回 `API_KEY_CREATED` 才能映射到本地 enum。任何改名或大小写变化都会 `IllegalArgumentException` 被 swallow（要 grep `catch (IllegalArgumentException)` 看是否有 swallow）。
+
+### 调查步骤（按代价从小到大）
+
+- [ ] 1. **必做**：直 curl `GET /tenants/{t}/audit-events?action=api_key_created` 看 springboot 是否返 200 + 全表数据（验证根因 #1）
+- [ ] 2. **必做**：`SELECT action, metadata FROM audit_events ORDER BY occurred_at DESC LIMIT 20;` 看 DB 实际有没有 `api_key_created` 事件行（如果有说明写入 OK，问题在 controller binding；如果没有说明写入断了，问题在 service / AuditWriter）
+- [ ] 3. `grep -n "catch.*Exception\|catch.*Throwable" src/main/java/saas/identity/platform/service/AuditWriter.java` 看是否有 swallow
+- [ ] 4. `grep -rn "AuditAction.fromValue\|@JsonCreator" src/main/java/saas/identity/` 看 enum 桥接配置
+- [ ] 5. 修 controller 显式 `@RequestParam("action") String action`（不接 enum），在 service 层用 `AuditAction.fromValue(action)` 转一次
+- [ ] 6. 修 AuditWriter line 47-54：删 swallow，改成 `log.warn` 但继续 save（`apiKeyId == null` 不应该 skip）
+- [ ] 7. 抽常量 `METADATA_API_KEY_ID = "apiKeyId"` 避免 magic string
+- [ ] 8. 改 `TenantApiKeyServiceTest` 加 `verify(auditWriter).write(eq(tid), any(), eq("api_key_created"), isNull(), argThat(m -> m != null && m.get("apiKeyId") != null))`
+- [ ] 9. 加 `@DataJpaTest` 跑 `AuditEventRepository.save(...)` 真插入验证 metadata 字段存进去了
+
+### 修复后回归
+
+- [ ] contract-test `M96.F02.I18` springboot 端转绿
+- [ ] mvn test 全绿（特别是 TenantApiKeyServiceTest 新加的 verify）
+- [ ] 本机 prod-build smoke：POST `/api-keys` → `GET /audit-events?action=api_key_created` 第 1 页就有新事件
+
+### 风险
+
+audit_events 表从不 truncate，contract-test 4 后端共用 DB，跑 50+ 次累计事件数远超 500 行。修本 bug 时**同时需要 contract-test 仓的 `beforeAll` 加 `TRUNCATE audit_events WHERE id NOT IN (V016 seed id 列表)`**（保留 V016 种子事件不动，只清跑出来的）。**这是跨仓 PR，不是 backend 仓单方面能解的事**，见 `saas-identity-platform-contract-test/PLAN.md` 新建 [DEBT] 工单。
+
 ## 迭代方向
 
 - （待补）
