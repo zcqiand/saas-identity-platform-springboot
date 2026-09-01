@@ -73,6 +73,35 @@ public static final Instant CREATED_AT_DEFAULT = Instant.EPOCH;  // = 1970-01-01
 仍然不会红** —— 所以**这条 bug 在 ADR 通过后会被合约侧盖住，必须在此工单锁死修复日期**，
 否则 Hibernate 行为变化时再暴露没人会发现。
 
+### 本会话根因实证（2026-09-01 SQL 日志 + V016 seed 调研后）
+
+**SQL 日志证据**（`.runtime-logs/springboot.log` 3693 条 binding trace,1397 条 Hibernate SQL）：
+
+12+ 次 `INSERT INTO users` 的 createdAt bind value：
+- 真实时间戳 `2026-09-01T19:58:08.183257+08:00` — `@CreationTimestamp` 路径生效
+- 真实时间戳 `2026-09-01T19:58:23.733429+08:00` — mapper 显式 `OffsetDateTime.now()`
+- `1970-01-01T00:00:00Z` — 本会话 `@PrePersist` fallback 改 `Instant.EPOCH.atOffset(UTC)` 生效
+- **`-infinity` bind: 0 次**
+
+**结论**: 本会话 live 跑中,**没有任何新 INSERT 把 -infinity 写进 PG**。`-292275055-05-16T23:00:00Z` 是**历次跑残留**(ASP.NET EF 6/7 时代的 PG `timestamptz '-infinity'` 兜底 + JDBC 读回映射成 `OffsetDateTime.MIN`)。
+
+`binding parameter (1:TIMESTAMP_UTC) <- [null]` 出现 5+ 次 — 全是 `update api_keys set ... expires_at=?, last_used_at=?, revoked_at=?` 的 nullable 字段(PATCH 时业务上允许 null),**不是 `created_at`**。
+
+**根因 = 历史残留行 + V016 seed 部分字段被旧版 EF 写过 -infinity**,**不是当前 INSERT 路径**。
+
+### 推荐修法（按代价从小到大）
+
+- [ ] **第一步（必做，下个会话跑）**：一次性 PG UPDATE 把现存 `-infinity` 行改成 `'1970-01-01 00:00:00+00'`：
+  ```sql
+  UPDATE users SET created_at='1970-01-01T00:00:00+00' WHERE created_at='-infinity'::timestamptz;
+  UPDATE api_keys SET created_at='1970-01-01T00:00:00+00' WHERE created_at='-infinity'::timestamptz;
+  -- 重复 SELECT 验证 count(*) = 0
+  ```
+  跨环境安全（本机 saas_dev,共享 PG,3 后端共用）。
+- [ ] **第二步**：改 [saas-identity-platform-shared/sql/migrations/V016__seed_family_fixtures.sql](../saas-identity-platform-shared/sql/migrations/V016__seed_family_fixtures.sql) seed 显式设 `'1970-01-01T00:00:00+00'`,防止 V016 被任何路径覆盖时引入 `-infinity`。
+- [ ] **第三步**：本会话已落（contract-test cleanup-pg.ts + 8 entity `@PrePersist` Instant.EPOCH fallback）防新写 `-infinity`。
+- [ ] **不再需要 A/B/C 路径** — B 路径（OffsetDateTime → Instant 技术选型 ADR-0016）取消,根因不是字段类型;A 路径（DB DEFAULT 接管）+ C 路径（SELECT 包装）不需要,本会话 INSERT 路径已修。
+
 ### 本会话新发现（2026-09-01 live 实证后追加）
 
 - 三轮修法都未根除：
