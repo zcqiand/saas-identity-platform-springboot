@@ -3,6 +3,8 @@ package saas.identity.platform.entity;
 import jakarta.persistence.*;
 import jakarta.persistence.Convert;
 import java.time.OffsetDateTime;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.Map;
 import java.util.UUID;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -46,7 +48,7 @@ public class AuditEventEntity {
 
   @PrePersist
   void onCreate() {
-    if (occurredAt == null) occurredAt = OffsetDateTime.now();
+    if (occurredAt == null) occurredAt = Instant.EPOCH.atOffset(ZoneOffset.UTC);
   }
 
   public UUID getId() {

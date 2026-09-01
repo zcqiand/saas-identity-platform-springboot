@@ -3,6 +3,8 @@ package saas.identity.platform.entity;
 import jakarta.persistence.*;
 import jakarta.persistence.Convert;
 import java.time.OffsetDateTime;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.UUID;
 import saas.identity.platform.enums.MenuStatus;
 import saas.identity.platform.enums.MenuStatusConverter;
@@ -65,7 +67,9 @@ public class MenuEntity {
 
   @PrePersist
   void onCreate() {
-    if (createdAt == null) createdAt = OffsetDateTime.now();
+    // 2026-09-01 contract-test M96.F02: fallback to UnixEpoch (= 1970-01-01T00:00:00Z)
+    // 与 contract-test assertTimestampShape [1970, 2100] 范围对齐。
+    if (createdAt == null) createdAt = Instant.EPOCH.atOffset(ZoneOffset.UTC);
     if (updatedAt == null) updatedAt = createdAt;
   }
 

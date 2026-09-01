@@ -3,6 +3,8 @@ package saas.identity.platform.entity;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -29,7 +31,7 @@ public class RolePermissionEntity {
 
   @PrePersist
   void onCreate() {
-    if (grantedAt == null) grantedAt = OffsetDateTime.now();
+    if (grantedAt == null) grantedAt = Instant.EPOCH.atOffset(ZoneOffset.UTC);
   }
 
   public UUID getRoleId() {

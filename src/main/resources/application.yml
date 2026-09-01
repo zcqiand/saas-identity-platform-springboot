@@ -44,6 +44,9 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         jdbc.time_zone: UTC
+    # 2026-09-01 contract-test M96.F02.I10 调查：开 show-sql 拿真 INSERT，
+    # 决定 DateTime 真根因（A/B/C 路径，见 PLAN.md §推荐修法）。
+    show-sql: true
 
   flyway:
     # Dev unblock：直接关 Flyway。saas_dev schema 已经被 AspNetCore + shared SQL 灌过，
@@ -53,6 +56,12 @@ spring:
     # Hibernate ddl-auto=none 也跳过校验，运行时由 UuidArrayType 等 UserType 处理 uuid[] 等列。
     # TODO Phase 6：用 testcontainers + 干净 saas_test 启 Flyway 做 schema 漂移检测；或者把 V00X 改成 idempotent (IF NOT EXISTS) 让 Flyway baseline-on-migrate=true 真的能跳过。
     enabled: false
+
+# 2026-09-01 contract-test M96.F02.I10 调查：拿 Hibernate 真 INSERT SQL 看 createdAt 列绑什么。
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
 
 # /actuator/health 暴露给 Docker HEALTHCHECK 探针（"应用真的在服务"vs"端口开着"）。
 # probes (liveness/readiness) 开启：Kubernetes/容器编排能区分"应用还在跑但还没就绪"vs"真挂了"。

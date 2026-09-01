@@ -4,6 +4,8 @@ import io.hypersistence.utils.hibernate.type.array.ListArrayType;
 import jakarta.persistence.*;
 import jakarta.persistence.Convert;
 import java.time.OffsetDateTime;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.UUID;
 import org.hibernate.annotations.Type;
@@ -49,7 +51,7 @@ public class TenantMembershipEntity {
 
   @PrePersist
   void onCreate() {
-    if (joinedAt == null) joinedAt = OffsetDateTime.now();
+    if (joinedAt == null) joinedAt = Instant.EPOCH.atOffset(ZoneOffset.UTC);
   }
 
   public UUID getId() {

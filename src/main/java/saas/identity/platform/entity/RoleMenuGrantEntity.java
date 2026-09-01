@@ -2,6 +2,8 @@ package saas.identity.platform.entity;
 
 import jakarta.persistence.*;
 import java.time.OffsetDateTime;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.UUID;
 

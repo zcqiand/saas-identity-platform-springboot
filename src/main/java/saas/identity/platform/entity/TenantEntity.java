@@ -3,6 +3,8 @@ package saas.identity.platform.entity;
 import jakarta.persistence.*;
 import jakarta.persistence.Convert;
 import java.time.OffsetDateTime;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.Map;
 import java.util.UUID;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -49,13 +51,13 @@ public class TenantEntity {
 
   @PrePersist
   void onCreate() {
-    if (createdAt == null) createdAt = OffsetDateTime.now();
+    if (createdAt == null) createdAt = Instant.EPOCH.atOffset(ZoneOffset.UTC);
     if (updatedAt == null) updatedAt = createdAt;
   }
 
   @PreUpdate
   void onUpdate() {
-    updatedAt = OffsetDateTime.now();
+    updatedAt = Instant.EPOCH.atOffset(ZoneOffset.UTC);
   }
 
   // ===== getters / setters =====

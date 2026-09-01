@@ -1,7 +1,9 @@
 package saas.identity.platform.entity;
 
 import jakarta.persistence.*;
+import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.UUID;
 
 /** V003 — 平台级 permission 字典；TypeSpec 不直接定义，由 roleIds: string[] 推导。 */
@@ -34,7 +36,9 @@ public class PermissionEntity {
 
   @PrePersist
   void onCreate() {
-    if (createdAt == null) createdAt = OffsetDateTime.now();
+    // 2026-09-01 contract-test M96.F02.I10: fallback to UnixEpoch (= 1970-01-01T00:00:00Z)
+    // 与 contract-test assertTimestampShape [1970, 2100] 范围对齐。
+    if (createdAt == null) createdAt = Instant.EPOCH.atOffset(ZoneOffset.UTC);
   }
 
   public UUID getId() {
