@@ -91,16 +91,29 @@ public static final Instant CREATED_AT_DEFAULT = Instant.EPOCH;  // = 1970-01-01
 
 ### 推荐修法（按代价从小到大）
 
-- [ ] **第一步（必做，下个会话跑）**：一次性 PG UPDATE 把现存 `-infinity` 行改成 `'1970-01-01 00:00:00+00'`：
+- [x] **第一步（必做，下个会话跑）**：一次性 PG UPDATE 把现存 `-infinity` 行改成 `'1970-01-01T00:00:00+00'`：
   ```sql
   UPDATE users SET created_at='1970-01-01T00:00:00+00' WHERE created_at='-infinity'::timestamptz;
   UPDATE api_keys SET created_at='1970-01-01T00:00:00+00' WHERE created_at='-infinity'::timestamptz;
-  -- 重复 SELECT 验证 count(*) = 0
   ```
-  跨环境安全（本机 saas_dev,共享 PG,3 后端共用）。
-- [ ] **第二步**：改 [saas-identity-platform-shared/sql/migrations/V016__seed_family_fixtures.sql](../saas-identity-platform-shared/sql/migrations/V016__seed_family_fixtures.sql) seed 显式设 `'1970-01-01T00:00:00+00'`,防止 V016 被任何路径覆盖时引入 `-infinity`。
-- [ ] **第三步**：本会话已落（contract-test cleanup-pg.ts + 8 entity `@PrePersist` Instant.EPOCH fallback）防新写 `-infinity`。
-- [ ] **不再需要 A/B/C 路径** — B 路径（OffsetDateTime → Instant 技术选型 ADR-0016）取消,根因不是字段类型;A 路径（DB DEFAULT 接管）+ C 路径（SELECT 包装）不需要,本会话 INSERT 路径已修。
+  **本会话实测 2026-09-01**:PG 实际已干净(0 rows affected),FixSentinelTimestamps.java 跑过显示 0 sentinel。推测是上轮 cleanup-pg.ts (本会话增强版) 启动时清掉,或 VACUUM 触发清理。脚本保留作未来兜底。
+- [ ] **第二步（防御性）**：改 [saas-identity-platform-shared/sql/migrations/V016__seed_family_fixtures.sql](../saas-identity-platform-shared/sql/migrations/V016__seed_family_fixtures.sql) seed 显式设 `'1970-01-01T00:00:00+00'`,防止 V016 被任何路径覆盖时引入 `-infinity`。**低优先**(本会话实证 V016 seed 自身没设 -infinity,问题在 INSERT 路径 mapper/service 漏赋;本会话 fallback 已落)。
+- [x] **第三步**：本会话已落（contract-test cleanup-pg.ts + 8 entity `@PrePersist` Instant.EPOCH fallback + SENTINEL_OR_NEG_YEAR 检测）防新写 `-infinity`。
+- [x] **不再需要 A/B/C 路径** — B 路径（OffsetDateTime → Instant 技术选型 ADR-0016）取消,根因不是字段类型;A 路径（DB DEFAULT 接管）+ C 路径（SELECT 包装）不需要,本会话 INSERT 路径已修。
+
+### 本会话最终验证（2026-09-01 21:40 live vitest 实测）
+
+| 阶段 | 测试 fail 数 | 说明 |
+|---|---|---|
+| 改前 | 19 / 63 fail | msw 路由 404 全军覆没(被 msw JWT env 丢失掩盖) |
+| 改 msw 启 + globalSetup + sentinel 兜底 | 3 / 235 pass | 真正问题暴露:**I07 / I10 / I18 全是 Plan 预测债** |
+
+**DateTime 真因已实证**:
+- 本会话新写 INSERT 的 createdAt 全部**真实时间戳或 1970-01-01T00:00:00Z** fallback(实测 0 次 -infinity bind)
+- 现存 PG 已 0 行 `-infinity`(FixSentinelTimestamps.java 跑过 0 rows)
+- **I15(api-keys 列表 sentinel)** 已转绿 ✅
+- **I19/I34/I57(ASP.NET 写端点 MinValue)** 已转绿 ✅
+- 3 剩余 fail 是 msw fixture / uniqueName / audit bug — 与 DateTime bug 无关,见 session.json next #2 #4
 
 ### 本会话新发现（2026-09-01 live 实证后追加）
 
