@@ -52,6 +52,20 @@ live mode 全量跑 I10，springboot 在 `users[].createdAt` 字段返回 `-2922
 - [ ] mvn test 全绿
 - [ ] 本机 prod-build smoke（启动 → 创建 user → GET 列表 → 看到 ISO 8601 毫秒 UTC）
 
+### 推荐默认值（user 拍板 2026-09-01）
+
+entity 字段如果需要兜底默认值，**不要用 `OffsetDateTime.MIN` / `Instant.MIN` / `null`**，用 **Unix 纪元**:
+
+```java
+// Java Instant / LocalDateTime
+public static final Instant CREATED_AT_DEFAULT = Instant.EPOCH;  // = 1970-01-01T00:00:00Z
+// 或:
+// public static final LocalDateTime CREATED_AT_DEFAULT = LocalDateTime.of(1970, 1, 1, 0, 0);
+// Instant.EPOCH 在 Jackson `JavaTimeModule` 默认输出 "1970-01-01T00:00:00Z"，contract-test [1970, 2100] 合法
+```
+
+**注意**: `LocalDateTime.of(1970, 1, 1, 0, 0)` 经 Jackson 序列化为 `"1970-01-01T00:00"`（无 Z 后缀，因 LocalDateTime 无时区），**`assertTimestampShape` 的 ISO regex 要求 `Z` 或 `+00:00`**，所以必须用 `Instant.EPOCH` 或在 mapper 层加 `.atZone(ZoneOffset.UTC).toInstant()`。
+
 ### 风险
 
 合约测试 ADR-0015-amend 通过后，I10 会改用「格式断言」比较 4 后端时间戳格式
@@ -154,3 +168,4 @@ audit_events 表从不 truncate，contract-test 4 后端共用 DB，跑 50+ 次�
 ## 迭代方向
 
 - （待补）
+
