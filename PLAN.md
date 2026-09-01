@@ -70,6 +70,16 @@ live mode 全量跑 I10，springboot 在 `users[].createdAt` 字段返回 `-2922
 - 实证调研发现：所有 13 个 entity 时间列类型为 `OffsetDateTime`，DB 列是 `TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP`，正常路径不可能落 `-infinity`。**真凶不在 entity / DTO 层**。
 - 建议下一步**先开 SQL 日志**（`application.yml` 加 `logging.level.org.hibernate.SQL: DEBUG` + `spring.jpa.show-sql: true`），重跑 contract-test I10，**对比拿到 `-infinity` 时的真 `INSERT INTO users(...) VALUES (...)`**，**再**动手改 Hibernate / entity 类型（候选：全部 entity `OffsetDateTime` → `Instant`，mapper 加 `Instant → OffsetDateTime` 转换）。
 
+### 跨语言 MinValue 对照（2026-09-01 user 拍板，下个会话调试参考）
+
+| Language / Framework | Minimum Date Value | Standard Code Representation | 本仓抓到的具体字符串 | 备注 |
+|---|---|---|---|---|
+| C# (.NET) | `0001-01-01 00:00:00` | `DateTime.MinValue` | `0001-01-01T00:00:00+00:00` | **本仓是 `DateTimeOffset.MinValue`（值类型，非可空）**，STJ round-trip 加 `T` + `+00:00`（不是 `Z`）。详见 [aspnetcore PLAN.md `+00:00` 注释](../saas-identity-platform-aspnetcore/PLAN.md) |
+| Java (`java.time`) | `-999999999-01-01T00:00:00` | `LocalDateTime.MIN` | `-292275055-05-16T23:00:00Z` | **本仓抓到不是 `LocalDateTime.MIN` 标准 toString**。年份 `-292275055` 不是 `-999999999` —— 真凶是 Hibernate 6 + PG `timestamptz '-infinity'` 经 `OffsetDateTime` 映射的内部 sentinel 值（Jackson `JavaTimeModule` 默认输出形态）。`LocalDateTime.MIN.toString()` 实际是 `-999999999-01-01T00:00`（无 Z、无毫秒、无偏移）。 |
+| Next.js (JS/TS) | `-271821-04-20T00:00:00Z` | `new Date(-8640000000000000)` | 未实测（本会话 nextjs 没起 4 后端） | contract-test `M96.F02.I15` / `I71` 抓到的 nextjs 时间戳是 `undefined`（推测 Drizzle `defaultNow()` 没填上），session.json 已记。 |
+
+**调试提示**：contract-test `assertTimestampShape` 用 `年份 [2000,2100]` 断言抓所有 MinValue —— 上述 3 个语言 MinValue 都不在区间，所以都能抓到。但**字符串形态与语言/框架/序列化器组合强相关**，下次会话调试 Hibernate `-infinity` 真凶时，应**先看真 SQL + 真 Java 对象类型**，不要被 `-292275055` 这个怪数字带偏。
+
 ### 推荐修法（按「先看 SQL → 再改 Hibernate → 最后改 DTO」三步）
 
 - [ ] **第一步（必须先做）**：`src/main/resources/application.yml` 加 SQL 日志:
