@@ -5,272 +5,226 @@
  */
 package saas.identity.shared.api;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
 import saas.identity.shared.dto.AdminAppsListApps200Response;
 import saas.identity.shared.dto.AdminAppsSetAppStatusRequest;
 import saas.identity.shared.dto.App;
 import saas.identity.shared.dto.CreateAppRequest;
 import saas.identity.shared.dto.ErrorResponse;
+import org.springframework.lang.Nullable;
 import saas.identity.shared.dto.UpdateAppRequest;
+import io.swagger.v3.oas.annotations.ExternalDocumentation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-01T23:20:59.484585600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import jakarta.annotation.Generated;
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 @Validated
 @Tag(name = "admin-apps", description = "the admin-apps API")
 public interface AdminAppsApi {
 
-  String PATH_ADMIN_APPS_CREATE_APP = "/api/v1/admin/apps";
-
-  /**
-   * POST /api/v1/admin/apps
-   *
-   * @param createAppRequest (required)
-   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
-   *     code 200)
-   */
-  @Operation(
-      operationId = "adminAppsCreateApp",
-      tags = {"admin-apps"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "The request has succeeded.",
-            content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation = App.class))
+    String PATH_ADMIN_APPS_CREATE_APP = "/api/v1/admin/apps";
+    /**
+     * POST /api/v1/admin/apps
+     *
+     * @param createAppRequest  (required)
+     * @return The request has succeeded. (status code 200)
+     *         or An unexpected error response. (status code 200)
+     */
+    @Operation(
+        operationId = "adminAppsCreateApp",
+        tags = { "admin-apps" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = App.class))
             }),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
-      })
-  @RequestMapping(
-      method = RequestMethod.POST,
-      value = AdminAppsApi.PATH_ADMIN_APPS_CREATE_APP,
-      produces = {"application/json"},
-      consumes = {"application/json"})
-  ResponseEntity<App> adminAppsCreateApp(
-      @Parameter(name = "CreateAppRequest", description = "", required = true) @Valid @RequestBody
-          CreateAppRequest createAppRequest);
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.POST,
+        value = AdminAppsApi.PATH_ADMIN_APPS_CREATE_APP,
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    ResponseEntity<App> adminAppsCreateApp(
+        @Parameter(name = "CreateAppRequest", description = "", required = true) @Valid @RequestBody CreateAppRequest createAppRequest
+    );
 
-  String PATH_ADMIN_APPS_DELETE_APP = "/api/v1/admin/apps/{appId}";
 
-  /**
-   * DELETE /api/v1/admin/apps/{appId}
-   *
-   * @param appId (required)
-   * @return There is no content to send for this request, but the headers may be useful. (status
-   *     code 204) or An unexpected error response. (status code 200)
-   */
-  @Operation(
-      operationId = "adminAppsDeleteApp",
-      tags = {"admin-apps"},
-      responses = {
-        @ApiResponse(
-            responseCode = "204",
-            description =
-                "There is no content to send for this request, but the headers may be useful. "),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+    String PATH_ADMIN_APPS_DELETE_APP = "/api/v1/admin/apps/{appId}";
+    /**
+     * DELETE /api/v1/admin/apps/{appId}
+     *
+     * @param appId  (required)
+     * @return There is no content to send for this request, but the headers may be useful.  (status code 204)
+     *         or An unexpected error response. (status code 200)
+     */
+    @Operation(
+        operationId = "adminAppsDeleteApp",
+        tags = { "admin-apps" },
+        responses = {
+            @ApiResponse(responseCode = "204", description = "There is no content to send for this request, but the headers may be useful. "),
+            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
-      })
-  @RequestMapping(
-      method = RequestMethod.DELETE,
-      value = AdminAppsApi.PATH_ADMIN_APPS_DELETE_APP,
-      produces = {"application/json"})
-  ResponseEntity<Void> adminAppsDeleteApp(
-      @Parameter(name = "appId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("appId")
-          String appId);
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.DELETE,
+        value = AdminAppsApi.PATH_ADMIN_APPS_DELETE_APP,
+        produces = { "application/json" }
+    )
+    ResponseEntity<Void> adminAppsDeleteApp(
+        @Parameter(name = "appId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("appId") String appId
+    );
 
-  String PATH_ADMIN_APPS_GET_APP = "/api/v1/admin/apps/{appId}";
 
-  /**
-   * GET /api/v1/admin/apps/{appId}
-   *
-   * @param appId (required)
-   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
-   *     code 200)
-   */
-  @Operation(
-      operationId = "adminAppsGetApp",
-      tags = {"admin-apps"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "The request has succeeded.",
-            content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation = App.class))
+    String PATH_ADMIN_APPS_GET_APP = "/api/v1/admin/apps/{appId}";
+    /**
+     * GET /api/v1/admin/apps/{appId}
+     *
+     * @param appId  (required)
+     * @return The request has succeeded. (status code 200)
+     *         or An unexpected error response. (status code 200)
+     */
+    @Operation(
+        operationId = "adminAppsGetApp",
+        tags = { "admin-apps" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = App.class))
             }),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
-      })
-  @RequestMapping(
-      method = RequestMethod.GET,
-      value = AdminAppsApi.PATH_ADMIN_APPS_GET_APP,
-      produces = {"application/json"})
-  ResponseEntity<App> adminAppsGetApp(
-      @Parameter(name = "appId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("appId")
-          String appId);
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = AdminAppsApi.PATH_ADMIN_APPS_GET_APP,
+        produces = { "application/json" }
+    )
+    ResponseEntity<App> adminAppsGetApp(
+        @Parameter(name = "appId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("appId") String appId
+    );
 
-  String PATH_ADMIN_APPS_LIST_APPS = "/api/v1/admin/apps";
 
-  /**
-   * GET /api/v1/admin/apps
-   *
-   * @param page (optional)
-   * @param pageSize (optional)
-   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
-   *     code 200)
-   */
-  @Operation(
-      operationId = "adminAppsListApps",
-      tags = {"admin-apps"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "The request has succeeded.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = AdminAppsListApps200Response.class))
+    String PATH_ADMIN_APPS_LIST_APPS = "/api/v1/admin/apps";
+    /**
+     * GET /api/v1/admin/apps
+     *
+     * @param page  (optional)
+     * @param pageSize  (optional)
+     * @return The request has succeeded. (status code 200)
+     *         or An unexpected error response. (status code 200)
+     */
+    @Operation(
+        operationId = "adminAppsListApps",
+        tags = { "admin-apps" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = AdminAppsListApps200Response.class))
             }),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
-      })
-  @RequestMapping(
-      method = RequestMethod.GET,
-      value = AdminAppsApi.PATH_ADMIN_APPS_LIST_APPS,
-      produces = {"application/json"})
-  ResponseEntity<AdminAppsListApps200Response> adminAppsListApps(
-      @Parameter(name = "page", description = "", in = ParameterIn.QUERY)
-          @Valid
-          @RequestParam(value = "page", required = false)
-          @Nullable
-          Integer page,
-      @Parameter(name = "pageSize", description = "", in = ParameterIn.QUERY)
-          @Valid
-          @RequestParam(value = "pageSize", required = false)
-          @Nullable
-          Integer pageSize);
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = AdminAppsApi.PATH_ADMIN_APPS_LIST_APPS,
+        produces = { "application/json" }
+    )
+    ResponseEntity<AdminAppsListApps200Response> adminAppsListApps(
+        @Parameter(name = "page", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "page", required = false) @Nullable Integer page,
+        @Parameter(name = "pageSize", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "pageSize", required = false) @Nullable Integer pageSize
+    );
 
-  String PATH_ADMIN_APPS_SET_APP_STATUS = "/api/v1/admin/apps/{appId}/status";
 
-  /**
-   * PATCH /api/v1/admin/apps/{appId}/status
-   *
-   * @param appId (required)
-   * @param adminAppsSetAppStatusRequest (required)
-   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
-   *     code 200)
-   */
-  @Operation(
-      operationId = "adminAppsSetAppStatus",
-      tags = {"admin-apps"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "The request has succeeded.",
-            content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation = App.class))
+    String PATH_ADMIN_APPS_SET_APP_STATUS = "/api/v1/admin/apps/{appId}/status";
+    /**
+     * PATCH /api/v1/admin/apps/{appId}/status
+     *
+     * @param appId  (required)
+     * @param adminAppsSetAppStatusRequest  (required)
+     * @return The request has succeeded. (status code 200)
+     *         or An unexpected error response. (status code 200)
+     */
+    @Operation(
+        operationId = "adminAppsSetAppStatus",
+        tags = { "admin-apps" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = App.class))
             }),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
-      })
-  @RequestMapping(
-      method = RequestMethod.PATCH,
-      value = AdminAppsApi.PATH_ADMIN_APPS_SET_APP_STATUS,
-      produces = {"application/json"},
-      consumes = {"application/json"})
-  ResponseEntity<App> adminAppsSetAppStatus(
-      @Parameter(name = "appId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("appId")
-          String appId,
-      @Parameter(name = "AdminAppsSetAppStatusRequest", description = "", required = true)
-          @Valid
-          @RequestBody
-          AdminAppsSetAppStatusRequest adminAppsSetAppStatusRequest);
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.PATCH,
+        value = AdminAppsApi.PATH_ADMIN_APPS_SET_APP_STATUS,
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    ResponseEntity<App> adminAppsSetAppStatus(
+        @Parameter(name = "appId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("appId") String appId,
+        @Parameter(name = "AdminAppsSetAppStatusRequest", description = "", required = true) @Valid @RequestBody AdminAppsSetAppStatusRequest adminAppsSetAppStatusRequest
+    );
 
-  String PATH_ADMIN_APPS_UPDATE_APP = "/api/v1/admin/apps/{appId}";
 
-  /**
-   * PATCH /api/v1/admin/apps/{appId}
-   *
-   * @param appId (required)
-   * @param updateAppRequest (required)
-   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
-   *     code 200)
-   */
-  @Operation(
-      operationId = "adminAppsUpdateApp",
-      tags = {"admin-apps"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "The request has succeeded.",
-            content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation = App.class))
+    String PATH_ADMIN_APPS_UPDATE_APP = "/api/v1/admin/apps/{appId}";
+    /**
+     * PATCH /api/v1/admin/apps/{appId}
+     *
+     * @param appId  (required)
+     * @param updateAppRequest  (required)
+     * @return The request has succeeded. (status code 200)
+     *         or An unexpected error response. (status code 200)
+     */
+    @Operation(
+        operationId = "adminAppsUpdateApp",
+        tags = { "admin-apps" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = App.class))
             }),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
-      })
-  @RequestMapping(
-      method = RequestMethod.PATCH,
-      value = AdminAppsApi.PATH_ADMIN_APPS_UPDATE_APP,
-      produces = {"application/json"},
-      consumes = {"application/json"})
-  ResponseEntity<App> adminAppsUpdateApp(
-      @Parameter(name = "appId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("appId")
-          String appId,
-      @Parameter(name = "UpdateAppRequest", description = "", required = true) @Valid @RequestBody
-          UpdateAppRequest updateAppRequest);
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.PATCH,
+        value = AdminAppsApi.PATH_ADMIN_APPS_UPDATE_APP,
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    ResponseEntity<App> adminAppsUpdateApp(
+        @Parameter(name = "appId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("appId") String appId,
+        @Parameter(name = "UpdateAppRequest", description = "", required = true) @Valid @RequestBody UpdateAppRequest updateAppRequest
+    );
+
 }

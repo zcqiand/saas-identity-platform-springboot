@@ -1,20 +1,26 @@
 package saas.identity.shared.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import java.util.*;
+import java.net.URI;
 import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.UUID;
 import org.springframework.lang.Nullable;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** OidcCallbackRequest */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-01T23:20:59.484585600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * OidcCallbackRequest
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class OidcCallbackRequest {
 
   private String code;
@@ -27,7 +33,9 @@ public class OidcCallbackRequest {
     super();
   }
 
-  /** Constructor with only required parameters */
+  /**
+   * Constructor with only required parameters
+   */
   public OidcCallbackRequest(String code, String state, UUID clientId) {
     this.code = code;
     this.state = state;
@@ -41,10 +49,9 @@ public class OidcCallbackRequest {
 
   /**
    * Get code
-   *
    * @return code
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "code", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("code")
   public String getCode() {
@@ -63,10 +70,9 @@ public class OidcCallbackRequest {
 
   /**
    * Get state
-   *
    * @return state
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "state", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("state")
   public String getState() {
@@ -85,11 +91,9 @@ public class OidcCallbackRequest {
 
   /**
    * Get clientId
-   *
    * @return clientId
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "clientId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("clientId")
   public UUID getClientId() {
@@ -110,9 +114,9 @@ public class OidcCallbackRequest {
       return false;
     }
     OidcCallbackRequest oidcCallbackRequest = (OidcCallbackRequest) o;
-    return Objects.equals(this.code, oidcCallbackRequest.code)
-        && Objects.equals(this.state, oidcCallbackRequest.state)
-        && Objects.equals(this.clientId, oidcCallbackRequest.clientId);
+    return Objects.equals(this.code, oidcCallbackRequest.code) &&
+        Objects.equals(this.state, oidcCallbackRequest.state) &&
+        Objects.equals(this.clientId, oidcCallbackRequest.clientId);
   }
 
   @Override
@@ -132,9 +136,11 @@ public class OidcCallbackRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

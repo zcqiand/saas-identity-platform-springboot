@@ -1,25 +1,34 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.time.OffsetDateTime;
-import java.util.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
+import saas.identity.shared.dto.ApiKeyStatus;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** ApiKey */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-01T23:20:59.484585600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * ApiKey
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class ApiKey {
 
   private UUID id;
@@ -53,15 +62,10 @@ public class ApiKey {
     super();
   }
 
-  /** Constructor with only required parameters */
-  public ApiKey(
-      UUID id,
-      UUID tenantId,
-      String name,
-      String prefix,
-      ApiKeyStatus status,
-      List<String> scopes,
-      OffsetDateTime createdAt) {
+  /**
+   * Constructor with only required parameters
+   */
+  public ApiKey(UUID id, UUID tenantId, String name, String prefix, ApiKeyStatus status, List<String> scopes, OffsetDateTime createdAt) {
     this.id = id;
     this.tenantId = tenantId;
     this.name = name;
@@ -78,11 +82,9 @@ public class ApiKey {
 
   /**
    * Get id
-   *
    * @return id
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("id")
   public UUID getId() {
@@ -101,11 +103,9 @@ public class ApiKey {
 
   /**
    * Get tenantId
-   *
    * @return tenantId
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "tenantId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("tenantId")
   public UUID getTenantId() {
@@ -124,11 +124,9 @@ public class ApiKey {
 
   /**
    * Get name
-   *
    * @return name
    */
-  @NotNull
-  @Size(min = 2, max = 128)
+  @NotNull @Size(min = 2, max = 128) 
   @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("name")
   public String getName() {
@@ -147,11 +145,9 @@ public class ApiKey {
 
   /**
    * Get prefix
-   *
    * @return prefix
    */
-  @NotNull
-  @Size(min = 8, max = 16)
+  @NotNull @Size(min = 8, max = 16) 
   @Schema(name = "prefix", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("prefix")
   public String getPrefix() {
@@ -170,11 +166,9 @@ public class ApiKey {
 
   /**
    * Get status
-   *
    * @return status
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("status")
   public ApiKeyStatus getStatus() {
@@ -201,10 +195,9 @@ public class ApiKey {
 
   /**
    * Get scopes
-   *
    * @return scopes
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "scopes", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("scopes")
   public List<String> getScopes() {
@@ -223,11 +216,9 @@ public class ApiKey {
 
   /**
    * Get createdAt
-   *
    * @return createdAt
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "createdAt", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("createdAt")
   public OffsetDateTime getCreatedAt() {
@@ -246,10 +237,9 @@ public class ApiKey {
 
   /**
    * Get lastUsedAt
-   *
    * @return lastUsedAt
    */
-  @Valid
+  @Valid 
   @Schema(name = "lastUsedAt", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("lastUsedAt")
   public @Nullable OffsetDateTime getLastUsedAt() {
@@ -268,10 +258,9 @@ public class ApiKey {
 
   /**
    * Get expiresAt
-   *
    * @return expiresAt
    */
-  @Valid
+  @Valid 
   @Schema(name = "expiresAt", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("expiresAt")
   public @Nullable OffsetDateTime getExpiresAt() {
@@ -290,10 +279,9 @@ public class ApiKey {
 
   /**
    * Get revokedAt
-   *
    * @return revokedAt
    */
-  @Valid
+  @Valid 
   @Schema(name = "revokedAt", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("revokedAt")
   public @Nullable OffsetDateTime getRevokedAt() {
@@ -314,22 +302,21 @@ public class ApiKey {
       return false;
     }
     ApiKey apiKey = (ApiKey) o;
-    return Objects.equals(this.id, apiKey.id)
-        && Objects.equals(this.tenantId, apiKey.tenantId)
-        && Objects.equals(this.name, apiKey.name)
-        && Objects.equals(this.prefix, apiKey.prefix)
-        && Objects.equals(this.status, apiKey.status)
-        && Objects.equals(this.scopes, apiKey.scopes)
-        && Objects.equals(this.createdAt, apiKey.createdAt)
-        && Objects.equals(this.lastUsedAt, apiKey.lastUsedAt)
-        && Objects.equals(this.expiresAt, apiKey.expiresAt)
-        && Objects.equals(this.revokedAt, apiKey.revokedAt);
+    return Objects.equals(this.id, apiKey.id) &&
+        Objects.equals(this.tenantId, apiKey.tenantId) &&
+        Objects.equals(this.name, apiKey.name) &&
+        Objects.equals(this.prefix, apiKey.prefix) &&
+        Objects.equals(this.status, apiKey.status) &&
+        Objects.equals(this.scopes, apiKey.scopes) &&
+        Objects.equals(this.createdAt, apiKey.createdAt) &&
+        Objects.equals(this.lastUsedAt, apiKey.lastUsedAt) &&
+        Objects.equals(this.expiresAt, apiKey.expiresAt) &&
+        Objects.equals(this.revokedAt, apiKey.revokedAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(
-        id, tenantId, name, prefix, status, scopes, createdAt, lastUsedAt, expiresAt, revokedAt);
+    return Objects.hash(id, tenantId, name, prefix, status, scopes, createdAt, lastUsedAt, expiresAt, revokedAt);
   }
 
   @Override
@@ -351,9 +338,11 @@ public class ApiKey {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

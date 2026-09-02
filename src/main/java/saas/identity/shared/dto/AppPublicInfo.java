@@ -1,21 +1,29 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import java.util.*;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.UUID;
 import org.springframework.lang.Nullable;
+import saas.identity.shared.dto.AppStatus;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** AppPublicInfo */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-01T23:20:59.484585600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * AppPublicInfo
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class AppPublicInfo {
 
   private UUID id;
@@ -36,7 +44,9 @@ public class AppPublicInfo {
     super();
   }
 
-  /** Constructor with only required parameters */
+  /**
+   * Constructor with only required parameters
+   */
   public AppPublicInfo(UUID id, String code, String name, AppStatus status) {
     this.id = id;
     this.code = code;
@@ -51,11 +61,9 @@ public class AppPublicInfo {
 
   /**
    * Get id
-   *
    * @return id
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("id")
   public UUID getId() {
@@ -74,11 +82,9 @@ public class AppPublicInfo {
 
   /**
    * Get code
-   *
    * @return code
    */
-  @NotNull
-  @Size(min = 2, max = 64)
+  @NotNull @Size(min = 2, max = 64) 
   @Schema(name = "code", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("code")
   public String getCode() {
@@ -97,11 +103,9 @@ public class AppPublicInfo {
 
   /**
    * Get name
-   *
    * @return name
    */
-  @NotNull
-  @Size(min = 2, max = 255)
+  @NotNull @Size(min = 2, max = 255) 
   @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("name")
   public String getName() {
@@ -120,9 +124,9 @@ public class AppPublicInfo {
 
   /**
    * Get description
-   *
    * @return description
    */
+  
   @Schema(name = "description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("description")
   public @Nullable String getDescription() {
@@ -141,9 +145,9 @@ public class AppPublicInfo {
 
   /**
    * Get icon
-   *
    * @return icon
    */
+  
   @Schema(name = "icon", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("icon")
   public @Nullable String getIcon() {
@@ -162,11 +166,9 @@ public class AppPublicInfo {
 
   /**
    * Get status
-   *
    * @return status
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("status")
   public AppStatus getStatus() {
@@ -187,12 +189,12 @@ public class AppPublicInfo {
       return false;
     }
     AppPublicInfo appPublicInfo = (AppPublicInfo) o;
-    return Objects.equals(this.id, appPublicInfo.id)
-        && Objects.equals(this.code, appPublicInfo.code)
-        && Objects.equals(this.name, appPublicInfo.name)
-        && Objects.equals(this.description, appPublicInfo.description)
-        && Objects.equals(this.icon, appPublicInfo.icon)
-        && Objects.equals(this.status, appPublicInfo.status);
+    return Objects.equals(this.id, appPublicInfo.id) &&
+        Objects.equals(this.code, appPublicInfo.code) &&
+        Objects.equals(this.name, appPublicInfo.name) &&
+        Objects.equals(this.description, appPublicInfo.description) &&
+        Objects.equals(this.icon, appPublicInfo.icon) &&
+        Objects.equals(this.status, appPublicInfo.status);
   }
 
   @Override
@@ -215,9 +217,11 @@ public class AppPublicInfo {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

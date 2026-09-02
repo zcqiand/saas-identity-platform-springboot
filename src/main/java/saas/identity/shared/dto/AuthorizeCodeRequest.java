@@ -1,29 +1,36 @@
 package saas.identity.shared.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import java.util.*;
+import java.net.URI;
 import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.UUID;
 import org.springframework.lang.Nullable;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** AuthorizeCodeRequest */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-01T23:20:59.484585600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * AuthorizeCodeRequest
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class AuthorizeCodeRequest {
 
   private UUID clientId;
 
   private String redirectUri;
 
-  /** Gets or Sets responseType */
+  /**
+   * Gets or Sets responseType
+   */
   public enum ResponseTypeEnum {
     CODE("code");
 
@@ -66,14 +73,10 @@ public class AuthorizeCodeRequest {
     super();
   }
 
-  /** Constructor with only required parameters */
-  public AuthorizeCodeRequest(
-      UUID clientId,
-      String redirectUri,
-      ResponseTypeEnum responseType,
-      String scope,
-      String state,
-      UUID tenantId) {
+  /**
+   * Constructor with only required parameters
+   */
+  public AuthorizeCodeRequest(UUID clientId, String redirectUri, ResponseTypeEnum responseType, String scope, String state, UUID tenantId) {
     this.clientId = clientId;
     this.redirectUri = redirectUri;
     this.responseType = responseType;
@@ -89,11 +92,9 @@ public class AuthorizeCodeRequest {
 
   /**
    * Get clientId
-   *
    * @return clientId
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "clientId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("clientId")
   public UUID getClientId() {
@@ -112,11 +113,9 @@ public class AuthorizeCodeRequest {
 
   /**
    * Get redirectUri
-   *
    * @return redirectUri
    */
-  @NotNull
-  @Size(min = 1, max = 2048)
+  @NotNull @Size(min = 1, max = 2048) 
   @Schema(name = "redirectUri", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("redirectUri")
   public String getRedirectUri() {
@@ -135,10 +134,9 @@ public class AuthorizeCodeRequest {
 
   /**
    * Get responseType
-   *
    * @return responseType
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "responseType", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("responseType")
   public ResponseTypeEnum getResponseType() {
@@ -157,10 +155,9 @@ public class AuthorizeCodeRequest {
 
   /**
    * Get scope
-   *
    * @return scope
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "scope", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("scope")
   public String getScope() {
@@ -179,10 +176,9 @@ public class AuthorizeCodeRequest {
 
   /**
    * Get state
-   *
    * @return state
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "state", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("state")
   public String getState() {
@@ -201,11 +197,9 @@ public class AuthorizeCodeRequest {
 
   /**
    * Get tenantId
-   *
    * @return tenantId
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "tenantId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("tenantId")
   public UUID getTenantId() {
@@ -226,12 +220,12 @@ public class AuthorizeCodeRequest {
       return false;
     }
     AuthorizeCodeRequest authorizeCodeRequest = (AuthorizeCodeRequest) o;
-    return Objects.equals(this.clientId, authorizeCodeRequest.clientId)
-        && Objects.equals(this.redirectUri, authorizeCodeRequest.redirectUri)
-        && Objects.equals(this.responseType, authorizeCodeRequest.responseType)
-        && Objects.equals(this.scope, authorizeCodeRequest.scope)
-        && Objects.equals(this.state, authorizeCodeRequest.state)
-        && Objects.equals(this.tenantId, authorizeCodeRequest.tenantId);
+    return Objects.equals(this.clientId, authorizeCodeRequest.clientId) &&
+        Objects.equals(this.redirectUri, authorizeCodeRequest.redirectUri) &&
+        Objects.equals(this.responseType, authorizeCodeRequest.responseType) &&
+        Objects.equals(this.scope, authorizeCodeRequest.scope) &&
+        Objects.equals(this.state, authorizeCodeRequest.state) &&
+        Objects.equals(this.tenantId, authorizeCodeRequest.tenantId);
   }
 
   @Override
@@ -254,9 +248,11 @@ public class AuthorizeCodeRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

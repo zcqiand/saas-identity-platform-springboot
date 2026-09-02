@@ -1,23 +1,31 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import org.springframework.lang.Nullable;
+import saas.identity.shared.dto.App;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import java.util.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import org.springframework.lang.Nullable;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** AdminAppsListApps200Response */
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * AdminAppsListApps200Response
+ */
+
 @JsonTypeName("AdminApps_listApps_200_response")
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-01T23:20:59.484585600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class AdminAppsListApps200Response {
 
   private List<@Valid App> items = new ArrayList<>();
@@ -32,9 +40,10 @@ public class AdminAppsListApps200Response {
     super();
   }
 
-  /** Constructor with only required parameters */
-  public AdminAppsListApps200Response(
-      List<@Valid App> items, Integer page, Integer pageSize, Long total) {
+  /**
+   * Constructor with only required parameters
+   */
+  public AdminAppsListApps200Response(List<@Valid App> items, Integer page, Integer pageSize, Long total) {
     this.items = items;
     this.page = page;
     this.pageSize = pageSize;
@@ -56,11 +65,9 @@ public class AdminAppsListApps200Response {
 
   /**
    * Get items
-   *
    * @return items
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "items", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("items")
   public List<@Valid App> getItems() {
@@ -79,10 +86,9 @@ public class AdminAppsListApps200Response {
 
   /**
    * Get page
-   *
    * @return page
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "page", example = "0", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("page")
   public Integer getPage() {
@@ -101,10 +107,9 @@ public class AdminAppsListApps200Response {
 
   /**
    * Get pageSize
-   *
    * @return pageSize
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "pageSize", example = "20", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("pageSize")
   public Integer getPageSize() {
@@ -123,10 +128,9 @@ public class AdminAppsListApps200Response {
 
   /**
    * Get total
-   *
    * @return total
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "total", example = "0", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("total")
   public Long getTotal() {
@@ -147,10 +151,10 @@ public class AdminAppsListApps200Response {
       return false;
     }
     AdminAppsListApps200Response adminAppsListApps200Response = (AdminAppsListApps200Response) o;
-    return Objects.equals(this.items, adminAppsListApps200Response.items)
-        && Objects.equals(this.page, adminAppsListApps200Response.page)
-        && Objects.equals(this.pageSize, adminAppsListApps200Response.pageSize)
-        && Objects.equals(this.total, adminAppsListApps200Response.total);
+    return Objects.equals(this.items, adminAppsListApps200Response.items) &&
+        Objects.equals(this.page, adminAppsListApps200Response.page) &&
+        Objects.equals(this.pageSize, adminAppsListApps200Response.pageSize) &&
+        Objects.equals(this.total, adminAppsListApps200Response.total);
   }
 
   @Override
@@ -171,9 +175,11 @@ public class AdminAppsListApps200Response {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

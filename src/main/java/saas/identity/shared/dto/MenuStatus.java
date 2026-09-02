@@ -1,19 +1,30 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonValue;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import jakarta.annotation.Generated;
-import jakarta.validation.constraints.*;
-import java.util.*;
 
-/** Gets or Sets MenuStatus */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-01T23:20:59.484585600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+/**
+ * Gets or Sets MenuStatus
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public enum MenuStatus {
+  
   ACTIVE("active"),
-
+  
   DISABLED("disabled");
 
   private final String value;
@@ -42,3 +53,4 @@ public enum MenuStatus {
     throw new IllegalArgumentException("Unexpected value '" + value + "'");
   }
 }
+

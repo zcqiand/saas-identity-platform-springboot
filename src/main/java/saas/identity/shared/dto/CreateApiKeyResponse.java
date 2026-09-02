@@ -1,19 +1,26 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import org.springframework.lang.Nullable;
+import saas.identity.shared.dto.ApiKey;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import java.util.*;
-import java.util.Objects;
-import org.springframework.lang.Nullable;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** CreateApiKeyResponse */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-01T23:20:59.484585600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * CreateApiKeyResponse
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class CreateApiKeyResponse {
 
   private ApiKey apiKey;
@@ -24,7 +31,9 @@ public class CreateApiKeyResponse {
     super();
   }
 
-  /** Constructor with only required parameters */
+  /**
+   * Constructor with only required parameters
+   */
   public CreateApiKeyResponse(ApiKey apiKey, String secret) {
     this.apiKey = apiKey;
     this.secret = secret;
@@ -37,11 +46,9 @@ public class CreateApiKeyResponse {
 
   /**
    * Get apiKey
-   *
    * @return apiKey
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "apiKey", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("apiKey")
   public ApiKey getApiKey() {
@@ -60,11 +67,9 @@ public class CreateApiKeyResponse {
 
   /**
    * Get secret
-   *
    * @return secret
    */
-  @NotNull
-  @Size(min = 16, max = 256)
+  @NotNull @Size(min = 16, max = 256) 
   @Schema(name = "secret", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("secret")
   public String getSecret() {
@@ -85,8 +90,8 @@ public class CreateApiKeyResponse {
       return false;
     }
     CreateApiKeyResponse createApiKeyResponse = (CreateApiKeyResponse) o;
-    return Objects.equals(this.apiKey, createApiKeyResponse.apiKey)
-        && Objects.equals(this.secret, createApiKeyResponse.secret);
+    return Objects.equals(this.apiKey, createApiKeyResponse.apiKey) &&
+        Objects.equals(this.secret, createApiKeyResponse.secret);
   }
 
   @Override
@@ -105,9 +110,11 @@ public class CreateApiKeyResponse {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

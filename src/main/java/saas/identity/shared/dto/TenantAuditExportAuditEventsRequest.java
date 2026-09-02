@@ -1,25 +1,30 @@
 package saas.identity.shared.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
 import java.time.OffsetDateTime;
-import java.util.*;
-import java.util.Objects;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** TenantAuditExportAuditEventsRequest */
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * TenantAuditExportAuditEventsRequest
+ */
+
 @JsonTypeName("TenantAudit_exportAuditEvents_request")
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-01T23:20:59.484585600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class TenantAuditExportAuditEventsRequest {
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -28,10 +33,12 @@ public class TenantAuditExportAuditEventsRequest {
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private OffsetDateTime to;
 
-  /** Gets or Sets format */
+  /**
+   * Gets or Sets format
+   */
   public enum FormatEnum {
     CSV("csv"),
-
+    
     JSON("json");
 
     private final String value;
@@ -67,9 +74,10 @@ public class TenantAuditExportAuditEventsRequest {
     super();
   }
 
-  /** Constructor with only required parameters */
-  public TenantAuditExportAuditEventsRequest(
-      OffsetDateTime from, OffsetDateTime to, FormatEnum format) {
+  /**
+   * Constructor with only required parameters
+   */
+  public TenantAuditExportAuditEventsRequest(OffsetDateTime from, OffsetDateTime to, FormatEnum format) {
     this.from = from;
     this.to = to;
     this.format = format;
@@ -82,11 +90,9 @@ public class TenantAuditExportAuditEventsRequest {
 
   /**
    * Get from
-   *
    * @return from
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "from", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("from")
   public OffsetDateTime getFrom() {
@@ -105,11 +111,9 @@ public class TenantAuditExportAuditEventsRequest {
 
   /**
    * Get to
-   *
    * @return to
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "to", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("to")
   public OffsetDateTime getTo() {
@@ -128,10 +132,9 @@ public class TenantAuditExportAuditEventsRequest {
 
   /**
    * Get format
-   *
    * @return format
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "format", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("format")
   public FormatEnum getFormat() {
@@ -151,11 +154,10 @@ public class TenantAuditExportAuditEventsRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    TenantAuditExportAuditEventsRequest tenantAuditExportAuditEventsRequest =
-        (TenantAuditExportAuditEventsRequest) o;
-    return Objects.equals(this.from, tenantAuditExportAuditEventsRequest.from)
-        && Objects.equals(this.to, tenantAuditExportAuditEventsRequest.to)
-        && Objects.equals(this.format, tenantAuditExportAuditEventsRequest.format);
+    TenantAuditExportAuditEventsRequest tenantAuditExportAuditEventsRequest = (TenantAuditExportAuditEventsRequest) o;
+    return Objects.equals(this.from, tenantAuditExportAuditEventsRequest.from) &&
+        Objects.equals(this.to, tenantAuditExportAuditEventsRequest.to) &&
+        Objects.equals(this.format, tenantAuditExportAuditEventsRequest.format);
   }
 
   @Override
@@ -175,9 +177,11 @@ public class TenantAuditExportAuditEventsRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

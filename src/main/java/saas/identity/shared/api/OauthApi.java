@@ -5,109 +5,99 @@
  */
 package saas.identity.shared.api;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
 import saas.identity.shared.dto.AuthorizeCodeRequest;
 import saas.identity.shared.dto.ErrorResponse;
 import saas.identity.shared.dto.OAuthAuthorize200Response;
 import saas.identity.shared.dto.TokenRequest;
 import saas.identity.shared.dto.TokenResponse;
+import io.swagger.v3.oas.annotations.ExternalDocumentation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-01T23:20:59.484585600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import jakarta.annotation.Generated;
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 @Validated
 @Tag(name = "oauth", description = "the oauth API")
 public interface OauthApi {
 
-  String PATH_O_AUTH_AUTHORIZE = "/api/v1/oauth/authorize";
-
-  /**
-   * POST /api/v1/oauth/authorize
-   *
-   * @param authorizeCodeRequest (required)
-   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
-   *     code 200)
-   */
-  @Operation(
-      operationId = "oAuthAuthorize",
-      tags = {"oauth"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "The request has succeeded.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = OAuthAuthorize200Response.class))
+    String PATH_O_AUTH_AUTHORIZE = "/api/v1/oauth/authorize";
+    /**
+     * POST /api/v1/oauth/authorize
+     *
+     * @param authorizeCodeRequest  (required)
+     * @return The request has succeeded. (status code 200)
+     *         or An unexpected error response. (status code 200)
+     */
+    @Operation(
+        operationId = "oAuthAuthorize",
+        tags = { "oauth" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = OAuthAuthorize200Response.class))
             }),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
-      })
-  @RequestMapping(
-      method = RequestMethod.POST,
-      value = OauthApi.PATH_O_AUTH_AUTHORIZE,
-      produces = {"application/json"},
-      consumes = {"application/json"})
-  ResponseEntity<OAuthAuthorize200Response> oAuthAuthorize(
-      @Parameter(name = "AuthorizeCodeRequest", description = "", required = true)
-          @Valid
-          @RequestBody
-          AuthorizeCodeRequest authorizeCodeRequest);
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.POST,
+        value = OauthApi.PATH_O_AUTH_AUTHORIZE,
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    ResponseEntity<OAuthAuthorize200Response> oAuthAuthorize(
+        @Parameter(name = "AuthorizeCodeRequest", description = "", required = true) @Valid @RequestBody AuthorizeCodeRequest authorizeCodeRequest
+    );
 
-  String PATH_O_AUTH_TOKEN = "/api/v1/oauth/token";
 
-  /**
-   * POST /api/v1/oauth/token
-   *
-   * @param tokenRequest (required)
-   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
-   *     code 200)
-   */
-  @Operation(
-      operationId = "oAuthToken",
-      tags = {"oauth"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "The request has succeeded.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = TokenResponse.class))
+    String PATH_O_AUTH_TOKEN = "/api/v1/oauth/token";
+    /**
+     * POST /api/v1/oauth/token
+     *
+     * @param tokenRequest  (required)
+     * @return The request has succeeded. (status code 200)
+     *         or An unexpected error response. (status code 200)
+     */
+    @Operation(
+        operationId = "oAuthToken",
+        tags = { "oauth" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = TokenResponse.class))
             }),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
-      })
-  @RequestMapping(
-      method = RequestMethod.POST,
-      value = OauthApi.PATH_O_AUTH_TOKEN,
-      produces = {"application/json"},
-      consumes = {"application/json"})
-  ResponseEntity<TokenResponse> oAuthToken(
-      @Parameter(name = "TokenRequest", description = "", required = true) @Valid @RequestBody
-          TokenRequest tokenRequest);
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.POST,
+        value = OauthApi.PATH_O_AUTH_TOKEN,
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    ResponseEntity<TokenResponse> oAuthToken(
+        @Parameter(name = "TokenRequest", description = "", required = true) @Valid @RequestBody TokenRequest tokenRequest
+    );
+
 }

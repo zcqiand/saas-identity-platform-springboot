@@ -1,21 +1,29 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
+import com.fasterxml.jackson.annotation.JsonValue;
+import org.springframework.lang.Nullable;
+import saas.identity.shared.dto.AppStatus;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import java.util.*;
-import java.util.Objects;
-import org.springframework.lang.Nullable;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** AdminAppsSetAppStatusRequest */
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * AdminAppsSetAppStatusRequest
+ */
+
 @JsonTypeName("AdminApps_setAppStatus_request")
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-01T23:20:59.484585600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class AdminAppsSetAppStatusRequest {
 
   private AppStatus status;
@@ -24,7 +32,9 @@ public class AdminAppsSetAppStatusRequest {
     super();
   }
 
-  /** Constructor with only required parameters */
+  /**
+   * Constructor with only required parameters
+   */
   public AdminAppsSetAppStatusRequest(AppStatus status) {
     this.status = status;
   }
@@ -36,11 +46,9 @@ public class AdminAppsSetAppStatusRequest {
 
   /**
    * Get status
-   *
    * @return status
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("status")
   public AppStatus getStatus() {
@@ -79,9 +87,11 @@ public class AdminAppsSetAppStatusRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

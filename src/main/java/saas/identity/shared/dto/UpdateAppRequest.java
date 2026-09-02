@@ -1,22 +1,32 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import org.springframework.lang.Nullable;
+import saas.identity.shared.dto.AppStatus;
+import saas.identity.shared.dto.OAuthGrantType;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import java.util.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import org.springframework.lang.Nullable;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** UpdateAppRequest */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-01T23:20:59.484585600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * UpdateAppRequest
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class UpdateAppRequest {
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -53,9 +63,9 @@ public class UpdateAppRequest {
 
   /**
    * Get name
-   *
    * @return name
    */
+  
   @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("name")
   public @Nullable String getName() {
@@ -74,9 +84,9 @@ public class UpdateAppRequest {
 
   /**
    * Get description
-   *
    * @return description
    */
+  
   @Schema(name = "description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("description")
   public @Nullable String getDescription() {
@@ -95,9 +105,9 @@ public class UpdateAppRequest {
 
   /**
    * Get icon
-   *
    * @return icon
    */
+  
   @Schema(name = "icon", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("icon")
   public @Nullable String getIcon() {
@@ -116,9 +126,9 @@ public class UpdateAppRequest {
 
   /**
    * Get sortOrder
-   *
    * @return sortOrder
    */
+  
   @Schema(name = "sortOrder", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("sortOrder")
   public @Nullable Integer getSortOrder() {
@@ -137,10 +147,9 @@ public class UpdateAppRequest {
 
   /**
    * Get status
-   *
    * @return status
    */
-  @Valid
+  @Valid 
   @Schema(name = "status", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("status")
   public @Nullable AppStatus getStatus() {
@@ -167,9 +176,9 @@ public class UpdateAppRequest {
 
   /**
    * Get redirectUris
-   *
    * @return redirectUris
    */
+  
   @Schema(name = "redirectUris", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("redirectUris")
   public List<String> getRedirectUris() {
@@ -196,9 +205,9 @@ public class UpdateAppRequest {
 
   /**
    * Get scopes
-   *
    * @return scopes
    */
+  
   @Schema(name = "scopes", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("scopes")
   public List<String> getScopes() {
@@ -225,10 +234,9 @@ public class UpdateAppRequest {
 
   /**
    * Get grantTypes
-   *
    * @return grantTypes
    */
-  @Valid
+  @Valid 
   @Schema(name = "grantTypes", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("grantTypes")
   public List<OAuthGrantType> getGrantTypes() {
@@ -247,9 +255,9 @@ public class UpdateAppRequest {
 
   /**
    * Get isFirstParty
-   *
    * @return isFirstParty
    */
+  
   @Schema(name = "isFirstParty", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("isFirstParty")
   public @Nullable Boolean getIsFirstParty() {
@@ -270,21 +278,20 @@ public class UpdateAppRequest {
       return false;
     }
     UpdateAppRequest updateAppRequest = (UpdateAppRequest) o;
-    return Objects.equals(this.name, updateAppRequest.name)
-        && Objects.equals(this.description, updateAppRequest.description)
-        && Objects.equals(this.icon, updateAppRequest.icon)
-        && Objects.equals(this.sortOrder, updateAppRequest.sortOrder)
-        && Objects.equals(this.status, updateAppRequest.status)
-        && Objects.equals(this.redirectUris, updateAppRequest.redirectUris)
-        && Objects.equals(this.scopes, updateAppRequest.scopes)
-        && Objects.equals(this.grantTypes, updateAppRequest.grantTypes)
-        && Objects.equals(this.isFirstParty, updateAppRequest.isFirstParty);
+    return Objects.equals(this.name, updateAppRequest.name) &&
+        Objects.equals(this.description, updateAppRequest.description) &&
+        Objects.equals(this.icon, updateAppRequest.icon) &&
+        Objects.equals(this.sortOrder, updateAppRequest.sortOrder) &&
+        Objects.equals(this.status, updateAppRequest.status) &&
+        Objects.equals(this.redirectUris, updateAppRequest.redirectUris) &&
+        Objects.equals(this.scopes, updateAppRequest.scopes) &&
+        Objects.equals(this.grantTypes, updateAppRequest.grantTypes) &&
+        Objects.equals(this.isFirstParty, updateAppRequest.isFirstParty);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(
-        name, description, icon, sortOrder, status, redirectUris, scopes, grantTypes, isFirstParty);
+    return Objects.hash(name, description, icon, sortOrder, status, redirectUris, scopes, grantTypes, isFirstParty);
   }
 
   @Override
@@ -305,9 +312,11 @@ public class UpdateAppRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

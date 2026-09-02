@@ -1,19 +1,26 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.constraints.*;
-import java.util.*;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import org.springframework.lang.Nullable;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** TokenResponse */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-01T23:20:59.484585600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * TokenResponse
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class TokenResponse {
 
   private String accessToken;
@@ -31,7 +38,9 @@ public class TokenResponse {
     super();
   }
 
-  /** Constructor with only required parameters */
+  /**
+   * Constructor with only required parameters
+   */
   public TokenResponse(String accessToken, String tokenType, Integer expiresIn, String scope) {
     this.accessToken = accessToken;
     this.tokenType = tokenType;
@@ -46,10 +55,9 @@ public class TokenResponse {
 
   /**
    * Get accessToken
-   *
    * @return accessToken
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "accessToken", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("accessToken")
   public String getAccessToken() {
@@ -68,9 +76,9 @@ public class TokenResponse {
 
   /**
    * Get refreshToken
-   *
    * @return refreshToken
    */
+  
   @Schema(name = "refreshToken", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("refreshToken")
   public @Nullable String getRefreshToken() {
@@ -89,10 +97,9 @@ public class TokenResponse {
 
   /**
    * Get tokenType
-   *
    * @return tokenType
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "tokenType", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("tokenType")
   public String getTokenType() {
@@ -111,10 +118,9 @@ public class TokenResponse {
 
   /**
    * Get expiresIn
-   *
    * @return expiresIn
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "expiresIn", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("expiresIn")
   public Integer getExpiresIn() {
@@ -133,10 +139,9 @@ public class TokenResponse {
 
   /**
    * Get scope
-   *
    * @return scope
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "scope", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("scope")
   public String getScope() {
@@ -157,11 +162,11 @@ public class TokenResponse {
       return false;
     }
     TokenResponse tokenResponse = (TokenResponse) o;
-    return Objects.equals(this.accessToken, tokenResponse.accessToken)
-        && Objects.equals(this.refreshToken, tokenResponse.refreshToken)
-        && Objects.equals(this.tokenType, tokenResponse.tokenType)
-        && Objects.equals(this.expiresIn, tokenResponse.expiresIn)
-        && Objects.equals(this.scope, tokenResponse.scope);
+    return Objects.equals(this.accessToken, tokenResponse.accessToken) &&
+        Objects.equals(this.refreshToken, tokenResponse.refreshToken) &&
+        Objects.equals(this.tokenType, tokenResponse.tokenType) &&
+        Objects.equals(this.expiresIn, tokenResponse.expiresIn) &&
+        Objects.equals(this.scope, tokenResponse.scope);
   }
 
   @Override
@@ -183,9 +188,11 @@ public class TokenResponse {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

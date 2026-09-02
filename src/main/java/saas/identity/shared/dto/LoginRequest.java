@@ -1,21 +1,27 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import java.util.*;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.UUID;
 import org.springframework.lang.Nullable;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** LoginRequest */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-01T23:20:59.484585600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * LoginRequest
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class LoginRequest {
 
   private String username;
@@ -29,7 +35,9 @@ public class LoginRequest {
     super();
   }
 
-  /** Constructor with only required parameters */
+  /**
+   * Constructor with only required parameters
+   */
   public LoginRequest(String username, String password) {
     this.username = username;
     this.password = password;
@@ -42,11 +50,9 @@ public class LoginRequest {
 
   /**
    * Get username
-   *
    * @return username
    */
-  @NotNull
-  @Size(min = 1, max = 64)
+  @NotNull @Size(min = 1, max = 64) 
   @Schema(name = "username", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("username")
   public String getUsername() {
@@ -65,11 +71,9 @@ public class LoginRequest {
 
   /**
    * Get password
-   *
    * @return password
    */
-  @NotNull
-  @Size(min = 1, max = 128)
+  @NotNull @Size(min = 1, max = 128) 
   @Schema(name = "password", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("password")
   public String getPassword() {
@@ -88,10 +92,9 @@ public class LoginRequest {
 
   /**
    * Get tenantCode
-   *
    * @return tenantCode
    */
-  @Valid
+  @Valid 
   @Schema(name = "tenantCode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("tenantCode")
   public @Nullable UUID getTenantCode() {
@@ -112,9 +115,9 @@ public class LoginRequest {
       return false;
     }
     LoginRequest loginRequest = (LoginRequest) o;
-    return Objects.equals(this.username, loginRequest.username)
-        && Objects.equals(this.password, loginRequest.password)
-        && Objects.equals(this.tenantCode, loginRequest.tenantCode);
+    return Objects.equals(this.username, loginRequest.username) &&
+        Objects.equals(this.password, loginRequest.password) &&
+        Objects.equals(this.tenantCode, loginRequest.tenantCode);
   }
 
   @Override
@@ -134,9 +137,11 @@ public class LoginRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

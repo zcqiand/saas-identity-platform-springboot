@@ -1,20 +1,29 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import org.springframework.lang.Nullable;
+import saas.identity.shared.dto.MenuStatus;
+import saas.identity.shared.dto.MenuType;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import java.util.*;
-import java.util.Objects;
-import org.springframework.lang.Nullable;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** UpdateMenuRequest */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-01T23:20:59.484585600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * UpdateMenuRequest
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class UpdateMenuRequest {
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -45,9 +54,9 @@ public class UpdateMenuRequest {
 
   /**
    * Get parentId
-   *
    * @return parentId
    */
+  
   @Schema(name = "parentId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("parentId")
   public @Nullable String getParentId() {
@@ -66,9 +75,9 @@ public class UpdateMenuRequest {
 
   /**
    * Get name
-   *
    * @return name
    */
+  
   @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("name")
   public @Nullable String getName() {
@@ -87,9 +96,9 @@ public class UpdateMenuRequest {
 
   /**
    * Get path
-   *
    * @return path
    */
+  
   @Schema(name = "path", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("path")
   public @Nullable String getPath() {
@@ -108,9 +117,9 @@ public class UpdateMenuRequest {
 
   /**
    * Get icon
-   *
    * @return icon
    */
+  
   @Schema(name = "icon", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("icon")
   public @Nullable String getIcon() {
@@ -129,10 +138,9 @@ public class UpdateMenuRequest {
 
   /**
    * Get type
-   *
    * @return type
    */
-  @Valid
+  @Valid 
   @Schema(name = "type", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("type")
   public @Nullable MenuType getType() {
@@ -151,9 +159,9 @@ public class UpdateMenuRequest {
 
   /**
    * Get sortOrder
-   *
    * @return sortOrder
    */
+  
   @Schema(name = "sortOrder", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("sortOrder")
   public @Nullable Integer getSortOrder() {
@@ -172,10 +180,9 @@ public class UpdateMenuRequest {
 
   /**
    * Get status
-   *
    * @return status
    */
-  @Valid
+  @Valid 
   @Schema(name = "status", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("status")
   public @Nullable MenuStatus getStatus() {
@@ -196,13 +203,13 @@ public class UpdateMenuRequest {
       return false;
     }
     UpdateMenuRequest updateMenuRequest = (UpdateMenuRequest) o;
-    return Objects.equals(this.parentId, updateMenuRequest.parentId)
-        && Objects.equals(this.name, updateMenuRequest.name)
-        && Objects.equals(this.path, updateMenuRequest.path)
-        && Objects.equals(this.icon, updateMenuRequest.icon)
-        && Objects.equals(this.type, updateMenuRequest.type)
-        && Objects.equals(this.sortOrder, updateMenuRequest.sortOrder)
-        && Objects.equals(this.status, updateMenuRequest.status);
+    return Objects.equals(this.parentId, updateMenuRequest.parentId) &&
+        Objects.equals(this.name, updateMenuRequest.name) &&
+        Objects.equals(this.path, updateMenuRequest.path) &&
+        Objects.equals(this.icon, updateMenuRequest.icon) &&
+        Objects.equals(this.type, updateMenuRequest.type) &&
+        Objects.equals(this.sortOrder, updateMenuRequest.sortOrder) &&
+        Objects.equals(this.status, updateMenuRequest.status);
   }
 
   @Override
@@ -226,9 +233,11 @@ public class UpdateMenuRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

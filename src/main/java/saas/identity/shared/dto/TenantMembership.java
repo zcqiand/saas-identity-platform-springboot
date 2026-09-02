@@ -1,24 +1,33 @@
 package saas.identity.shared.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import java.time.OffsetDateTime;
-import java.util.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.net.URI;
 import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
+import saas.identity.shared.dto.MembershipStatus;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** TenantMembership */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-01T23:20:59.484585600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * TenantMembership
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class TenantMembership {
 
   private UUID id;
@@ -38,14 +47,10 @@ public class TenantMembership {
     super();
   }
 
-  /** Constructor with only required parameters */
-  public TenantMembership(
-      UUID id,
-      UUID userId,
-      UUID tenantId,
-      List<String> roleIds,
-      MembershipStatus status,
-      OffsetDateTime joinedAt) {
+  /**
+   * Constructor with only required parameters
+   */
+  public TenantMembership(UUID id, UUID userId, UUID tenantId, List<String> roleIds, MembershipStatus status, OffsetDateTime joinedAt) {
     this.id = id;
     this.userId = userId;
     this.tenantId = tenantId;
@@ -61,11 +66,9 @@ public class TenantMembership {
 
   /**
    * Get id
-   *
    * @return id
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("id")
   public UUID getId() {
@@ -84,11 +87,9 @@ public class TenantMembership {
 
   /**
    * Get userId
-   *
    * @return userId
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "userId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("userId")
   public UUID getUserId() {
@@ -107,11 +108,9 @@ public class TenantMembership {
 
   /**
    * Get tenantId
-   *
    * @return tenantId
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "tenantId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("tenantId")
   public UUID getTenantId() {
@@ -138,10 +137,9 @@ public class TenantMembership {
 
   /**
    * Get roleIds
-   *
    * @return roleIds
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "roleIds", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("roleIds")
   public List<String> getRoleIds() {
@@ -160,11 +158,9 @@ public class TenantMembership {
 
   /**
    * Get status
-   *
    * @return status
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("status")
   public MembershipStatus getStatus() {
@@ -183,11 +179,9 @@ public class TenantMembership {
 
   /**
    * Get joinedAt
-   *
    * @return joinedAt
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "joinedAt", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("joinedAt")
   public OffsetDateTime getJoinedAt() {
@@ -208,12 +202,12 @@ public class TenantMembership {
       return false;
     }
     TenantMembership tenantMembership = (TenantMembership) o;
-    return Objects.equals(this.id, tenantMembership.id)
-        && Objects.equals(this.userId, tenantMembership.userId)
-        && Objects.equals(this.tenantId, tenantMembership.tenantId)
-        && Objects.equals(this.roleIds, tenantMembership.roleIds)
-        && Objects.equals(this.status, tenantMembership.status)
-        && Objects.equals(this.joinedAt, tenantMembership.joinedAt);
+    return Objects.equals(this.id, tenantMembership.id) &&
+        Objects.equals(this.userId, tenantMembership.userId) &&
+        Objects.equals(this.tenantId, tenantMembership.tenantId) &&
+        Objects.equals(this.roleIds, tenantMembership.roleIds) &&
+        Objects.equals(this.status, tenantMembership.status) &&
+        Objects.equals(this.joinedAt, tenantMembership.joinedAt);
   }
 
   @Override
@@ -236,9 +230,11 @@ public class TenantMembership {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

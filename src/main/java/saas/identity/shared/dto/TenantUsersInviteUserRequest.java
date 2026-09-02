@@ -1,23 +1,31 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.constraints.*;
-import java.util.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import org.springframework.lang.Nullable;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** TenantUsersInviteUserRequest */
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * TenantUsersInviteUserRequest
+ */
+
 @JsonTypeName("TenantUsers_inviteUser_request")
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-01T23:20:59.484585600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class TenantUsersInviteUserRequest {
 
   private String email;
@@ -29,7 +37,9 @@ public class TenantUsersInviteUserRequest {
     super();
   }
 
-  /** Constructor with only required parameters */
+  /**
+   * Constructor with only required parameters
+   */
   public TenantUsersInviteUserRequest(String email) {
     this.email = email;
   }
@@ -41,10 +51,9 @@ public class TenantUsersInviteUserRequest {
 
   /**
    * Get email
-   *
    * @return email
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "email", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("email")
   public String getEmail() {
@@ -71,9 +80,9 @@ public class TenantUsersInviteUserRequest {
 
   /**
    * Get roleIds
-   *
    * @return roleIds
    */
+  
   @Schema(name = "roleIds", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("roleIds")
   public List<String> getRoleIds() {
@@ -94,8 +103,8 @@ public class TenantUsersInviteUserRequest {
       return false;
     }
     TenantUsersInviteUserRequest tenantUsersInviteUserRequest = (TenantUsersInviteUserRequest) o;
-    return Objects.equals(this.email, tenantUsersInviteUserRequest.email)
-        && Objects.equals(this.roleIds, tenantUsersInviteUserRequest.roleIds);
+    return Objects.equals(this.email, tenantUsersInviteUserRequest.email) &&
+        Objects.equals(this.roleIds, tenantUsersInviteUserRequest.roleIds);
   }
 
   @Override
@@ -114,9 +123,11 @@ public class TenantUsersInviteUserRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

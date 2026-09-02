@@ -1,20 +1,26 @@
 package saas.identity.shared.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import java.util.*;
+import java.net.URI;
 import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.UUID;
 import org.springframework.lang.Nullable;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** LoginResponse */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-01T23:20:59.484585600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * LoginResponse
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class LoginResponse {
 
   private String accessToken;
@@ -33,14 +39,10 @@ public class LoginResponse {
     super();
   }
 
-  /** Constructor with only required parameters */
-  public LoginResponse(
-      String accessToken,
-      String refreshToken,
-      String tokenType,
-      Integer expiresIn,
-      UUID userId,
-      UUID currentTenantId) {
+  /**
+   * Constructor with only required parameters
+   */
+  public LoginResponse(String accessToken, String refreshToken, String tokenType, Integer expiresIn, UUID userId, UUID currentTenantId) {
     this.accessToken = accessToken;
     this.refreshToken = refreshToken;
     this.tokenType = tokenType;
@@ -56,10 +58,9 @@ public class LoginResponse {
 
   /**
    * Get accessToken
-   *
    * @return accessToken
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "accessToken", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("accessToken")
   public String getAccessToken() {
@@ -78,10 +79,9 @@ public class LoginResponse {
 
   /**
    * Get refreshToken
-   *
    * @return refreshToken
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "refreshToken", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("refreshToken")
   public String getRefreshToken() {
@@ -100,10 +100,9 @@ public class LoginResponse {
 
   /**
    * Get tokenType
-   *
    * @return tokenType
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "tokenType", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("tokenType")
   public String getTokenType() {
@@ -122,10 +121,9 @@ public class LoginResponse {
 
   /**
    * Get expiresIn
-   *
    * @return expiresIn
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "expiresIn", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("expiresIn")
   public Integer getExpiresIn() {
@@ -144,11 +142,9 @@ public class LoginResponse {
 
   /**
    * Get userId
-   *
    * @return userId
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "userId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("userId")
   public UUID getUserId() {
@@ -167,11 +163,9 @@ public class LoginResponse {
 
   /**
    * Get currentTenantId
-   *
    * @return currentTenantId
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "currentTenantId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("currentTenantId")
   public UUID getCurrentTenantId() {
@@ -192,12 +186,12 @@ public class LoginResponse {
       return false;
     }
     LoginResponse loginResponse = (LoginResponse) o;
-    return Objects.equals(this.accessToken, loginResponse.accessToken)
-        && Objects.equals(this.refreshToken, loginResponse.refreshToken)
-        && Objects.equals(this.tokenType, loginResponse.tokenType)
-        && Objects.equals(this.expiresIn, loginResponse.expiresIn)
-        && Objects.equals(this.userId, loginResponse.userId)
-        && Objects.equals(this.currentTenantId, loginResponse.currentTenantId);
+    return Objects.equals(this.accessToken, loginResponse.accessToken) &&
+        Objects.equals(this.refreshToken, loginResponse.refreshToken) &&
+        Objects.equals(this.tokenType, loginResponse.tokenType) &&
+        Objects.equals(this.expiresIn, loginResponse.expiresIn) &&
+        Objects.equals(this.userId, loginResponse.userId) &&
+        Objects.equals(this.currentTenantId, loginResponse.currentTenantId);
   }
 
   @Override
@@ -220,9 +214,11 @@ public class LoginResponse {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+
