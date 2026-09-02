@@ -32,11 +32,15 @@ public class TenantUsersService {
 
   private final UserRepository userRepository;
   private final TenantMembershipRepository membershipRepository;
+  private final AuditWriter auditWriter;
 
   public TenantUsersService(
-      UserRepository userRepository, TenantMembershipRepository membershipRepository) {
+      UserRepository userRepository,
+      TenantMembershipRepository membershipRepository,
+      AuditWriter auditWriter) {
     this.userRepository = userRepository;
     this.membershipRepository = membershipRepository;
+    this.auditWriter = auditWriter;
   }
 
   // M01.F01.I01
@@ -74,6 +78,14 @@ public class TenantUsersService {
   public User createUser(UUID tenantId, CreateUserRequest body) {
     UserEntity entity = TenantUserMapper.fromCreateRequest(tenantId, body);
     UserEntity saved = userRepository.save(entity);
+    // M01.F01.I02 写端点副作用 — user_created（2026-09-02 contract-test M96 audit 覆盖对齐，
+    // 形状对齐 nextjs：metadata={userId}；actor 系统动作 null，与 msw undefined 同语义）
+    auditWriter.write(
+        tenantId,
+        null,
+        "user_created",
+        saved.getId(),
+        java.util.Map.of("userId", saved.getId().toString()));
     return TenantUserMapper.toDto(saved);
   }
 

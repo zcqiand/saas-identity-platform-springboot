@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
@@ -31,10 +32,12 @@ class AuthServiceTest {
 
   private final UserRepository userRepository = mock(UserRepository.class);
   private final TenantRepository tenantRepository = mock(TenantRepository.class);
+  private final AuditWriter auditWriter = mock(AuditWriter.class);
   // 与 SecurityConfig.jwtDecoder 同 key：login 签出的 token 必须能被本仓 decoder 验过
   private final JwtIssuer jwt =
       new JwtIssuer("unit-test-signing-key-0123456789abcdef0123", "ut-issuer", "ut-aud", 3600);
-  private final AuthService service = new AuthService(userRepository, tenantRepository, jwt);
+  private final AuthService service =
+      new AuthService(userRepository, tenantRepository, jwt, auditWriter);
 
   private UserEntity activeUser(UUID tenantId, UUID userId) {
     UserEntity u = new UserEntity();
@@ -75,6 +78,33 @@ class AuthServiceTest {
     assertFalse(token.endsWith("dev-placeholder"), "不得再发 dev-placeholder 假签");
     assertEquals(userId, resp.getUserId());
     assertEquals(tenantId, resp.getCurrentTenantId());
+  }
+
+  // 2026-09-02 contract-test M96 audit 覆盖对齐：login 成功必须写 login_success 审计事件
+  // （msw/nextjs 已写，本仓此前缺失 → audit 列表 4 后端对前端不可区分破裂）。
+  // 形状对齐 nextjs app/api/v1/auth/login/route.ts：actor=target=登录用户，metadata={username}。
+  @Test
+  @Fn({"M03.F01.I01"})
+  void login_success_writesAuditEvent() {
+    UUID tenantId = UUID.randomUUID();
+    UUID userId = UUID.randomUUID();
+    TenantEntity t = new TenantEntity();
+    t.setId(tenantId);
+    t.setCode("ACME");
+    t.setStatus(TenantStatus.ACTIVE);
+    when(tenantRepository.findByCode(tenantId.toString())).thenReturn(Optional.of(t));
+    when(userRepository.findByTenantIdAndUsername(tenantId, "alice"))
+        .thenReturn(Optional.of(activeUser(tenantId, userId)));
+
+    service.login(new LoginRequest().tenantCode(tenantId).username("alice").password("secret"));
+
+    verify(auditWriter)
+        .write(
+            eq(tenantId),
+            eq(userId),
+            eq("login_success"),
+            eq(null),
+            eq(java.util.Map.of("username", "alice")));
   }
 
   @Test
@@ -127,7 +157,8 @@ class AuthServiceTest {
   @Fn({"M03.F02.I04"})
   void refresh_badToken_throws() {
     TokenRequest body = new TokenRequest().refreshToken("garbage");
-    assertThrows(SecurityException.class, () -> service.refresh(body));
+    // 2026-08-31 contract-test M96.F02.I24：refresh 无效 token 家族统一 400（IllegalArgumentException）
+    assertThrows(IllegalArgumentException.class, () -> service.refresh(body));
   }
 
   @Test

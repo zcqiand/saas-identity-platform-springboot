@@ -4,7 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.OffsetDateTime;
@@ -34,8 +36,9 @@ class TenantUsersServiceTest {
   private final UserRepository userRepository = mock(UserRepository.class);
   private final saas.identity.platform.repository.TenantMembershipRepository membershipRepository =
       mock(saas.identity.platform.repository.TenantMembershipRepository.class);
+  private final AuditWriter auditWriter = mock(AuditWriter.class);
   private final TenantUsersService service =
-      new TenantUsersService(userRepository, membershipRepository);
+      new TenantUsersService(userRepository, membershipRepository, auditWriter);
 
   @Test
   @Fn({"M01.F01.I01"})
@@ -65,7 +68,14 @@ class TenantUsersServiceTest {
   @Fn({"M01.F01.I02"})
   void createUser_returnsUser() {
     UUID tid = UUID.randomUUID();
-    when(userRepository.save(any(UserEntity.class))).thenAnswer(inv -> inv.getArgument(0));
+    // save mock 模拟 DB @GeneratedValue：填 id（createUser 现在会读 getId() 写审计 metadata）
+    when(userRepository.save(any(UserEntity.class)))
+        .thenAnswer(
+            inv -> {
+              UserEntity e = inv.getArgument(0);
+              if (e.getId() == null) e.setId(UUID.randomUUID());
+              return e;
+            });
     CreateUserRequest body = new CreateUserRequest();
     body.setUsername("alice");
     body.setEmail("alice@example.com");
@@ -76,13 +86,81 @@ class TenantUsersServiceTest {
     assertEquals(tid, u.getTenantId());
   }
 
+  // 2026-09-02 contract-test M96 audit 覆盖对齐：createUser 成功必须写 user_created 审计事件
+  // （msw/nextjs 已写，本仓此前缺失）。形状对齐 nextjs users/route.ts：metadata={userId}。
+  // actorUserId：service 层无请求上下文，写 null（系统动作），与 msw 的 undefined 同语义。
+  @Test
+  @Fn({"M01.F01.I02"})
+  void createUser_writesAuditEvent() {
+    UUID tid = UUID.randomUUID();
+    UUID generatedId = UUID.randomUUID();
+    // @GeneratedValue 在 mock save 下不触发，手动填 id 模拟 DB 生成
+    when(userRepository.save(any(UserEntity.class)))
+        .thenAnswer(
+            inv -> {
+              UserEntity e = inv.getArgument(0);
+              e.setId(generatedId);
+              return e;
+            });
+    CreateUserRequest body = new CreateUserRequest();
+    body.setUsername("bob");
+    body.setEmail("bob@example.com");
+    body.setPassword("p");
+
+    service.createUser(tid, body);
+
+    verify(auditWriter)
+        .write(
+            eq(tid),
+            eq(null),
+            eq("user_created"),
+            eq(generatedId),
+            eq(java.util.Map.of("userId", generatedId.toString())));
+  }
+
   @Test
   @Fn({"M01.F01.I05"})
   void deleteUser_throwsIfMissing() {
     UUID tid = UUID.randomUUID();
     UUID uid = UUID.randomUUID();
     when(userRepository.findByTenantIdAndId(tid, uid)).thenReturn(java.util.Optional.empty());
-    assertThrows(IllegalArgumentException.class, () -> service.deleteUser(tid, uid));
+    // 2026-09-01 contract-test I43：资源不存在语义 = NoSuchElementException → 404
+    // （原 IllegalArgumentException → 400，与家族 TenantApiKeyService/AdminTenantService 分叉）
+    assertThrows(java.util.NoSuchElementException.class, () -> service.deleteUser(tid, uid));
+  }
+
+  // 2026-09-01 contract-test I39/I70：PATCH 不存在 user 必须 404（NSEE），不是 400（IAE）
+  @Test
+  @Fn({"M01.F01.I04"})
+  void updateUser_throwsNoSuchIfMissing() {
+    UUID tid = UUID.randomUUID();
+    UUID uid = UUID.randomUUID();
+    when(userRepository.findByTenantIdAndId(tid, uid)).thenReturn(java.util.Optional.empty());
+    saas.identity.shared.dto.UpdateUserRequest body =
+        new saas.identity.shared.dto.UpdateUserRequest();
+    body.setDisplayName("noop");
+    assertThrows(java.util.NoSuchElementException.class, () -> service.updateUser(tid, uid, body));
+  }
+
+  // 2026-09-01 contract-test I40 前置：assignRoles 不存在 user 同款 404 语义
+  @Test
+  @Fn({"M01.F02.I01"})
+  void assignRoles_throwsNoSuchIfMissing() {
+    UUID tid = UUID.randomUUID();
+    UUID uid = UUID.randomUUID();
+    when(userRepository.findByTenantIdAndId(tid, uid)).thenReturn(java.util.Optional.empty());
+    assertThrows(
+        java.util.NoSuchElementException.class, () -> service.assignRoles(tid, uid, List.of()));
+  }
+
+  // 2026-09-01 contract-test I42/I43 前置：getUser 不存在同款 404 语义
+  @Test
+  @Fn({"M01.F01.I03"})
+  void getUser_throwsNoSuchIfMissing() {
+    UUID tid = UUID.randomUUID();
+    UUID uid = UUID.randomUUID();
+    when(userRepository.findByTenantIdAndId(tid, uid)).thenReturn(java.util.Optional.empty());
+    assertThrows(java.util.NoSuchElementException.class, () -> service.getUser(tid, uid));
   }
 
   @Test

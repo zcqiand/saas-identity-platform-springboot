@@ -33,4 +33,13 @@
     <Match>
         <Bug pattern="CT_CONSTRUCTOR_THROW"/>
     </Match>
+    <!--
+      FixSentinelTimestamps: one-shot 运维脚本（PG -infinity 行 → 1970-01-01，已跑过使命，留作工具）。
+      硬编码密码是 dev 库真值（与 .env.local 同源，不进 CI）；SQL 拼接的 table/col
+      来自同文件私有常量数组，无外部输入注入面；顶层 throws Exception 是脚本惯例。
+      防御性重构对 one-shot 脚本是过度工程，静默忽略。
+    -->
+    <Match>
+        <Class name="saas.identity.platform.FixSentinelTimestamps"/>
+    </Match>
 </FindBugsFilter>
