@@ -13,7 +13,9 @@
 # 这份配置的目的:
 #   - saas.YOUR_DOMAIN 的 HTTP 301 到 HTTPS
 #   - HTTPS 终结在 VPS（持 cert）
-#   - proxy_pass 到本机容器端口 8023（由 docker run -p 127.0.0.1:8023:8080 决定）
+#   - proxy_pass 到本机容器端口 8023（由 docker run -p 127.0.0.1:8023:5105 决定）
+#     注：v0.2.0 起容器内端口从 8080 迁到 5105（端口分段 §6：saas 后端段 X05）。
+#     VPS 暴露端口 8023 不变，nginx 这里只看 8023。
 #
 # 注意:不持有 default_server。同一台 VPS 上若 saas-react/nextjs 也跑 :80 default_server,
 # springboot 这边重复声明 nginx -t 直接报错——务必先装 saas（或任意一个）并把 default 占位收掉。

@@ -10,7 +10,8 @@
 #
 # 与姊妹仓 saas-identity-platform-nextjs.sh 的差异:
 #   - 数据库：PostgreSQL 远程, DATABASE_URL 从 springboot.env 注入（无本地 ./data 卷）
-#   - 容器内是 Java 17 (Spring Boot) 监听 :8080 → -p 127.0.0.1:8023:8080
+#   - 容器内是 Java 21 (Spring Boot 3.4) 监听 :5105 → -p 127.0.0.1:8023:5105
+#     （2026-09-02 端口分段 §6：saas 后端段 X05）
 #   - 密钥走 ./springboot.env (DATABASE_URL/USERNAME/PASSWORD + CORS),由 setup-vps.sh 渲染时
 #     不预生成（fail-fast 不便）,本脚本首启自举。
 #   - JWT_SIGNING_KEY: v0.2.0 起 JwtIssuer(HS256) 构造 fail-fast 必填。缺失时本脚本
@@ -141,6 +142,16 @@ if [ -f "$BASE/springboot.env" ]; then
   append_if_missing JWT_ISSUER 'saas-identity-platform'
   append_if_missing JWT_AUDIENCE 'saas-identity-platform-clients'
   append_if_missing JWT_TTL_SECONDS '3600'
+
+  # 一次性 stale 值 reconcile —— append_if_missing 只补 key, 不覆盖值。
+  # v0.2.0 之前老 env-file 写 SERVER_PORT=8080,与 Dockerfile ENV SERVER_PORT=5105 +
+  # docker run -p ...:5105 不一致,导致 JVM 监听 8080、容器 publish 5105 无 listener,
+  # healthcheck 永远 connection-refused, deploy 120s 超时。检测到旧值就 sed 覆盖。
+  # 同类迁移按此模式续写(migrate_if_stale KEY OLD NEW)。
+  if grep -q '^SERVER_PORT=8080$' "$BASE/springboot.env"; then
+    sed -i 's/^SERVER_PORT=8080$/SERVER_PORT=5105/' "$BASE/springboot.env"
+    echo "→ reconcile SERVER_PORT: 8080 → 5105 (V018 port migration)"
+  fi
 fi
 
 echo "→ image: $IMAGE"
@@ -175,11 +186,14 @@ docker ps --filter name="$CONTAINER_NAME"
 # 200+body UP 时是真 ready)。
 #
 # ⚠️ v0.1.10 的 bug: 写的是当时的容器内部端口, 但 deploy 脚本
-# 跑在 HOST 上, 容器端口映射是 127.0.0.1:${HOST_PORT}:8080 (HOST_PORT=8023).
+# 跑在 HOST 上, 容器端口映射是 127.0.0.1:${HOST_PORT}:5105 (HOST_PORT=8023).
 # host 上 wget 容器内部端口 = 连接 host 的同名端口 (没服务), connect-refused, 120 次都失败。
 # Docker HEALTHCHECK (Dockerfile:38) 走的是容器 network namespace 内的 127.0.0.1:5105,
-# 所以日志里 02:52:26 Spring DispatcherServlet init 出现一次是 Docker HEALTHCHECK 命中,
+# 所以日志里 Spring DispatcherServlet init 出现一次是 Docker HEALTHCHECK 命中,
 # 而非 deploy 脚本 wget。
+# 注：v0.2.0 起容器端口从 8080 迁到 5105（端口分段 §6），deploy 脚本里 -p 同步，
+# 但老 springboot.env 若写 SERVER_PORT=8080 仍会让 JVM 监听 8080 → publish 5105 无 listener。
+# 见上方 reconcile 段，append_if_missing 不覆盖值需要 sed 兜底。
 #
 # wget --tries=1 --timeout=3 -q: 不重试, 3s timeout, 静默。
 i=0
