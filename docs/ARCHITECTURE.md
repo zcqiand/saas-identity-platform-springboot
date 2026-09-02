@@ -152,6 +152,7 @@ saas-identity-platform-springboot/
 │   │           ├── V007__indexes.sql
 │   │           ├── V008__users_role_ids_and_drop_redundant_index.sql
 │   │           ├── V009__init_oauth_codes.sql
+│   │           ├── ...（V014 seed lab-mgmt app / V015 menus / V016 fixtures / V017 client_id UUID / V018 端口分段）
 │   │           └── README.md
 │   └── test/java/saas/identity/platform/
 │       ├── harness/                                 ← 测试侧 fnTest 工具 + trace 监听
@@ -644,7 +645,7 @@ shared 仓 tag v<X>-<YYYYMMDD>  →  本仓 拉新 openapi.yaml  →  本仓 tag
 
 ---
 
-## 附录 C：典型陷阱（详见父仓 [memory/](../../../memory/)）
+## 附录 C：典型陷阱（详见父仓 memory/）
 
 | 陷阱 | 后果 | 解法 |
 |---|---|---|

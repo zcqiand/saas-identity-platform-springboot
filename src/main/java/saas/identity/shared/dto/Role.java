@@ -1,32 +1,25 @@
 package saas.identity.shared.dto;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import java.time.OffsetDateTime;
+import java.util.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
 
-
-import java.util.*;
-import jakarta.annotation.Generated;
-
-/**
- * Role
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+/** Role */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-02T23:27:00.762429900+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 public class Role {
 
   private UUID id;
@@ -52,10 +45,15 @@ public class Role {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
-  public Role(UUID id, UUID tenantId, String code, String name, List<String> permissionIds, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
+  /** Constructor with only required parameters */
+  public Role(
+      UUID id,
+      UUID tenantId,
+      String code,
+      String name,
+      List<String> permissionIds,
+      OffsetDateTime createdAt,
+      OffsetDateTime updatedAt) {
     this.id = id;
     this.tenantId = tenantId;
     this.code = code;
@@ -72,9 +70,11 @@ public class Role {
 
   /**
    * Get id
+   *
    * @return id
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("id")
   public UUID getId() {
@@ -93,9 +93,11 @@ public class Role {
 
   /**
    * Get tenantId
+   *
    * @return tenantId
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "tenantId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("tenantId")
   public UUID getTenantId() {
@@ -114,9 +116,11 @@ public class Role {
 
   /**
    * Get code
+   *
    * @return code
    */
-  @NotNull @Size(min = 1, max = 64) 
+  @NotNull
+  @Size(min = 1, max = 64)
   @Schema(name = "code", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("code")
   public String getCode() {
@@ -135,9 +139,11 @@ public class Role {
 
   /**
    * Get name
+   *
    * @return name
    */
-  @NotNull @Size(min = 1, max = 255) 
+  @NotNull
+  @Size(min = 1, max = 255)
   @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("name")
   public String getName() {
@@ -156,9 +162,9 @@ public class Role {
 
   /**
    * Get description
+   *
    * @return description
    */
-  
   @Schema(name = "description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("description")
   public @Nullable String getDescription() {
@@ -185,9 +191,10 @@ public class Role {
 
   /**
    * Get permissionIds
+   *
    * @return permissionIds
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "permissionIds", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("permissionIds")
   public List<String> getPermissionIds() {
@@ -206,9 +213,11 @@ public class Role {
 
   /**
    * Get createdAt
+   *
    * @return createdAt
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "createdAt", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("createdAt")
   public OffsetDateTime getCreatedAt() {
@@ -227,9 +236,11 @@ public class Role {
 
   /**
    * Get updatedAt
+   *
    * @return updatedAt
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "updatedAt", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("updatedAt")
   public OffsetDateTime getUpdatedAt() {
@@ -250,14 +261,14 @@ public class Role {
       return false;
     }
     Role role = (Role) o;
-    return Objects.equals(this.id, role.id) &&
-        Objects.equals(this.tenantId, role.tenantId) &&
-        Objects.equals(this.code, role.code) &&
-        Objects.equals(this.name, role.name) &&
-        Objects.equals(this.description, role.description) &&
-        Objects.equals(this.permissionIds, role.permissionIds) &&
-        Objects.equals(this.createdAt, role.createdAt) &&
-        Objects.equals(this.updatedAt, role.updatedAt);
+    return Objects.equals(this.id, role.id)
+        && Objects.equals(this.tenantId, role.tenantId)
+        && Objects.equals(this.code, role.code)
+        && Objects.equals(this.name, role.name)
+        && Objects.equals(this.description, role.description)
+        && Objects.equals(this.permissionIds, role.permissionIds)
+        && Objects.equals(this.createdAt, role.createdAt)
+        && Objects.equals(this.updatedAt, role.updatedAt);
   }
 
   @Override
@@ -282,11 +293,9 @@ public class Role {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
-

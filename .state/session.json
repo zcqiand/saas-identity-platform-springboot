@@ -1,36 +1,31 @@
 {
   "schema": 1,
   "project": "saas-identity-platform-springboot",
-  "current_task": "2026-09-01 DateTime.MinValue bug 修法三轮未根除（@CreationTimestamp + service/mapper 显式 setCreatedAt 兑底），ticket 在 PLAN.md，剩 I15/I16/I18/I19/I34/I57/I71 + I09/I10 共 9 fail",
-  "last_session_at": "2026-09-01",
+  "current_task": "2026-09-03 spotless L1 复绿（上批 DateTime.MinValue ticket 仍未结，9 fail 仍在；本次只动了 L1 格式）",
+  "last_session_at": "2026-09-03",
   "done": [
-    "entity/ApiKeyEntity.java: @CreationTimestamp 顶替 @PrePersist；移除 @PrePersist onCreate 方法",
-    "entity/UserEntity.java: @CreationTimestamp/@UpdateTimestamp 顶替 @PrePersist/@PreUpdate",
-    "entity/RoleEntity.java: @CreationTimestamp/@UpdateTimestamp 顶替 @PrePersist/@PreUpdate",
-    "service/TenantApiKeyService.java: create()/rotate() 显式 e.setCreatedAt(OffsetDateTime.now()) 兑底",
-    "service/TenantUsersService.java: inviteUser() 显式 entity.setCreatedAt/UpdatedAt 兑底",
-    "mapper/RoleMapper.java: fromCreateRequest 显式 setCreatedAt/setUpdatedAt",
-    "mapper/TenantUserMapper.java: fromCreateRequest 显式 setCreatedAt/setUpdatedAt",
-    "PLAN.md: 开 [BUG] DateTime.MinValue ticket（症状/已知事实/候选根因/调查步骤/回归/风险）",
-    "M06.F03 AuditWriter + AuditActionConverter + ApiKey 写路径 audit emit（上批）"
+    "mvn spotless:apply → 73 文件 import 排序 + 格式归一（OpenAPI codegen 产物的 Generated 注解换行、import 顺序、Map/Optional 未用导入清理）",
+    "mvn spotless:check → PASS（exit 0）",
+    "python scripts/gate.py -p saas-identity-platform-springboot → L0/L0.5/L1/L2/L3/L4/L5 全 PASS（87+72 功能条目，软告警 2：M09.F03.I02/I03 缺测试引用，与本批无关）"
   ],
   "next": [
-    "【本会话未解】定位 DateTime.MinValue 真根因。已排除：@PrePersist 不触发、@CreationTimestamp 不触发、service 显式 set 不触发。剩可能：Hibernate 共享连接 PG 下批 flush / DTO mapper 覆盖 entity 字段 / 写入路径走 native SQL / DTO 反序列化时用 Spring BindingResult 覆盖",
-    "建议下个会话先加 SQL 日志（spring.jpa.show-sql=true + logging.level.org.hibernate.SQL=DEBUG）看实际 INSERT 语句",
-    "本会话上 batch 完成：mvn compile 通过；mvn test 未跑（需补）",
+    "DateTime.MinValue ticket 仍在 session.json #open_questions 列表 —— 三轮未根因（@CreationTimestamp/@PrePersist/service setCreatedAt 都试过），下一步必须开 SQL 日志看实际 INSERT 实体",
+    "建议下个会话第一步：spring.jpa.show-sql=true + logging.level.org.hibernate.SQL=DEBUG 重跑 inviteUser() 路径看真 SQL（PLAN.md ticket 调查步骤 1 仍没做）",
     "本地 /tmp/springboot-run7.log 是带 env 的真跑实例；要 commit 前杀掉"
   ],
   "open_questions": [
-    "Ticket 调查步骤 1（curl POST 再 GET 看 MinValue 复现）显示「直接调用」时 createdAt 是有效值（2026-09-01T...+08:00）；只有「通过 contract-test 4 后端并发触发」时才会出现 -infinity。是否涉及并发/事务隔离问题？",
-    "mvn test 是否会因为 @PrePersist/@CreationTimestamp 改动产生新失败？本会话未跑"
+    "Ticket 调查步骤 1 显示「直接调用」时 createdAt 是有效值，只有 contract-test 4 后端并发触发才 -infinity。是否涉及并发/事务隔离？",
+    "spotless:apply 改了 73 文件，是否会让 OpenAPI codegen 二次跑出 diff？gen-shared 必须在 commit 前再跑一次验证"
   ],
   "dont": [
     "不要再用 saas.identity.platform.enums.AuditAction.valueOf(\"api_key_created\")",
     "不要再让 auditWriter.write() 在 metadata.apiKeyId=null 时崩",
-    "不要再单依赖 @PrePersist/@CreationTimestamp 兑底 —— 本会话实证都不可靠；下一步必须先用 SQL 日志看实际 INSERT",
-    "不要再在 PG 探针数据累积（shape-*/contract-test-key-*/rot-shape-*）—— 必须在某次会话写 teardown 强删，或在 contract-test beforeAll 加清库钩子"
+    "不要再单依赖 @PrePersist/@CreationTimestamp 兑底 —— 已实证都不可靠，下一步必须用 SQL 日志看 INSERT",
+    "不要再在 PG 探针数据累积（shape-*/contract-test-key-*/rot-shape-*）—— 必须在某次会话写 teardown 强删，或在 contract-test beforeAll 加清库钩子",
+    "不要在 spotless:apply 之后不跑 spotless:check 验证偶有未应用的情况",
+    "不要在改了 OpenAPI 输入后不跑 gen-shared 就 commit（spotless:apply 只管格式，不管产物是不是最新）"
   ],
-  "last_gate_passed_at": "2026-08-31T18:39+08:00",
+  "last_gate_passed_at": "2026-09-03T11:50+08:00",
   "active_branch": "master",
   "ahead_of_origin": "0"
 }

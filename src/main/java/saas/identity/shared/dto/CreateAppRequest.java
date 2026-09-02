@@ -1,32 +1,22 @@
 package saas.identity.shared.dto;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import org.springframework.lang.Nullable;
-import saas.identity.shared.dto.AppStatus;
-import saas.identity.shared.dto.OAuthGrantType;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
-
-
 import java.util.*;
-import jakarta.annotation.Generated;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import org.springframework.lang.Nullable;
 
-/**
- * CreateAppRequest
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+/** CreateAppRequest */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-02T23:27:00.762429900+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 public class CreateAppRequest {
 
   private String code;
@@ -65,9 +55,7 @@ public class CreateAppRequest {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
+  /** Constructor with only required parameters */
   public CreateAppRequest(String code, String name, String clientId, List<String> redirectUris) {
     this.code = code;
     this.name = name;
@@ -82,9 +70,11 @@ public class CreateAppRequest {
 
   /**
    * Get code
+   *
    * @return code
    */
-  @NotNull @Size(min = 2, max = 64) 
+  @NotNull
+  @Size(min = 2, max = 64)
   @Schema(name = "code", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("code")
   public String getCode() {
@@ -103,9 +93,11 @@ public class CreateAppRequest {
 
   /**
    * Get name
+   *
    * @return name
    */
-  @NotNull @Size(min = 2, max = 255) 
+  @NotNull
+  @Size(min = 2, max = 255)
   @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("name")
   public String getName() {
@@ -124,9 +116,9 @@ public class CreateAppRequest {
 
   /**
    * Get description
+   *
    * @return description
    */
-  
   @Schema(name = "description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("description")
   public @Nullable String getDescription() {
@@ -145,9 +137,9 @@ public class CreateAppRequest {
 
   /**
    * Get icon
+   *
    * @return icon
    */
-  
   @Schema(name = "icon", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("icon")
   public @Nullable String getIcon() {
@@ -166,9 +158,9 @@ public class CreateAppRequest {
 
   /**
    * Get sortOrder
+   *
    * @return sortOrder
    */
-  
   @Schema(name = "sortOrder", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("sortOrder")
   public @Nullable Integer getSortOrder() {
@@ -187,9 +179,10 @@ public class CreateAppRequest {
 
   /**
    * Get status
+   *
    * @return status
    */
-  @Valid 
+  @Valid
   @Schema(name = "status", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("status")
   public @Nullable AppStatus getStatus() {
@@ -208,9 +201,11 @@ public class CreateAppRequest {
 
   /**
    * Get clientId
+   *
    * @return clientId
    */
-  @NotNull @Size(min = 2, max = 128) 
+  @NotNull
+  @Size(min = 2, max = 128)
   @Schema(name = "clientId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("clientId")
   public String getClientId() {
@@ -229,9 +224,9 @@ public class CreateAppRequest {
 
   /**
    * Get clientSecret
+   *
    * @return clientSecret
    */
-  
   @Schema(name = "clientSecret", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("clientSecret")
   public @Nullable String getClientSecret() {
@@ -258,9 +253,10 @@ public class CreateAppRequest {
 
   /**
    * Get redirectUris
+   *
    * @return redirectUris
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "redirectUris", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("redirectUris")
   public List<String> getRedirectUris() {
@@ -287,9 +283,9 @@ public class CreateAppRequest {
 
   /**
    * Get scopes
+   *
    * @return scopes
    */
-  
   @Schema(name = "scopes", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("scopes")
   public List<String> getScopes() {
@@ -316,9 +312,10 @@ public class CreateAppRequest {
 
   /**
    * Get grantTypes
+   *
    * @return grantTypes
    */
-  @Valid 
+  @Valid
   @Schema(name = "grantTypes", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("grantTypes")
   public List<OAuthGrantType> getGrantTypes() {
@@ -337,9 +334,9 @@ public class CreateAppRequest {
 
   /**
    * Get isFirstParty
+   *
    * @return isFirstParty
    */
-  
   @Schema(name = "isFirstParty", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("isFirstParty")
   public @Nullable Boolean getIsFirstParty() {
@@ -360,23 +357,35 @@ public class CreateAppRequest {
       return false;
     }
     CreateAppRequest createAppRequest = (CreateAppRequest) o;
-    return Objects.equals(this.code, createAppRequest.code) &&
-        Objects.equals(this.name, createAppRequest.name) &&
-        Objects.equals(this.description, createAppRequest.description) &&
-        Objects.equals(this.icon, createAppRequest.icon) &&
-        Objects.equals(this.sortOrder, createAppRequest.sortOrder) &&
-        Objects.equals(this.status, createAppRequest.status) &&
-        Objects.equals(this.clientId, createAppRequest.clientId) &&
-        Objects.equals(this.clientSecret, createAppRequest.clientSecret) &&
-        Objects.equals(this.redirectUris, createAppRequest.redirectUris) &&
-        Objects.equals(this.scopes, createAppRequest.scopes) &&
-        Objects.equals(this.grantTypes, createAppRequest.grantTypes) &&
-        Objects.equals(this.isFirstParty, createAppRequest.isFirstParty);
+    return Objects.equals(this.code, createAppRequest.code)
+        && Objects.equals(this.name, createAppRequest.name)
+        && Objects.equals(this.description, createAppRequest.description)
+        && Objects.equals(this.icon, createAppRequest.icon)
+        && Objects.equals(this.sortOrder, createAppRequest.sortOrder)
+        && Objects.equals(this.status, createAppRequest.status)
+        && Objects.equals(this.clientId, createAppRequest.clientId)
+        && Objects.equals(this.clientSecret, createAppRequest.clientSecret)
+        && Objects.equals(this.redirectUris, createAppRequest.redirectUris)
+        && Objects.equals(this.scopes, createAppRequest.scopes)
+        && Objects.equals(this.grantTypes, createAppRequest.grantTypes)
+        && Objects.equals(this.isFirstParty, createAppRequest.isFirstParty);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(code, name, description, icon, sortOrder, status, clientId, clientSecret, redirectUris, scopes, grantTypes, isFirstParty);
+    return Objects.hash(
+        code,
+        name,
+        description,
+        icon,
+        sortOrder,
+        status,
+        clientId,
+        clientSecret,
+        redirectUris,
+        scopes,
+        grantTypes,
+        isFirstParty);
   }
 
   @Override
@@ -400,11 +409,9 @@ public class CreateAppRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
-

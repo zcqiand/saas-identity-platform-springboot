@@ -1,35 +1,25 @@
 package saas.identity.shared.dto;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import java.time.OffsetDateTime;
+import java.util.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
-import saas.identity.shared.dto.AppStatus;
-import saas.identity.shared.dto.OAuthGrantType;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
 
-
-import java.util.*;
-import jakarta.annotation.Generated;
-
-/**
- * App
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+/** App */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-02T23:27:00.762429900+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 public class App {
 
   private UUID id;
@@ -71,10 +61,20 @@ public class App {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
-  public App(UUID id, String code, String name, Integer sortOrder, AppStatus status, String clientId, List<String> redirectUris, List<String> scopes, List<OAuthGrantType> grantTypes, Boolean isFirstParty, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
+  /** Constructor with only required parameters */
+  public App(
+      UUID id,
+      String code,
+      String name,
+      Integer sortOrder,
+      AppStatus status,
+      String clientId,
+      List<String> redirectUris,
+      List<String> scopes,
+      List<OAuthGrantType> grantTypes,
+      Boolean isFirstParty,
+      OffsetDateTime createdAt,
+      OffsetDateTime updatedAt) {
     this.id = id;
     this.code = code;
     this.name = name;
@@ -96,9 +96,11 @@ public class App {
 
   /**
    * Get id
+   *
    * @return id
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("id")
   public UUID getId() {
@@ -117,9 +119,11 @@ public class App {
 
   /**
    * Get code
+   *
    * @return code
    */
-  @NotNull @Size(min = 2, max = 64) 
+  @NotNull
+  @Size(min = 2, max = 64)
   @Schema(name = "code", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("code")
   public String getCode() {
@@ -138,9 +142,11 @@ public class App {
 
   /**
    * Get name
+   *
    * @return name
    */
-  @NotNull @Size(min = 2, max = 255) 
+  @NotNull
+  @Size(min = 2, max = 255)
   @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("name")
   public String getName() {
@@ -159,9 +165,9 @@ public class App {
 
   /**
    * Get description
+   *
    * @return description
    */
-  
   @Schema(name = "description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("description")
   public @Nullable String getDescription() {
@@ -180,9 +186,9 @@ public class App {
 
   /**
    * Get icon
+   *
    * @return icon
    */
-  
   @Schema(name = "icon", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("icon")
   public @Nullable String getIcon() {
@@ -201,9 +207,10 @@ public class App {
 
   /**
    * Get sortOrder
+   *
    * @return sortOrder
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "sortOrder", example = "0", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("sortOrder")
   public Integer getSortOrder() {
@@ -222,9 +229,11 @@ public class App {
 
   /**
    * Get status
+   *
    * @return status
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("status")
   public AppStatus getStatus() {
@@ -243,9 +252,11 @@ public class App {
 
   /**
    * Get clientId
+   *
    * @return clientId
    */
-  @NotNull @Size(min = 2, max = 128) 
+  @NotNull
+  @Size(min = 2, max = 128)
   @Schema(name = "clientId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("clientId")
   public String getClientId() {
@@ -264,9 +275,9 @@ public class App {
 
   /**
    * Get clientSecret
+   *
    * @return clientSecret
    */
-  
   @Schema(name = "clientSecret", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("clientSecret")
   public @Nullable String getClientSecret() {
@@ -293,9 +304,10 @@ public class App {
 
   /**
    * Get redirectUris
+   *
    * @return redirectUris
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "redirectUris", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("redirectUris")
   public List<String> getRedirectUris() {
@@ -322,9 +334,10 @@ public class App {
 
   /**
    * Get scopes
+   *
    * @return scopes
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "scopes", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("scopes")
   public List<String> getScopes() {
@@ -351,9 +364,11 @@ public class App {
 
   /**
    * Get grantTypes
+   *
    * @return grantTypes
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "grantTypes", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("grantTypes")
   public List<OAuthGrantType> getGrantTypes() {
@@ -372,9 +387,10 @@ public class App {
 
   /**
    * Get isFirstParty
+   *
    * @return isFirstParty
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "isFirstParty", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("isFirstParty")
   public Boolean getIsFirstParty() {
@@ -393,9 +409,11 @@ public class App {
 
   /**
    * Get createdAt
+   *
    * @return createdAt
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "createdAt", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("createdAt")
   public OffsetDateTime getCreatedAt() {
@@ -414,9 +432,11 @@ public class App {
 
   /**
    * Get updatedAt
+   *
    * @return updatedAt
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "updatedAt", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("updatedAt")
   public OffsetDateTime getUpdatedAt() {
@@ -437,26 +457,41 @@ public class App {
       return false;
     }
     App app = (App) o;
-    return Objects.equals(this.id, app.id) &&
-        Objects.equals(this.code, app.code) &&
-        Objects.equals(this.name, app.name) &&
-        Objects.equals(this.description, app.description) &&
-        Objects.equals(this.icon, app.icon) &&
-        Objects.equals(this.sortOrder, app.sortOrder) &&
-        Objects.equals(this.status, app.status) &&
-        Objects.equals(this.clientId, app.clientId) &&
-        Objects.equals(this.clientSecret, app.clientSecret) &&
-        Objects.equals(this.redirectUris, app.redirectUris) &&
-        Objects.equals(this.scopes, app.scopes) &&
-        Objects.equals(this.grantTypes, app.grantTypes) &&
-        Objects.equals(this.isFirstParty, app.isFirstParty) &&
-        Objects.equals(this.createdAt, app.createdAt) &&
-        Objects.equals(this.updatedAt, app.updatedAt);
+    return Objects.equals(this.id, app.id)
+        && Objects.equals(this.code, app.code)
+        && Objects.equals(this.name, app.name)
+        && Objects.equals(this.description, app.description)
+        && Objects.equals(this.icon, app.icon)
+        && Objects.equals(this.sortOrder, app.sortOrder)
+        && Objects.equals(this.status, app.status)
+        && Objects.equals(this.clientId, app.clientId)
+        && Objects.equals(this.clientSecret, app.clientSecret)
+        && Objects.equals(this.redirectUris, app.redirectUris)
+        && Objects.equals(this.scopes, app.scopes)
+        && Objects.equals(this.grantTypes, app.grantTypes)
+        && Objects.equals(this.isFirstParty, app.isFirstParty)
+        && Objects.equals(this.createdAt, app.createdAt)
+        && Objects.equals(this.updatedAt, app.updatedAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, code, name, description, icon, sortOrder, status, clientId, clientSecret, redirectUris, scopes, grantTypes, isFirstParty, createdAt, updatedAt);
+    return Objects.hash(
+        id,
+        code,
+        name,
+        description,
+        icon,
+        sortOrder,
+        status,
+        clientId,
+        clientSecret,
+        redirectUris,
+        scopes,
+        grantTypes,
+        isFirstParty,
+        createdAt,
+        updatedAt);
   }
 
   @Override
@@ -483,11 +518,9 @@ public class App {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
-

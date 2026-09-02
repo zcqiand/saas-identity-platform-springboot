@@ -1,33 +1,25 @@
 package saas.identity.shared.dto;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import java.time.OffsetDateTime;
+import java.util.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
-import saas.identity.shared.dto.AuditAction;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
 
-
-import java.util.*;
-import jakarta.annotation.Generated;
-
-/**
- * AuditEvent
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+/** AuditEvent */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-02T23:27:00.762429900+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 public class AuditEvent {
 
   private UUID id;
@@ -52,9 +44,7 @@ public class AuditEvent {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
+  /** Constructor with only required parameters */
   public AuditEvent(UUID id, UUID tenantId, AuditAction action, OffsetDateTime occurredAt) {
     this.id = id;
     this.tenantId = tenantId;
@@ -69,9 +59,11 @@ public class AuditEvent {
 
   /**
    * Get id
+   *
    * @return id
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("id")
   public UUID getId() {
@@ -90,9 +82,11 @@ public class AuditEvent {
 
   /**
    * Get tenantId
+   *
    * @return tenantId
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "tenantId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("tenantId")
   public UUID getTenantId() {
@@ -111,9 +105,10 @@ public class AuditEvent {
 
   /**
    * Get actorUserId
+   *
    * @return actorUserId
    */
-  @Valid 
+  @Valid
   @Schema(name = "actorUserId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("actorUserId")
   public @Nullable UUID getActorUserId() {
@@ -132,9 +127,11 @@ public class AuditEvent {
 
   /**
    * Get action
+   *
    * @return action
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "action", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("action")
   public AuditAction getAction() {
@@ -153,9 +150,10 @@ public class AuditEvent {
 
   /**
    * Get targetUserId
+   *
    * @return targetUserId
    */
-  @Valid 
+  @Valid
   @Schema(name = "targetUserId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("targetUserId")
   public @Nullable UUID getTargetUserId() {
@@ -182,9 +180,9 @@ public class AuditEvent {
 
   /**
    * Get metadata
+   *
    * @return metadata
    */
-  
   @Schema(name = "metadata", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("metadata")
   public Map<String, Object> getMetadata() {
@@ -203,9 +201,11 @@ public class AuditEvent {
 
   /**
    * Get occurredAt
+   *
    * @return occurredAt
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "occurredAt", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("occurredAt")
   public OffsetDateTime getOccurredAt() {
@@ -226,13 +226,13 @@ public class AuditEvent {
       return false;
     }
     AuditEvent auditEvent = (AuditEvent) o;
-    return Objects.equals(this.id, auditEvent.id) &&
-        Objects.equals(this.tenantId, auditEvent.tenantId) &&
-        Objects.equals(this.actorUserId, auditEvent.actorUserId) &&
-        Objects.equals(this.action, auditEvent.action) &&
-        Objects.equals(this.targetUserId, auditEvent.targetUserId) &&
-        Objects.equals(this.metadata, auditEvent.metadata) &&
-        Objects.equals(this.occurredAt, auditEvent.occurredAt);
+    return Objects.equals(this.id, auditEvent.id)
+        && Objects.equals(this.tenantId, auditEvent.tenantId)
+        && Objects.equals(this.actorUserId, auditEvent.actorUserId)
+        && Objects.equals(this.action, auditEvent.action)
+        && Objects.equals(this.targetUserId, auditEvent.targetUserId)
+        && Objects.equals(this.metadata, auditEvent.metadata)
+        && Objects.equals(this.occurredAt, auditEvent.occurredAt);
   }
 
   @Override
@@ -256,11 +256,9 @@ public class AuditEvent {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
-

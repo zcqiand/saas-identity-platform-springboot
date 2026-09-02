@@ -1,27 +1,20 @@
 package saas.identity.shared.dto;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import org.springframework.lang.Nullable;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
-
-
-import java.util.*;
 import jakarta.annotation.Generated;
+import jakarta.validation.constraints.*;
+import java.util.*;
+import java.util.Objects;
+import org.springframework.lang.Nullable;
 
-/**
- * TenantAuditExportAuditEvents200Response
- */
-
+/** TenantAuditExportAuditEvents200Response */
 @JsonTypeName("TenantAudit_exportAuditEvents_200_response")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-02T23:27:00.762429900+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 public class TenantAuditExportAuditEvents200Response {
 
   private String downloadUrl;
@@ -30,9 +23,7 @@ public class TenantAuditExportAuditEvents200Response {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
+  /** Constructor with only required parameters */
   public TenantAuditExportAuditEvents200Response(String downloadUrl) {
     this.downloadUrl = downloadUrl;
   }
@@ -44,9 +35,10 @@ public class TenantAuditExportAuditEvents200Response {
 
   /**
    * Get downloadUrl
+   *
    * @return downloadUrl
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "downloadUrl", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("downloadUrl")
   public String getDownloadUrl() {
@@ -66,7 +58,8 @@ public class TenantAuditExportAuditEvents200Response {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    TenantAuditExportAuditEvents200Response tenantAuditExportAuditEvents200Response = (TenantAuditExportAuditEvents200Response) o;
+    TenantAuditExportAuditEvents200Response tenantAuditExportAuditEvents200Response =
+        (TenantAuditExportAuditEvents200Response) o;
     return Objects.equals(this.downloadUrl, tenantAuditExportAuditEvents200Response.downloadUrl);
   }
 
@@ -85,11 +78,9 @@ public class TenantAuditExportAuditEvents200Response {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
-

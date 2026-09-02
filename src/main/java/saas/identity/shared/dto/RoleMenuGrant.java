@@ -1,31 +1,24 @@
 package saas.identity.shared.dto;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import java.time.OffsetDateTime;
+import java.util.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
 
-
-import java.util.*;
-import jakarta.annotation.Generated;
-
-/**
- * RoleMenuGrant
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+/** RoleMenuGrant */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-02T23:27:00.762429900+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 public class RoleMenuGrant {
 
   private UUID roleId;
@@ -41,9 +34,7 @@ public class RoleMenuGrant {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
+  /** Constructor with only required parameters */
   public RoleMenuGrant(UUID roleId, UUID tenantId, List<String> menuIds, OffsetDateTime updatedAt) {
     this.roleId = roleId;
     this.tenantId = tenantId;
@@ -58,9 +49,11 @@ public class RoleMenuGrant {
 
   /**
    * Get roleId
+   *
    * @return roleId
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "roleId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("roleId")
   public UUID getRoleId() {
@@ -79,9 +72,11 @@ public class RoleMenuGrant {
 
   /**
    * Get tenantId
+   *
    * @return tenantId
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "tenantId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("tenantId")
   public UUID getTenantId() {
@@ -108,9 +103,10 @@ public class RoleMenuGrant {
 
   /**
    * Get menuIds
+   *
    * @return menuIds
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "menuIds", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("menuIds")
   public List<String> getMenuIds() {
@@ -129,9 +125,11 @@ public class RoleMenuGrant {
 
   /**
    * Get updatedAt
+   *
    * @return updatedAt
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "updatedAt", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("updatedAt")
   public OffsetDateTime getUpdatedAt() {
@@ -152,10 +150,10 @@ public class RoleMenuGrant {
       return false;
     }
     RoleMenuGrant roleMenuGrant = (RoleMenuGrant) o;
-    return Objects.equals(this.roleId, roleMenuGrant.roleId) &&
-        Objects.equals(this.tenantId, roleMenuGrant.tenantId) &&
-        Objects.equals(this.menuIds, roleMenuGrant.menuIds) &&
-        Objects.equals(this.updatedAt, roleMenuGrant.updatedAt);
+    return Objects.equals(this.roleId, roleMenuGrant.roleId)
+        && Objects.equals(this.tenantId, roleMenuGrant.tenantId)
+        && Objects.equals(this.menuIds, roleMenuGrant.menuIds)
+        && Objects.equals(this.updatedAt, roleMenuGrant.updatedAt);
   }
 
   @Override
@@ -176,11 +174,9 @@ public class RoleMenuGrant {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
-

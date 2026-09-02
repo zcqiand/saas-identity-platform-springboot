@@ -1,31 +1,23 @@
 package saas.identity.shared.dto;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-import org.springframework.lang.Nullable;
-import saas.identity.shared.dto.TenantMembership;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
-
-
 import java.util.*;
-import jakarta.annotation.Generated;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+import org.springframework.lang.Nullable;
 
-/**
- * CurrentUser
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+/** CurrentUser */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-02T23:27:00.762429900+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 public class CurrentUser {
 
   private UUID id;
@@ -44,9 +36,7 @@ public class CurrentUser {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
+  /** Constructor with only required parameters */
   public CurrentUser(UUID id, String email, List<@Valid TenantMembership> memberships) {
     this.id = id;
     this.email = email;
@@ -60,9 +50,11 @@ public class CurrentUser {
 
   /**
    * Get id
+   *
    * @return id
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("id")
   public UUID getId() {
@@ -81,9 +73,11 @@ public class CurrentUser {
 
   /**
    * Get email
+   *
    * @return email
    */
-  @NotNull @jakarta.validation.constraints.Email 
+  @NotNull
+  @jakarta.validation.constraints.Email
   @Schema(name = "email", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("email")
   public String getEmail() {
@@ -102,9 +96,9 @@ public class CurrentUser {
 
   /**
    * Get displayName
+   *
    * @return displayName
    */
-  
   @Schema(name = "displayName", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("displayName")
   public @Nullable String getDisplayName() {
@@ -131,9 +125,11 @@ public class CurrentUser {
 
   /**
    * Get memberships
+   *
    * @return memberships
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "memberships", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("memberships")
   public List<@Valid TenantMembership> getMemberships() {
@@ -152,9 +148,10 @@ public class CurrentUser {
 
   /**
    * Get currentTenantId
+   *
    * @return currentTenantId
    */
-  @Valid 
+  @Valid
   @Schema(name = "currentTenantId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("currentTenantId")
   public @Nullable UUID getCurrentTenantId() {
@@ -175,11 +172,11 @@ public class CurrentUser {
       return false;
     }
     CurrentUser currentUser = (CurrentUser) o;
-    return Objects.equals(this.id, currentUser.id) &&
-        Objects.equals(this.email, currentUser.email) &&
-        Objects.equals(this.displayName, currentUser.displayName) &&
-        Objects.equals(this.memberships, currentUser.memberships) &&
-        Objects.equals(this.currentTenantId, currentUser.currentTenantId);
+    return Objects.equals(this.id, currentUser.id)
+        && Objects.equals(this.email, currentUser.email)
+        && Objects.equals(this.displayName, currentUser.displayName)
+        && Objects.equals(this.memberships, currentUser.memberships)
+        && Objects.equals(this.currentTenantId, currentUser.currentTenantId);
   }
 
   @Override
@@ -201,11 +198,9 @@ public class CurrentUser {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
-

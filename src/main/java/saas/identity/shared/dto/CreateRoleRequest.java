@@ -1,29 +1,21 @@
 package saas.identity.shared.dto;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import org.springframework.lang.Nullable;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
-
-
-import java.util.*;
 import jakarta.annotation.Generated;
+import jakarta.validation.constraints.*;
+import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import org.springframework.lang.Nullable;
 
-/**
- * CreateRoleRequest
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+/** CreateRoleRequest */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-02T23:27:00.762429900+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 public class CreateRoleRequest {
 
   private String code;
@@ -40,9 +32,7 @@ public class CreateRoleRequest {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
+  /** Constructor with only required parameters */
   public CreateRoleRequest(String code, String name) {
     this.code = code;
     this.name = name;
@@ -55,9 +45,11 @@ public class CreateRoleRequest {
 
   /**
    * Get code
+   *
    * @return code
    */
-  @NotNull @Size(min = 1, max = 64) 
+  @NotNull
+  @Size(min = 1, max = 64)
   @Schema(name = "code", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("code")
   public String getCode() {
@@ -76,9 +68,11 @@ public class CreateRoleRequest {
 
   /**
    * Get name
+   *
    * @return name
    */
-  @NotNull @Size(min = 1, max = 255) 
+  @NotNull
+  @Size(min = 1, max = 255)
   @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("name")
   public String getName() {
@@ -97,9 +91,9 @@ public class CreateRoleRequest {
 
   /**
    * Get description
+   *
    * @return description
    */
-  
   @Schema(name = "description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("description")
   public @Nullable String getDescription() {
@@ -126,9 +120,9 @@ public class CreateRoleRequest {
 
   /**
    * Get permissionIds
+   *
    * @return permissionIds
    */
-  
   @Schema(name = "permissionIds", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("permissionIds")
   public List<String> getPermissionIds() {
@@ -149,10 +143,10 @@ public class CreateRoleRequest {
       return false;
     }
     CreateRoleRequest createRoleRequest = (CreateRoleRequest) o;
-    return Objects.equals(this.code, createRoleRequest.code) &&
-        Objects.equals(this.name, createRoleRequest.name) &&
-        Objects.equals(this.description, createRoleRequest.description) &&
-        Objects.equals(this.permissionIds, createRoleRequest.permissionIds);
+    return Objects.equals(this.code, createRoleRequest.code)
+        && Objects.equals(this.name, createRoleRequest.name)
+        && Objects.equals(this.description, createRoleRequest.description)
+        && Objects.equals(this.permissionIds, createRoleRequest.permissionIds);
   }
 
   @Override
@@ -173,11 +167,9 @@ public class CreateRoleRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
-

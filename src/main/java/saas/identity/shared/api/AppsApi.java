@@ -5,64 +5,65 @@
  */
 package saas.identity.shared.api;
 
-import saas.identity.shared.dto.AppPublicInfo;
-import saas.identity.shared.dto.ErrorResponse;
-import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
+import jakarta.annotation.Generated;
+import jakarta.validation.constraints.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import saas.identity.shared.dto.AppPublicInfo;
+import saas.identity.shared.dto.ErrorResponse;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import jakarta.annotation.Generated;
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-02T23:27:00.762429900+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 @Validated
 @Tag(name = "apps", description = "the apps API")
 public interface AppsApi {
 
-    String PATH_APPS_GET_APP = "/api/v1/apps/{code}";
-    /**
-     * GET /api/v1/apps/{code}
-     *
-     * @param code  (required)
-     * @return The request has succeeded. (status code 200)
-     *         or An unexpected error response. (status code 200)
-     */
-    @Operation(
-        operationId = "appsGetApp",
-        tags = { "apps" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = AppPublicInfo.class))
-            }),
-            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-            })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.GET,
-        value = AppsApi.PATH_APPS_GET_APP,
-        produces = { "application/json" }
-    )
-    ResponseEntity<AppPublicInfo> appsGetApp(
-        @Parameter(name = "code", description = "", required = true, in = ParameterIn.PATH) @PathVariable("code") String code
-    );
+  String PATH_APPS_GET_APP = "/api/v1/apps/{code}";
 
+  /**
+   * GET /api/v1/apps/{code}
+   *
+   * @param code (required)
+   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
+   *     code 200)
+   */
+  @Operation(
+      operationId = "appsGetApp",
+      tags = {"apps"},
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "The request has succeeded.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = AppPublicInfo.class))
+            }),
+        @ApiResponse(
+            responseCode = "default",
+            description = "An unexpected error response.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            })
+      })
+  @RequestMapping(
+      method = RequestMethod.GET,
+      value = AppsApi.PATH_APPS_GET_APP,
+      produces = {"application/json"})
+  ResponseEntity<AppPublicInfo> appsGetApp(
+      @Parameter(name = "code", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("code")
+          String code);
 }

@@ -5,268 +5,340 @@
  */
 package saas.identity.shared.api;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Generated;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import java.util.List;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import saas.identity.shared.dto.AdminAppMenusMoveMenuRequest;
 import saas.identity.shared.dto.CreateMenuRequest;
 import saas.identity.shared.dto.ErrorResponse;
 import saas.identity.shared.dto.Menu;
 import saas.identity.shared.dto.ReorderMenuRequest;
 import saas.identity.shared.dto.UpdateMenuRequest;
-import io.swagger.v3.oas.annotations.ExternalDocumentation;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import jakarta.annotation.Generated;
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-02T23:27:00.762429900+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 @Validated
 @Tag(name = "admin-app-menus", description = "the admin-app-menus API")
 public interface AdminAppMenusApi {
 
-    String PATH_ADMIN_APP_MENUS_CREATE_MENU = "/api/v1/admin/apps/{appId}/menus";
-    /**
-     * POST /api/v1/admin/apps/{appId}/menus
-     *
-     * @param appId  (required)
-     * @param createMenuRequest  (required)
-     * @return The request has succeeded. (status code 200)
-     *         or An unexpected error response. (status code 200)
-     */
-    @Operation(
-        operationId = "adminAppMenusCreateMenu",
-        tags = { "admin-app-menus" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Menu.class))
+  String PATH_ADMIN_APP_MENUS_CREATE_MENU = "/api/v1/admin/apps/{appId}/menus";
+
+  /**
+   * POST /api/v1/admin/apps/{appId}/menus
+   *
+   * @param appId (required)
+   * @param createMenuRequest (required)
+   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
+   *     code 200)
+   */
+  @Operation(
+      operationId = "adminAppMenusCreateMenu",
+      tags = {"admin-app-menus"},
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "The request has succeeded.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = Menu.class))
             }),
-            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+        @ApiResponse(
+            responseCode = "default",
+            description = "An unexpected error response.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
             })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.POST,
-        value = AdminAppMenusApi.PATH_ADMIN_APP_MENUS_CREATE_MENU,
-        produces = { "application/json" },
-        consumes = { "application/json" }
-    )
-    ResponseEntity<Menu> adminAppMenusCreateMenu(
-        @Parameter(name = "appId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("appId") String appId,
-        @Parameter(name = "CreateMenuRequest", description = "", required = true) @Valid @RequestBody CreateMenuRequest createMenuRequest
-    );
+      })
+  @RequestMapping(
+      method = RequestMethod.POST,
+      value = AdminAppMenusApi.PATH_ADMIN_APP_MENUS_CREATE_MENU,
+      produces = {"application/json"},
+      consumes = {"application/json"})
+  ResponseEntity<Menu> adminAppMenusCreateMenu(
+      @Parameter(name = "appId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("appId")
+          String appId,
+      @Parameter(name = "CreateMenuRequest", description = "", required = true) @Valid @RequestBody
+          CreateMenuRequest createMenuRequest);
 
+  String PATH_ADMIN_APP_MENUS_DELETE_MENU = "/api/v1/admin/apps/{appId}/menus/{menuId}";
 
-    String PATH_ADMIN_APP_MENUS_DELETE_MENU = "/api/v1/admin/apps/{appId}/menus/{menuId}";
-    /**
-     * DELETE /api/v1/admin/apps/{appId}/menus/{menuId}
-     *
-     * @param appId  (required)
-     * @param menuId  (required)
-     * @return There is no content to send for this request, but the headers may be useful.  (status code 204)
-     *         or An unexpected error response. (status code 200)
-     */
-    @Operation(
-        operationId = "adminAppMenusDeleteMenu",
-        tags = { "admin-app-menus" },
-        responses = {
-            @ApiResponse(responseCode = "204", description = "There is no content to send for this request, but the headers may be useful. "),
-            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+  /**
+   * DELETE /api/v1/admin/apps/{appId}/menus/{menuId}
+   *
+   * @param appId (required)
+   * @param menuId (required)
+   * @return There is no content to send for this request, but the headers may be useful. (status
+   *     code 204) or An unexpected error response. (status code 200)
+   */
+  @Operation(
+      operationId = "adminAppMenusDeleteMenu",
+      tags = {"admin-app-menus"},
+      responses = {
+        @ApiResponse(
+            responseCode = "204",
+            description =
+                "There is no content to send for this request, but the headers may be useful. "),
+        @ApiResponse(
+            responseCode = "default",
+            description = "An unexpected error response.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
             })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.DELETE,
-        value = AdminAppMenusApi.PATH_ADMIN_APP_MENUS_DELETE_MENU,
-        produces = { "application/json" }
-    )
-    ResponseEntity<Void> adminAppMenusDeleteMenu(
-        @Parameter(name = "appId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("appId") String appId,
-        @Parameter(name = "menuId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("menuId") String menuId
-    );
+      })
+  @RequestMapping(
+      method = RequestMethod.DELETE,
+      value = AdminAppMenusApi.PATH_ADMIN_APP_MENUS_DELETE_MENU,
+      produces = {"application/json"})
+  ResponseEntity<Void> adminAppMenusDeleteMenu(
+      @Parameter(name = "appId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("appId")
+          String appId,
+      @Parameter(name = "menuId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("menuId")
+          String menuId);
 
+  String PATH_ADMIN_APP_MENUS_GET_MENU = "/api/v1/admin/apps/{appId}/menus/{menuId}";
 
-    String PATH_ADMIN_APP_MENUS_GET_MENU = "/api/v1/admin/apps/{appId}/menus/{menuId}";
-    /**
-     * GET /api/v1/admin/apps/{appId}/menus/{menuId}
-     *
-     * @param appId  (required)
-     * @param menuId  (required)
-     * @return The request has succeeded. (status code 200)
-     *         or An unexpected error response. (status code 200)
-     */
-    @Operation(
-        operationId = "adminAppMenusGetMenu",
-        tags = { "admin-app-menus" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Menu.class))
+  /**
+   * GET /api/v1/admin/apps/{appId}/menus/{menuId}
+   *
+   * @param appId (required)
+   * @param menuId (required)
+   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
+   *     code 200)
+   */
+  @Operation(
+      operationId = "adminAppMenusGetMenu",
+      tags = {"admin-app-menus"},
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "The request has succeeded.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = Menu.class))
             }),
-            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+        @ApiResponse(
+            responseCode = "default",
+            description = "An unexpected error response.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
             })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.GET,
-        value = AdminAppMenusApi.PATH_ADMIN_APP_MENUS_GET_MENU,
-        produces = { "application/json" }
-    )
-    ResponseEntity<Menu> adminAppMenusGetMenu(
-        @Parameter(name = "appId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("appId") String appId,
-        @Parameter(name = "menuId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("menuId") String menuId
-    );
+      })
+  @RequestMapping(
+      method = RequestMethod.GET,
+      value = AdminAppMenusApi.PATH_ADMIN_APP_MENUS_GET_MENU,
+      produces = {"application/json"})
+  ResponseEntity<Menu> adminAppMenusGetMenu(
+      @Parameter(name = "appId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("appId")
+          String appId,
+      @Parameter(name = "menuId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("menuId")
+          String menuId);
 
+  String PATH_ADMIN_APP_MENUS_LIST_MENUS = "/api/v1/admin/apps/{appId}/menus";
 
-    String PATH_ADMIN_APP_MENUS_LIST_MENUS = "/api/v1/admin/apps/{appId}/menus";
-    /**
-     * GET /api/v1/admin/apps/{appId}/menus
-     *
-     * @param appId  (required)
-     * @return The request has succeeded. (status code 200)
-     *         or An unexpected error response. (status code 200)
-     */
-    @Operation(
-        operationId = "adminAppMenusListMenus",
-        tags = { "admin-app-menus" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Menu.class)))
+  /**
+   * GET /api/v1/admin/apps/{appId}/menus
+   *
+   * @param appId (required)
+   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
+   *     code 200)
+   */
+  @Operation(
+      operationId = "adminAppMenusListMenus",
+      tags = {"admin-app-menus"},
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "The request has succeeded.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  array = @ArraySchema(schema = @Schema(implementation = Menu.class)))
             }),
-            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+        @ApiResponse(
+            responseCode = "default",
+            description = "An unexpected error response.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
             })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.GET,
-        value = AdminAppMenusApi.PATH_ADMIN_APP_MENUS_LIST_MENUS,
-        produces = { "application/json" }
-    )
-    ResponseEntity<List<Menu>> adminAppMenusListMenus(
-        @Parameter(name = "appId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("appId") String appId
-    );
+      })
+  @RequestMapping(
+      method = RequestMethod.GET,
+      value = AdminAppMenusApi.PATH_ADMIN_APP_MENUS_LIST_MENUS,
+      produces = {"application/json"})
+  ResponseEntity<List<Menu>> adminAppMenusListMenus(
+      @Parameter(name = "appId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("appId")
+          String appId);
 
+  String PATH_ADMIN_APP_MENUS_MOVE_MENU = "/api/v1/admin/apps/{appId}/menus/{menuId}/parent";
 
-    String PATH_ADMIN_APP_MENUS_MOVE_MENU = "/api/v1/admin/apps/{appId}/menus/{menuId}/parent";
-    /**
-     * PATCH /api/v1/admin/apps/{appId}/menus/{menuId}/parent
-     *
-     * @param appId  (required)
-     * @param menuId  (required)
-     * @param adminAppMenusMoveMenuRequest  (required)
-     * @return The request has succeeded. (status code 200)
-     *         or An unexpected error response. (status code 200)
-     */
-    @Operation(
-        operationId = "adminAppMenusMoveMenu",
-        tags = { "admin-app-menus" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Menu.class))
+  /**
+   * PATCH /api/v1/admin/apps/{appId}/menus/{menuId}/parent
+   *
+   * @param appId (required)
+   * @param menuId (required)
+   * @param adminAppMenusMoveMenuRequest (required)
+   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
+   *     code 200)
+   */
+  @Operation(
+      operationId = "adminAppMenusMoveMenu",
+      tags = {"admin-app-menus"},
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "The request has succeeded.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = Menu.class))
             }),
-            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+        @ApiResponse(
+            responseCode = "default",
+            description = "An unexpected error response.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
             })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.PATCH,
-        value = AdminAppMenusApi.PATH_ADMIN_APP_MENUS_MOVE_MENU,
-        produces = { "application/json" },
-        consumes = { "application/json" }
-    )
-    ResponseEntity<Menu> adminAppMenusMoveMenu(
-        @Parameter(name = "appId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("appId") String appId,
-        @Parameter(name = "menuId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("menuId") String menuId,
-        @Parameter(name = "AdminAppMenusMoveMenuRequest", description = "", required = true) @Valid @RequestBody AdminAppMenusMoveMenuRequest adminAppMenusMoveMenuRequest
-    );
+      })
+  @RequestMapping(
+      method = RequestMethod.PATCH,
+      value = AdminAppMenusApi.PATH_ADMIN_APP_MENUS_MOVE_MENU,
+      produces = {"application/json"},
+      consumes = {"application/json"})
+  ResponseEntity<Menu> adminAppMenusMoveMenu(
+      @Parameter(name = "appId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("appId")
+          String appId,
+      @Parameter(name = "menuId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("menuId")
+          String menuId,
+      @Parameter(name = "AdminAppMenusMoveMenuRequest", description = "", required = true)
+          @Valid
+          @RequestBody
+          AdminAppMenusMoveMenuRequest adminAppMenusMoveMenuRequest);
 
+  String PATH_ADMIN_APP_MENUS_REORDER_MENUS = "/api/v1/admin/apps/{appId}/menus/{menuId}/reorder";
 
-    String PATH_ADMIN_APP_MENUS_REORDER_MENUS = "/api/v1/admin/apps/{appId}/menus/{menuId}/reorder";
-    /**
-     * PUT /api/v1/admin/apps/{appId}/menus/{menuId}/reorder
-     *
-     * @param appId  (required)
-     * @param menuId  (required)
-     * @param reorderMenuRequest  (required)
-     * @return The request has succeeded. (status code 200)
-     *         or An unexpected error response. (status code 200)
-     */
-    @Operation(
-        operationId = "adminAppMenusReorderMenus",
-        tags = { "admin-app-menus" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Menu.class)))
+  /**
+   * PUT /api/v1/admin/apps/{appId}/menus/{menuId}/reorder
+   *
+   * @param appId (required)
+   * @param menuId (required)
+   * @param reorderMenuRequest (required)
+   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
+   *     code 200)
+   */
+  @Operation(
+      operationId = "adminAppMenusReorderMenus",
+      tags = {"admin-app-menus"},
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "The request has succeeded.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  array = @ArraySchema(schema = @Schema(implementation = Menu.class)))
             }),
-            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+        @ApiResponse(
+            responseCode = "default",
+            description = "An unexpected error response.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
             })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.PUT,
-        value = AdminAppMenusApi.PATH_ADMIN_APP_MENUS_REORDER_MENUS,
-        produces = { "application/json" },
-        consumes = { "application/json" }
-    )
-    ResponseEntity<List<Menu>> adminAppMenusReorderMenus(
-        @Parameter(name = "appId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("appId") String appId,
-        @Parameter(name = "menuId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("menuId") String menuId,
-        @Parameter(name = "ReorderMenuRequest", description = "", required = true) @Valid @RequestBody ReorderMenuRequest reorderMenuRequest
-    );
+      })
+  @RequestMapping(
+      method = RequestMethod.PUT,
+      value = AdminAppMenusApi.PATH_ADMIN_APP_MENUS_REORDER_MENUS,
+      produces = {"application/json"},
+      consumes = {"application/json"})
+  ResponseEntity<List<Menu>> adminAppMenusReorderMenus(
+      @Parameter(name = "appId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("appId")
+          String appId,
+      @Parameter(name = "menuId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("menuId")
+          String menuId,
+      @Parameter(name = "ReorderMenuRequest", description = "", required = true) @Valid @RequestBody
+          ReorderMenuRequest reorderMenuRequest);
 
+  String PATH_ADMIN_APP_MENUS_UPDATE_MENU = "/api/v1/admin/apps/{appId}/menus/{menuId}";
 
-    String PATH_ADMIN_APP_MENUS_UPDATE_MENU = "/api/v1/admin/apps/{appId}/menus/{menuId}";
-    /**
-     * PATCH /api/v1/admin/apps/{appId}/menus/{menuId}
-     *
-     * @param appId  (required)
-     * @param menuId  (required)
-     * @param updateMenuRequest  (required)
-     * @return The request has succeeded. (status code 200)
-     *         or An unexpected error response. (status code 200)
-     */
-    @Operation(
-        operationId = "adminAppMenusUpdateMenu",
-        tags = { "admin-app-menus" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Menu.class))
+  /**
+   * PATCH /api/v1/admin/apps/{appId}/menus/{menuId}
+   *
+   * @param appId (required)
+   * @param menuId (required)
+   * @param updateMenuRequest (required)
+   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
+   *     code 200)
+   */
+  @Operation(
+      operationId = "adminAppMenusUpdateMenu",
+      tags = {"admin-app-menus"},
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "The request has succeeded.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = Menu.class))
             }),
-            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+        @ApiResponse(
+            responseCode = "default",
+            description = "An unexpected error response.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
             })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.PATCH,
-        value = AdminAppMenusApi.PATH_ADMIN_APP_MENUS_UPDATE_MENU,
-        produces = { "application/json" },
-        consumes = { "application/json" }
-    )
-    ResponseEntity<Menu> adminAppMenusUpdateMenu(
-        @Parameter(name = "appId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("appId") String appId,
-        @Parameter(name = "menuId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("menuId") String menuId,
-        @Parameter(name = "UpdateMenuRequest", description = "", required = true) @Valid @RequestBody UpdateMenuRequest updateMenuRequest
-    );
-
+      })
+  @RequestMapping(
+      method = RequestMethod.PATCH,
+      value = AdminAppMenusApi.PATH_ADMIN_APP_MENUS_UPDATE_MENU,
+      produces = {"application/json"},
+      consumes = {"application/json"})
+  ResponseEntity<Menu> adminAppMenusUpdateMenu(
+      @Parameter(name = "appId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("appId")
+          String appId,
+      @Parameter(name = "menuId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("menuId")
+          String menuId,
+      @Parameter(name = "UpdateMenuRequest", description = "", required = true) @Valid @RequestBody
+          UpdateMenuRequest updateMenuRequest);
 }

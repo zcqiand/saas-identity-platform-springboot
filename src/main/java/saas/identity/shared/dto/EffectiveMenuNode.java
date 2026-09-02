@@ -1,32 +1,23 @@
 package saas.identity.shared.dto;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-import org.springframework.lang.Nullable;
-import saas.identity.shared.dto.MenuType;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
-
-
 import java.util.*;
-import jakarta.annotation.Generated;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+import org.springframework.lang.Nullable;
 
-/**
- * EffectiveMenuNode
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+/** EffectiveMenuNode */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-02T23:27:00.762429900+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 public class EffectiveMenuNode {
 
   private UUID id;
@@ -56,10 +47,15 @@ public class EffectiveMenuNode {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
-  public EffectiveMenuNode(UUID id, UUID appId, String code, String name, MenuType type, Integer sortOrder, List<@Valid EffectiveMenuNode> children) {
+  /** Constructor with only required parameters */
+  public EffectiveMenuNode(
+      UUID id,
+      UUID appId,
+      String code,
+      String name,
+      MenuType type,
+      Integer sortOrder,
+      List<@Valid EffectiveMenuNode> children) {
     this.id = id;
     this.appId = appId;
     this.code = code;
@@ -76,9 +72,11 @@ public class EffectiveMenuNode {
 
   /**
    * Get id
+   *
    * @return id
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("id")
   public UUID getId() {
@@ -97,9 +95,11 @@ public class EffectiveMenuNode {
 
   /**
    * Get appId
+   *
    * @return appId
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "appId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("appId")
   public UUID getAppId() {
@@ -118,9 +118,10 @@ public class EffectiveMenuNode {
 
   /**
    * Get parentId
+   *
    * @return parentId
    */
-  @Valid 
+  @Valid
   @Schema(name = "parentId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("parentId")
   public @Nullable UUID getParentId() {
@@ -139,9 +140,10 @@ public class EffectiveMenuNode {
 
   /**
    * Get code
+   *
    * @return code
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "code", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("code")
   public String getCode() {
@@ -160,9 +162,10 @@ public class EffectiveMenuNode {
 
   /**
    * Get name
+   *
    * @return name
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("name")
   public String getName() {
@@ -181,9 +184,9 @@ public class EffectiveMenuNode {
 
   /**
    * Get path
+   *
    * @return path
    */
-  
   @Schema(name = "path", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("path")
   public @Nullable String getPath() {
@@ -202,9 +205,9 @@ public class EffectiveMenuNode {
 
   /**
    * Get icon
+   *
    * @return icon
    */
-  
   @Schema(name = "icon", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("icon")
   public @Nullable String getIcon() {
@@ -223,9 +226,11 @@ public class EffectiveMenuNode {
 
   /**
    * Get type
+   *
    * @return type
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "type", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("type")
   public MenuType getType() {
@@ -244,9 +249,10 @@ public class EffectiveMenuNode {
 
   /**
    * Get sortOrder
+   *
    * @return sortOrder
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "sortOrder", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("sortOrder")
   public Integer getSortOrder() {
@@ -273,9 +279,11 @@ public class EffectiveMenuNode {
 
   /**
    * Get children
+   *
    * @return children
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "children", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("children")
   public List<@Valid EffectiveMenuNode> getChildren() {
@@ -296,16 +304,16 @@ public class EffectiveMenuNode {
       return false;
     }
     EffectiveMenuNode effectiveMenuNode = (EffectiveMenuNode) o;
-    return Objects.equals(this.id, effectiveMenuNode.id) &&
-        Objects.equals(this.appId, effectiveMenuNode.appId) &&
-        Objects.equals(this.parentId, effectiveMenuNode.parentId) &&
-        Objects.equals(this.code, effectiveMenuNode.code) &&
-        Objects.equals(this.name, effectiveMenuNode.name) &&
-        Objects.equals(this.path, effectiveMenuNode.path) &&
-        Objects.equals(this.icon, effectiveMenuNode.icon) &&
-        Objects.equals(this.type, effectiveMenuNode.type) &&
-        Objects.equals(this.sortOrder, effectiveMenuNode.sortOrder) &&
-        Objects.equals(this.children, effectiveMenuNode.children);
+    return Objects.equals(this.id, effectiveMenuNode.id)
+        && Objects.equals(this.appId, effectiveMenuNode.appId)
+        && Objects.equals(this.parentId, effectiveMenuNode.parentId)
+        && Objects.equals(this.code, effectiveMenuNode.code)
+        && Objects.equals(this.name, effectiveMenuNode.name)
+        && Objects.equals(this.path, effectiveMenuNode.path)
+        && Objects.equals(this.icon, effectiveMenuNode.icon)
+        && Objects.equals(this.type, effectiveMenuNode.type)
+        && Objects.equals(this.sortOrder, effectiveMenuNode.sortOrder)
+        && Objects.equals(this.children, effectiveMenuNode.children);
   }
 
   @Override
@@ -332,11 +340,9 @@ public class EffectiveMenuNode {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
-

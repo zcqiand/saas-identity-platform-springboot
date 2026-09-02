@@ -1,26 +1,19 @@
 package saas.identity.shared.dto;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import org.springframework.lang.Nullable;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
-
-
-import java.util.*;
 import jakarta.annotation.Generated;
+import jakarta.validation.constraints.*;
+import java.util.*;
+import java.util.Objects;
+import org.springframework.lang.Nullable;
 
-/**
- * TenantSettings
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+/** TenantSettings */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-02T23:27:00.762429900+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 public class TenantSettings {
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -39,9 +32,9 @@ public class TenantSettings {
 
   /**
    * Get themeColor
+   *
    * @return themeColor
    */
-  
   @Schema(name = "themeColor", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("themeColor")
   public @Nullable String getThemeColor() {
@@ -60,9 +53,9 @@ public class TenantSettings {
 
   /**
    * Get locale
+   *
    * @return locale
    */
-  
   @Schema(name = "locale", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("locale")
   public @Nullable String getLocale() {
@@ -81,9 +74,9 @@ public class TenantSettings {
 
   /**
    * Get maxUsers
+   *
    * @return maxUsers
    */
-  
   @Schema(name = "maxUsers", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("maxUsers")
   public @Nullable Integer getMaxUsers() {
@@ -104,9 +97,9 @@ public class TenantSettings {
       return false;
     }
     TenantSettings tenantSettings = (TenantSettings) o;
-    return Objects.equals(this.themeColor, tenantSettings.themeColor) &&
-        Objects.equals(this.locale, tenantSettings.locale) &&
-        Objects.equals(this.maxUsers, tenantSettings.maxUsers);
+    return Objects.equals(this.themeColor, tenantSettings.themeColor)
+        && Objects.equals(this.locale, tenantSettings.locale)
+        && Objects.equals(this.maxUsers, tenantSettings.maxUsers);
   }
 
   @Override
@@ -126,11 +119,9 @@ public class TenantSettings {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
-

@@ -1,30 +1,21 @@
 package saas.identity.shared.dto;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import java.util.UUID;
-import org.springframework.lang.Nullable;
-import saas.identity.shared.dto.MenuStatus;
-import saas.identity.shared.dto.MenuType;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
-
-
 import java.util.*;
-import jakarta.annotation.Generated;
+import java.util.Objects;
+import java.util.UUID;
+import org.springframework.lang.Nullable;
 
-/**
- * CreateMenuRequest
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-02T22:47:47.334506300+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+/** CreateMenuRequest */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-02T23:27:00.762429900+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 public class CreateMenuRequest {
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -53,9 +44,7 @@ public class CreateMenuRequest {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
+  /** Constructor with only required parameters */
   public CreateMenuRequest(String code, String name) {
     this.code = code;
     this.name = name;
@@ -68,9 +57,10 @@ public class CreateMenuRequest {
 
   /**
    * Get parentId
+   *
    * @return parentId
    */
-  @Valid 
+  @Valid
   @Schema(name = "parentId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("parentId")
   public @Nullable UUID getParentId() {
@@ -89,9 +79,11 @@ public class CreateMenuRequest {
 
   /**
    * Get code
+   *
    * @return code
    */
-  @NotNull @Size(min = 2, max = 64) 
+  @NotNull
+  @Size(min = 2, max = 64)
   @Schema(name = "code", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("code")
   public String getCode() {
@@ -110,9 +102,11 @@ public class CreateMenuRequest {
 
   /**
    * Get name
+   *
    * @return name
    */
-  @NotNull @Size(min = 2, max = 255) 
+  @NotNull
+  @Size(min = 2, max = 255)
   @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("name")
   public String getName() {
@@ -131,9 +125,9 @@ public class CreateMenuRequest {
 
   /**
    * Get path
+   *
    * @return path
    */
-  
   @Schema(name = "path", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("path")
   public @Nullable String getPath() {
@@ -152,9 +146,9 @@ public class CreateMenuRequest {
 
   /**
    * Get icon
+   *
    * @return icon
    */
-  
   @Schema(name = "icon", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("icon")
   public @Nullable String getIcon() {
@@ -173,9 +167,10 @@ public class CreateMenuRequest {
 
   /**
    * Get type
+   *
    * @return type
    */
-  @Valid 
+  @Valid
   @Schema(name = "type", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("type")
   public @Nullable MenuType getType() {
@@ -194,9 +189,9 @@ public class CreateMenuRequest {
 
   /**
    * Get sortOrder
+   *
    * @return sortOrder
    */
-  
   @Schema(name = "sortOrder", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("sortOrder")
   public @Nullable Integer getSortOrder() {
@@ -215,9 +210,10 @@ public class CreateMenuRequest {
 
   /**
    * Get status
+   *
    * @return status
    */
-  @Valid 
+  @Valid
   @Schema(name = "status", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("status")
   public @Nullable MenuStatus getStatus() {
@@ -238,14 +234,14 @@ public class CreateMenuRequest {
       return false;
     }
     CreateMenuRequest createMenuRequest = (CreateMenuRequest) o;
-    return Objects.equals(this.parentId, createMenuRequest.parentId) &&
-        Objects.equals(this.code, createMenuRequest.code) &&
-        Objects.equals(this.name, createMenuRequest.name) &&
-        Objects.equals(this.path, createMenuRequest.path) &&
-        Objects.equals(this.icon, createMenuRequest.icon) &&
-        Objects.equals(this.type, createMenuRequest.type) &&
-        Objects.equals(this.sortOrder, createMenuRequest.sortOrder) &&
-        Objects.equals(this.status, createMenuRequest.status);
+    return Objects.equals(this.parentId, createMenuRequest.parentId)
+        && Objects.equals(this.code, createMenuRequest.code)
+        && Objects.equals(this.name, createMenuRequest.name)
+        && Objects.equals(this.path, createMenuRequest.path)
+        && Objects.equals(this.icon, createMenuRequest.icon)
+        && Objects.equals(this.type, createMenuRequest.type)
+        && Objects.equals(this.sortOrder, createMenuRequest.sortOrder)
+        && Objects.equals(this.status, createMenuRequest.status);
   }
 
   @Override
@@ -270,11 +266,9 @@ public class CreateMenuRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
-

@@ -8,7 +8,7 @@
 
 - **状态**: 待定位
 - **首次发现**: 2026-09-01 live mode 全量 contract-test run
-- **关联 ADR**: [docs/adr/0015-amend-timestamps.md](../../../docs/adr/0015-amend-timestamps.md) §「已知非契约问题」
+- **关联 ADR**: [docs/adr/0015-amend-timestamps.md](../../docs/adr/0015-amend-timestamps.md) §「已知非契约问题」
 - **关联合约测试**: `M96.F02.I10 GET /tenants/{t}/users 四方比对`
 
 ### 症状（活证据）
