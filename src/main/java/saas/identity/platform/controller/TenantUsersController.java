@@ -55,20 +55,9 @@ public class TenantUsersController implements TenantUsersApi {
       String userId,
       saas.identity.shared.dto.UpdateUserRequest updateUserRequest) {
     tenantGuard.verifyPathTenant(tenantId);
-    User u = new User();
-    u.setId(UUID.fromString(userId));
-    u.setTenantId(UUID.fromString(tenantId));
-    u.setUsername(
-        updateUserRequest.getDisplayName() == null ? "alice" : updateUserRequest.getDisplayName());
-    u.setEmail(
-        updateUserRequest.getEmail() == null ? "alice@example.com" : updateUserRequest.getEmail());
-    u.setStatus(
-        updateUserRequest.getStatus() == null ? UserStatus.ACTIVE : updateUserRequest.getStatus());
-    u.setRoleIds(
-        updateUserRequest.getRoleIds() == null
-            ? java.util.List.of()
-            : updateUserRequest.getRoleIds());
-    return ResponseEntity.ok(u);
+    // 2026-09-01 contract-test I39：原内存 stub 写不落库，切 service（DB-backed）
+    return ResponseEntity.ok(
+        service.updateUser(UUID.fromString(tenantId), UUID.fromString(userId), updateUserRequest));
   }
 
   @Override
@@ -82,41 +71,35 @@ public class TenantUsersController implements TenantUsersApi {
   public ResponseEntity<User> tenantUsersAssignRoles(
       String tenantId, String userId, TenantUsersAssignRolesRequest body) {
     tenantGuard.verifyPathTenant(tenantId);
-    User u = new User();
-    u.setId(UUID.fromString(userId));
-    u.setTenantId(UUID.fromString(tenantId));
-    u.setUsername("alice");
-    u.setEmail("alice@example.com");
-    u.setStatus(UserStatus.ACTIVE);
-    u.setRoleIds(body.getRoleIds() == null ? java.util.List.of() : body.getRoleIds());
-    return ResponseEntity.ok(u);
+    // 2026-09-01 contract-test I40：原内存 stub，切 service（memberships authoritative 双写）
+    java.util.List<UUID> roleIds =
+        body.getRoleIds() == null
+            ? java.util.List.of()
+            : body.getRoleIds().stream().map(UUID::fromString).toList();
+    return ResponseEntity.ok(
+        service.assignRoles(UUID.fromString(tenantId), UUID.fromString(userId), roleIds));
   }
 
   @Override
   public ResponseEntity<User> tenantUsersInviteUser(
       String tenantId, TenantUsersInviteUserRequest body) {
     tenantGuard.verifyPathTenant(tenantId);
-    User u = new User();
-    u.setId(UUID.randomUUID());
-    u.setTenantId(UUID.fromString(tenantId));
-    u.setUsername(body.getEmail());
-    u.setEmail(body.getEmail());
-    u.setStatus(UserStatus.INVITED);
-    u.setRoleIds(body.getRoleIds() == null ? java.util.List.of() : body.getRoleIds());
-    return ResponseEntity.ok(u);
+    // 2026-09-01 contract-test I42：原内存 stub 不落库（DELETE 随即 400），切 service
+    java.util.List<UUID> roleIds =
+        body.getRoleIds() == null
+            ? null
+            : body.getRoleIds().stream().map(UUID::fromString).toList();
+    return ResponseEntity.ok(
+        service.inviteUser(UUID.fromString(tenantId), body.getEmail(), roleIds));
   }
 
   @Override
   public ResponseEntity<User> tenantUsersChangeUserStatus(
       String tenantId, String userId, TenantUsersChangeUserStatusRequest body) {
     tenantGuard.verifyPathTenant(tenantId);
-    User u = new User();
-    u.setId(UUID.fromString(userId));
-    u.setTenantId(UUID.fromString(tenantId));
-    u.setUsername("alice");
-    u.setEmail("alice@example.com");
-    u.setStatus(body.getStatus());
-    u.setRoleIds(java.util.List.of());
-    return ResponseEntity.ok(u);
+    // 2026-09-01 contract-test I41：原内存 stub，切 service（status 真往返）
+    return ResponseEntity.ok(
+        service.changeUserStatus(
+            UUID.fromString(tenantId), UUID.fromString(userId), body.getStatus()));
   }
 }

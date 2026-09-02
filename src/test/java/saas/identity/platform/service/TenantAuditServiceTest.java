@@ -48,7 +48,8 @@ class TenantAuditServiceTest {
   void list_returnsPage() {
     UUID tid = UUID.randomUUID();
     Page<AuditEventEntity> page = new PageImpl<>(List.of(event(tid)));
-    when(auditEventRepository.findByTenantId(eq(tid), any(Pageable.class))).thenReturn(page);
+    when(auditEventRepository.findByTenantIdOrderByOccurredAtDesc(eq(tid), any(Pageable.class)))
+        .thenReturn(page);
 
     Page<AuditEvent> result = service.list(tid, 0, 20, null, null, null, null);
     assertEquals(1, result.getContent().size());
@@ -60,11 +61,12 @@ class TenantAuditServiceTest {
     UUID tid = UUID.randomUUID();
     UUID actor = UUID.randomUUID();
     Page<AuditEventEntity> page = new PageImpl<>(List.of());
-    when(auditEventRepository.findByTenantIdAndActorUserId(eq(tid), eq(actor), any(Pageable.class)))
+    when(auditEventRepository.findByTenantIdAndActorUserIdOrderByOccurredAtDesc(
+            eq(tid), eq(actor), any(Pageable.class)))
         .thenReturn(page);
     service.list(tid, 0, 20, actor, null, null, null);
     verify(auditEventRepository)
-        .findByTenantIdAndActorUserId(eq(tid), eq(actor), any(Pageable.class));
+        .findByTenantIdAndActorUserIdOrderByOccurredAtDesc(eq(tid), eq(actor), any(Pageable.class));
   }
 
   @Test
@@ -74,12 +76,13 @@ class TenantAuditServiceTest {
     OffsetDateTime from = OffsetDateTime.now().minusDays(1);
     OffsetDateTime to = OffsetDateTime.now();
     Page<AuditEventEntity> page = new PageImpl<>(List.of());
-    when(auditEventRepository.findByTenantIdAndOccurredAtBetween(
+    when(auditEventRepository.findByTenantIdAndOccurredAtBetweenOrderByOccurredAtDesc(
             eq(tid), eq(from), eq(to), any(Pageable.class)))
         .thenReturn(page);
     service.list(tid, 0, 20, null, null, from, to);
     verify(auditEventRepository)
-        .findByTenantIdAndOccurredAtBetween(eq(tid), eq(from), eq(to), any(Pageable.class));
+        .findByTenantIdAndOccurredAtBetweenOrderByOccurredAtDesc(
+            eq(tid), eq(from), eq(to), any(Pageable.class));
   }
 
   @Test

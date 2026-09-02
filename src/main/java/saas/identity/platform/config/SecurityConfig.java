@@ -19,11 +19,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
   /**
-   * 逗号分隔的允许 origin 列表。默认给 dev：saas-nextjs(:3000) + lab-react,vue(:5173) + lab-nextjs(:3001)；生产用
-   * SAAS_CORS_ALLOWED_ORIGINS env override 改为正式域名。
+   * 逗号分隔的允许 origin 列表。默认给 dev：saas-nextjs(:5101) + saas-react(:5102) + saas-vue(:5103) +
+   * lab-nextjs(:5201)；生产用 SAAS_CORS_ALLOWED_ORIGINS env override 改为正式域名。
    */
   @Value(
-      "${saas.cors.allowed-origins:http://localhost:3000,http://localhost:5173,http://localhost:3001}")
+      "${saas.cors.allowed-origins:http://localhost:5101,http://localhost:5102,http://localhost:5103,http://localhost:5201}")
   private List<String> allowedOrigins;
 
   /**

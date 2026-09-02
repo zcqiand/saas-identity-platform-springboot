@@ -88,7 +88,8 @@ class MeServiceTest {
   void whoami_throwsIfUserMissing() {
     UUID userId = UUID.randomUUID();
     when(userRepository.findById(userId)).thenReturn(Optional.empty());
-    assertThrows(IllegalArgumentException.class, () -> service.whoami(userId));
+    // 2026-09-01 contract-test：资源不存在语义统一 NSEE → 404（同 TenantUsersService 收口）
+    assertThrows(java.util.NoSuchElementException.class, () -> service.whoami(userId));
   }
 
   @Test
@@ -130,6 +131,8 @@ class MeServiceTest {
     UUID tenantId = UUID.randomUUID();
     when(membershipRepository.findByUserIdAndTenantId(userId, tenantId))
         .thenReturn(Optional.empty());
-    assertThrows(SecurityException.class, () -> service.switchTenant(userId, tenantId));
+    // 2026-08-31 contract-test M96.F02.I28：非成员统一 NoSuchElementException → 404
+    assertThrows(
+        java.util.NoSuchElementException.class, () -> service.switchTenant(userId, tenantId));
   }
 }

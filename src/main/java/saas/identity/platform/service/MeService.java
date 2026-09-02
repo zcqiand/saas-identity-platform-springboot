@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.UUID;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -68,7 +69,7 @@ public class MeService {
     UserEntity user =
         userRepository
             .findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("user not found"));
+            .orElseThrow(() -> new NoSuchElementException("user not found"));
     List<TenantMembershipEntity> memberships = membershipRepository.findByUserId(userId);
     List<TenantMembership> dtos =
         memberships.stream()
@@ -99,12 +100,14 @@ public class MeService {
 
   @Transactional
   public SwitchTenantResponse switchTenant(UUID userId, UUID tenantId) {
+    // 2026-08-31 contract-test M96.F02.I28：非成员/不存在统一 NoSuchElementException → 404
+    // （家族契约：msw oracle / aspnetcore / nextjs 同款；原 SecurityException → 401 分叉）
     TenantMembershipEntity m =
         membershipRepository
             .findByUserIdAndTenantId(userId, tenantId)
-            .orElseThrow(() -> new SecurityException("not a member of this tenant"));
+            .orElseThrow(() -> new NoSuchElementException("not a member of this tenant"));
     if (m.getStatus() == saas.identity.platform.enums.MembershipStatus.REMOVED) {
-      throw new SecurityException("not a member of this tenant");
+      throw new NoSuchElementException("not a member of this tenant");
     }
     return new SwitchTenantResponse()
         .accessToken(jwtIssuer.issueAccessToken(userId, tenantId))

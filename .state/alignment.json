@@ -141,7 +141,8 @@
         "docs\\design\\design-function-map.md"
       ],
       "tests": [
-        "createUser_returnsUser()"
+        "createUser_returnsUser()",
+        "createUser_writesAuditEvent()"
       ],
       "entry": []
     },
@@ -152,7 +153,9 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "getUser_throwsNoSuchIfMissing()"
+      ],
       "entry": []
     },
     "M01.F01.I04": {
@@ -162,7 +165,9 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "updateUser_throwsNoSuchIfMissing()"
+      ],
       "entry": []
     },
     "M01.F01.I05": {
@@ -194,7 +199,9 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "assignRoles_throwsNoSuchIfMissing()"
+      ],
       "entry": []
     },
     "M01.F02.I02": {
@@ -300,7 +307,8 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "login_success_returnsToken()"
+        "login_success_returnsToken()",
+        "login_success_writesAuditEvent()"
       ],
       "entry": []
     },

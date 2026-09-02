@@ -51,7 +51,7 @@ if [ ! -f "$BASE/springboot.env" ]; then
       printf 'DATABASE_USER=%s\n' "$DATABASE_USER"
       printf 'DATABASE_PASSWORD=%s\n' "$DATABASE_PASSWORD"
       printf 'DATABASE_NAME=saas_prod\n'
-      printf 'SERVER_PORT=8080\n'
+      printf 'SERVER_PORT=5105\n'
       # 默认 CORS 白名单：react SPA + saas-nextjs + 本仓域名。运维可在 setup-vps 之后手工追加 origin。
       printf 'SAAS_CORS_ALLOWED_ORIGINS=https://%s,https://saas-react.xiangru.uk,https://saas-nextjs.xiangru.uk\n' "$NGINX_DOMAIN"
       # JWT 三件套显式写(JwtIssuer @Value 默认值兜底是反模式,禁;值=契约文件值)
@@ -137,7 +137,7 @@ if [ -f "$BASE/springboot.env" ]; then
     fi
   }
   append_if_missing DATABASE_NAME 'saas_prod'
-  append_if_missing SERVER_PORT '8080'
+  append_if_missing SERVER_PORT '5105'
   append_if_missing JWT_ISSUER 'saas-identity-platform'
   append_if_missing JWT_AUDIENCE 'saas-identity-platform-clients'
   append_if_missing JWT_TTL_SECONDS '3600'
@@ -158,7 +158,7 @@ echo "→ docker run"
 docker run -d \
   --name "$CONTAINER_NAME" \
   --restart unless-stopped \
-  -p "127.0.0.1:${HOST_PORT}:8080" \
+  -p "127.0.0.1:${HOST_PORT}:5105" \
   --env-file "$BASE/springboot.env" \
   "$IMAGE"
 
@@ -174,10 +174,10 @@ docker ps --filter name="$CONTAINER_NAME"
 # 内就被标 unhealthy。改用直接 HTTP 探针 (Spring Boot 3.x /actuator/health
 # 200+body UP 时是真 ready)。
 #
-# ⚠️ v0.1.10 的 bug: 写的是 127.0.0.1:8080 (容器内部端口), 但 deploy 脚本
+# ⚠️ v0.1.10 的 bug: 写的是当时的容器内部端口, 但 deploy 脚本
 # 跑在 HOST 上, 容器端口映射是 127.0.0.1:${HOST_PORT}:8080 (HOST_PORT=8023).
-# host 上 wget 127.0.0.1:8080 = 连接 host 的 8080 (没服务), connect-refused, 120 次都失败。
-# Docker HEALTHCHECK (Dockerfile:38) 走的是容器 network namespace 内的 127.0.0.1:8080,
+# host 上 wget 容器内部端口 = 连接 host 的同名端口 (没服务), connect-refused, 120 次都失败。
+# Docker HEALTHCHECK (Dockerfile:38) 走的是容器 network namespace 内的 127.0.0.1:5105,
 # 所以日志里 02:52:26 Spring DispatcherServlet init 出现一次是 Docker HEALTHCHECK 命中,
 # 而非 deploy 脚本 wget。
 #

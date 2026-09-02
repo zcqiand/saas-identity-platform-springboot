@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: ${SERVER_PORT:5105}
 
 # Spring Security OAuth2 resource server 配置：SecurityConfig.jwtDecoder() 用 JWT_SIGNING_KEY
 # 构造 NimbusJwtDecoder.withSecretKey()（HS256 真验签，Phase 2 起）。

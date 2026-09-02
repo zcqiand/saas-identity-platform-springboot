@@ -2,7 +2,7 @@
 # saas-identity-platform-springboot — 生产镜像
 #
 #   builder  → 安装 deps + mvn package（生成 Spring Boot fat jar）
-#   runtime  → eclipse-temurin:17-jre-slim + app.jar，监听 SERVER_PORT=8080
+#   runtime  → eclipse-temurin:17-jre-slim + app.jar，监听 SERVER_PORT=5105
 #
 # 数据库：PostgreSQL（远程）。容器内不持有 DB 文件 —— 运行期必须通过
 #         DATABASE_URL 环境变量注入连接串（由 VPS springboot.env 注入）。
@@ -48,16 +48,16 @@ COPY --from=builder /app/app.jar /app/app.jar
 
 # JVM 在容器内堆上限参考 cgroup 内存限额（默认 75%）
 ENV JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=75.0"
-ENV SERVER_PORT=8080
+ENV SERVER_PORT=5105
 ENV TZ=UTC
 
-EXPOSE 8080
+EXPOSE 5105
 
 # Bean wiring tolerance: Spring Boot 冷启动 5-15s @ 小 VPS。
 # probe 走 /actuator/health（spring-boot-starter-actuator + management.endpoint.health.probes.enabled:true
 # 在 application.yml 里开）。如果 servlet 链还没就绪, /actuator/health 会返回 503,
 # Docker HEALTHCHECK exit 1, container restart-loop —— 这是想要的 fail-loud 行为。
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
-  CMD wget -q --spider http://127.0.0.1:8080/actuator/health || exit 1
+  CMD wget -q --spider http://127.0.0.1:5105/actuator/health || exit 1
 
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

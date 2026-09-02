@@ -38,15 +38,19 @@ public class TenantAuditService {
       OffsetDateTime from,
       OffsetDateTime to) {
     Pageable p = PageRequest.of(page, pageSize);
-    var q = auditEventRepository.findByTenantId(tenantId, p);
+    var q = auditEventRepository.findByTenantIdOrderByOccurredAtDesc(tenantId, p);
     if (actorUserId != null)
-      q = auditEventRepository.findByTenantIdAndActorUserId(tenantId, actorUserId, p);
+      q =
+          auditEventRepository.findByTenantIdAndActorUserIdOrderByOccurredAtDesc(
+              tenantId, actorUserId, p);
     if (action != null)
       q =
-          auditEventRepository.findByTenantIdAndAction(
+          auditEventRepository.findByTenantIdAndActionOrderByOccurredAtDesc(
               tenantId, AuditEventMapper.toDbAction(action), p);
     if (from != null && to != null) {
-      q = auditEventRepository.findByTenantIdAndOccurredAtBetween(tenantId, from, to, p);
+      q =
+          auditEventRepository.findByTenantIdAndOccurredAtBetweenOrderByOccurredAtDesc(
+              tenantId, from, to, p);
     }
     return q.map(AuditEventMapper::toDto);
   }
@@ -57,7 +61,7 @@ public class TenantAuditService {
     // AuditEventRepository 不带 byActor 分页；先查所有再用 page 截
     // Phase 5 Testcontainers: full scan
     auditEventRepository
-        .findByTenantIdAndActorUserId(
+        .findByTenantIdAndActorUserIdOrderByOccurredAtDesc(
             UUID.fromString("00000000-0000-0000-0000-000000000000"), actorUserId, p)
         .getContent();
     return Page.empty(); // 简化：全 DB 扫描后过滤

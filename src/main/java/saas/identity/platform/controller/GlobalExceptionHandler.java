@@ -23,6 +23,9 @@ import saas.identity.platform.service.OauthService;
  *       INVALID_REQUEST
  *   <li>NoSuchElementException / EntityNotFoundException → 404 NOT_FOUND（M05.F01.I05 物理删幂等 —
  *       contract-test I21：重复 DELETE 已不存在的 keyId 必须 404 而非 500）
+ *   <li>SecurityException → 401 UNAUTHORIZED（2026-08-31 contract-test M96.F02.I22/I24：
+ *       AuthService.login 错密码 / refresh 无效 token 抛裸 SecurityException，未映射时 500， 与 aspnetcore/nextjs
+ *       的 401 分叉）
  *   <li>其余 RuntimeException → 500 INTERNAL_ERROR（Spring 默认，不在此拦）
  * </ul>
  */
@@ -30,11 +33,23 @@ import saas.identity.platform.service.OauthService;
 public class GlobalExceptionHandler {
 
   @ExceptionHandler({
-    OauthService.InvalidClientException.class,
-    OauthService.InvalidGrantException.class
+    // 2026-08-31 contract-test M96.F02.I22/I24：AuthService.login 错密码与 refresh
+    // 均抛裸 SecurityException，未映射时 500；aspnetcore/nextjs 同场景均 401。
+    SecurityException.class
   })
   public ResponseEntity<Map<String, String>> unauthorized(Exception ex) {
     return body(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED", ex.getMessage());
+  }
+
+  // 2026-09-01 contract-test I26/I27：OAuth 错误族（invalid_client / invalid_grant，
+  // RFC 6749 §5.2）在 msw oracle / nextjs / aspnetcore 均返 400，
+  // 此前映射 401 是 4 后端孤例分叉。
+  @ExceptionHandler({
+    OauthService.InvalidClientException.class,
+    OauthService.InvalidGrantException.class
+  })
+  public ResponseEntity<Map<String, String>> invalidGrant(Exception ex) {
+    return body(HttpStatus.BAD_REQUEST, "INVALID_GRANT", ex.getMessage());
   }
 
   @ExceptionHandler({
@@ -44,6 +59,21 @@ public class GlobalExceptionHandler {
   })
   public ResponseEntity<Map<String, String>> badRequest(Exception ex) {
     return body(HttpStatus.BAD_REQUEST, "INVALID_REQUEST", ex.getMessage());
+  }
+
+  // 2026-09-01 contract-test I67/I69：POST users/roles 空 body 触发 codegen 接口的 @Valid
+  // 校验（CreateUserRequest @NotNull username/email/password），MethodArgumentNotValidException
+  // 未映射时落 Spring 默认 body（{timestamp,status,error,path}），与家族 envelope
+  // {error,error_description} 分叉 —— contract-test drop code/message 后仍多 status/timestamp 键。
+  @ExceptionHandler(org.springframework.web.bind.MethodArgumentNotValidException.class)
+  public ResponseEntity<Map<String, String>> validationFailed(
+      org.springframework.web.bind.MethodArgumentNotValidException ex) {
+    String first =
+        ex.getBindingResult().getFieldErrors().stream()
+            .findFirst()
+            .map(f -> f.getField() + ": " + f.getDefaultMessage())
+            .orElse("validation failed");
+    return body(HttpStatus.BAD_REQUEST, "INVALID_REQUEST", first);
   }
 
   /**

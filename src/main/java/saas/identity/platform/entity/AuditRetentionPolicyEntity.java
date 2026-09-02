@@ -2,8 +2,6 @@ package saas.identity.platform.entity;
 
 import jakarta.persistence.*;
 import java.time.OffsetDateTime;
-import java.time.Instant;
-import java.time.ZoneOffset;
 import java.util.UUID;
 
 /** V006 — 一租户一行；决定 audit_events 自动清理窗口（M06.F02）。 */

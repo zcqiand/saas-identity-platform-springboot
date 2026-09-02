@@ -187,7 +187,7 @@ saas-identity-platform-springboot/
 | Bean | 职责 | 关键配置 |
 |---|---|---|
 | `SecurityFilterChain filterChain(HttpSecurity)` | OAuth2 resource server + CORS + STATELESS + route 白名单 | `/api/v1/auth/**`、`/api/v1/oauth/**`、`/actuator/**`、`/v3/api-docs*`、`/swagger-ui/**` `permitAll`；其他 `.anyRequest().authenticated()` |
-| `CorsConfigurationSource corsConfigurationSource()` | 读 `saas.cors.allowed-origins`（env `SAAS_CORS_ALLOWED_ORIGINS` 覆盖），默认 dev = `localhost:3000 + :5173 + :3001` | `addAllowedOrigin("*")` 不允许——`setAllowCredentials(true)` 必须配合显式 origin |
+| `CorsConfigurationSource corsConfigurationSource()` | 读 `saas.cors.allowed-origins`（env `SAAS_CORS_ALLOWED_ORIGINS` 覆盖），默认 dev = `localhost:5101 + :5102 + :5103 + :5201` | `addAllowedOrigin("*")` 不允许——`setAllowCredentials(true)` 必须配合显式 origin |
 | `JwtDecoder jwtDecoder()` | **dev-only bean**：`DevJwtDecoder` 静态内部类，吃 MSW/test 的 `alg=none` fixture token；base64url 解 header + payload，只校验 `exp`，过期把 `Jwt.exp` 延长到 `now+1h`；不验签 / 不验 issuer / audience | prod profile **不加载** 此 bean；prod = 删该 inner class + 在 `application.yml` 配 `spring.security.oauth2.resourceserver.jwt.issuer-uri`，让 Spring Boot 自动配置 `NimbusJwtDecoder` 走 JWKS 验 HS256 真签发 JWT |
 | `JwtIssuer`（`security/JwtIssuer.java`） | **主路径**：HS256 真签发 access token；claims = sub/tenant_id/jti/iss/aud/exp/iat；与 saas-aspnetcore/nextjs-self 镜像实现 | 镜像 `Jwt:SigningKey` ≥32B env；缺失即抛 `IllegalStateException`（防 prod 用弱 dev 默认 key） |
 
@@ -428,11 +428,11 @@ spring:
    → flyway.enabled=false（dev）
    → DB schema 由 shared SQL 灌入 saas_dev
 
-[集成测试] curl -X POST http://localhost:8080/api/v1/auth/login
+[集成测试] curl -X POST http://localhost:5105/api/v1/auth/login
    → TenantGuard 不走（M03 auth 是全局）
    → JwtIssuer HS256 真签 access token（JWT_SIGNING_KEY ≥32B），prod profile 默认路径
    ↓
-[前端联调] 前端 .env 切 NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
+[前端联调] 前端 .env 切 NEXT_PUBLIC_API_BASE_URL=http://localhost:5105
    → axios 带 JWT（HS256 真签发）请求
    → 后端 NimbusJwtDecoder 真验签（对称密钥）
    → 业务返回

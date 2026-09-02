@@ -13,7 +13,7 @@ import org.springframework.lang.Nullable;
 @JsonTypeName("TenantAudit_getRetentionPolicy_200_response")
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-08-31T17:07:11.941023200+08:00[Asia/Shanghai]",
+    date = "2026-09-01T23:20:59.484585600+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
 public class TenantAuditGetRetentionPolicy200Response {
 

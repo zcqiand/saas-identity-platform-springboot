@@ -40,7 +40,7 @@ public class DevDataFixer implements CommandLineRunner {
     int menus = fixArray("role_menu_grants", "menu_ids");
     // apps.text[] 列（redirect_uris / scopes / grant_types）也走 hypersistence-utils StringArrayType，
     // 同样的 unwrapArray NPE。直接灌 dummy 占位。dev 不影响 OAuth flow 真实数据。
-    int redirectUris = fixTextArray("apps", "redirect_uris", "http://localhost:3000/callback");
+    int redirectUris = fixTextArray("apps", "redirect_uris", "http://localhost:5101/callback");
     int scopes = fixTextArray("apps", "scopes", "openid");
     int grantTypes = fixGrantTypes("apps");
     log.info(

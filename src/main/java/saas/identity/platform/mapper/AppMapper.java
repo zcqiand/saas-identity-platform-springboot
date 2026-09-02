@@ -43,9 +43,11 @@ public final class AppMapper {
     e.setName(req.getName());
     String desc = req.getDescription();
     e.setDescription(desc == null ? null : desc);
-    // icon: use String.valueOf which SpotBugs treats as non-null
-    String iconSafe = String.valueOf(req.getIcon());
-    e.setIcon(iconSafe.isEmpty() ? null : iconSafe);
+    // 2026-09-01 contract-test I45：String.valueOf(null) 产出字面 "null" 字符串入库，
+    // 响应 icon:"null" 与 msw/nextjs/aspnetcore 的 null/缺省分叉。改显式 null 检查
+    // （SpotBugs 告警已被方法级注解覆盖）。
+    String icon = req.getIcon();
+    e.setIcon(icon == null ? null : icon);
     Integer sortOrder = req.getSortOrder();
     e.setSortOrder(sortOrder == null ? 0 : sortOrder);
     saas.identity.shared.dto.AppStatus reqStatus = req.getStatus();

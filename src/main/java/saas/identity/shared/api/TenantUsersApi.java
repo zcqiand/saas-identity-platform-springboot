@@ -31,7 +31,7 @@ import saas.identity.shared.dto.UserStatus;
 
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-08-28T16:38:49.530507900+08:00[Asia/Shanghai]",
+    date = "2026-09-01T23:20:59.484585600+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
 @Validated
 @Tag(name = "tenant-users", description = "the tenant-users API")

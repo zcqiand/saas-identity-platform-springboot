@@ -19,39 +19,40 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import saas.identity.shared.dto.AdminAppsListApps200Response;
-import saas.identity.shared.dto.AdminAppsSetAppStatusRequest;
-import saas.identity.shared.dto.App;
-import saas.identity.shared.dto.CreateAppRequest;
+import saas.identity.shared.dto.AdminTenantsListTenants200Response;
+import saas.identity.shared.dto.CreateTenantRequest;
 import saas.identity.shared.dto.ErrorResponse;
-import saas.identity.shared.dto.UpdateAppRequest;
+import saas.identity.shared.dto.Tenant;
+import saas.identity.shared.dto.UpdateTenantRequest;
 
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-08-28T16:38:49.530507900+08:00[Asia/Shanghai]",
+    date = "2026-09-01T23:20:59.484585600+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
 @Validated
-@Tag(name = "admin-apps", description = "the admin-apps API")
-public interface AdminAppsApi {
+@Tag(name = "admin-tenants", description = "the admin-tenants API")
+public interface AdminTenantsApi {
 
-  String PATH_ADMIN_APPS_CREATE_APP = "/api/v1/admin/apps";
+  String PATH_ADMIN_TENANTS_CREATE_TENANT = "/api/v1/admin/tenants";
 
   /**
-   * POST /api/v1/admin/apps
+   * POST /api/v1/admin/tenants
    *
-   * @param createAppRequest (required)
+   * @param createTenantRequest (required)
    * @return The request has succeeded. (status code 200) or An unexpected error response. (status
    *     code 200)
    */
   @Operation(
-      operationId = "adminAppsCreateApp",
-      tags = {"admin-apps"},
+      operationId = "adminTenantsCreateTenant",
+      tags = {"admin-tenants"},
       responses = {
         @ApiResponse(
             responseCode = "200",
             description = "The request has succeeded.",
             content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation = App.class))
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = Tenant.class))
             }),
         @ApiResponse(
             responseCode = "default",
@@ -64,25 +65,27 @@ public interface AdminAppsApi {
       })
   @RequestMapping(
       method = RequestMethod.POST,
-      value = AdminAppsApi.PATH_ADMIN_APPS_CREATE_APP,
+      value = AdminTenantsApi.PATH_ADMIN_TENANTS_CREATE_TENANT,
       produces = {"application/json"},
       consumes = {"application/json"})
-  ResponseEntity<App> adminAppsCreateApp(
-      @Parameter(name = "CreateAppRequest", description = "", required = true) @Valid @RequestBody
-          CreateAppRequest createAppRequest);
+  ResponseEntity<Tenant> adminTenantsCreateTenant(
+      @Parameter(name = "CreateTenantRequest", description = "", required = true)
+          @Valid
+          @RequestBody
+          CreateTenantRequest createTenantRequest);
 
-  String PATH_ADMIN_APPS_DELETE_APP = "/api/v1/admin/apps/{appId}";
+  String PATH_ADMIN_TENANTS_DELETE_TENANT = "/api/v1/admin/tenants/{id}";
 
   /**
-   * DELETE /api/v1/admin/apps/{appId}
+   * DELETE /api/v1/admin/tenants/{id}
    *
-   * @param appId (required)
+   * @param id (required)
    * @return There is no content to send for this request, but the headers may be useful. (status
    *     code 204) or An unexpected error response. (status code 200)
    */
   @Operation(
-      operationId = "adminAppsDeleteApp",
-      tags = {"admin-apps"},
+      operationId = "adminTenantsDeleteTenant",
+      tags = {"admin-tenants"},
       responses = {
         @ApiResponse(
             responseCode = "204",
@@ -99,31 +102,33 @@ public interface AdminAppsApi {
       })
   @RequestMapping(
       method = RequestMethod.DELETE,
-      value = AdminAppsApi.PATH_ADMIN_APPS_DELETE_APP,
+      value = AdminTenantsApi.PATH_ADMIN_TENANTS_DELETE_TENANT,
       produces = {"application/json"})
-  ResponseEntity<Void> adminAppsDeleteApp(
-      @Parameter(name = "appId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("appId")
-          String appId);
+  ResponseEntity<Void> adminTenantsDeleteTenant(
+      @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("id")
+          String id);
 
-  String PATH_ADMIN_APPS_GET_APP = "/api/v1/admin/apps/{appId}";
+  String PATH_ADMIN_TENANTS_GET_TENANT = "/api/v1/admin/tenants/{id}";
 
   /**
-   * GET /api/v1/admin/apps/{appId}
+   * GET /api/v1/admin/tenants/{id}
    *
-   * @param appId (required)
+   * @param id (required)
    * @return The request has succeeded. (status code 200) or An unexpected error response. (status
    *     code 200)
    */
   @Operation(
-      operationId = "adminAppsGetApp",
-      tags = {"admin-apps"},
+      operationId = "adminTenantsGetTenant",
+      tags = {"admin-tenants"},
       responses = {
         @ApiResponse(
             responseCode = "200",
             description = "The request has succeeded.",
             content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation = App.class))
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = Tenant.class))
             }),
         @ApiResponse(
             responseCode = "default",
@@ -136,17 +141,17 @@ public interface AdminAppsApi {
       })
   @RequestMapping(
       method = RequestMethod.GET,
-      value = AdminAppsApi.PATH_ADMIN_APPS_GET_APP,
+      value = AdminTenantsApi.PATH_ADMIN_TENANTS_GET_TENANT,
       produces = {"application/json"})
-  ResponseEntity<App> adminAppsGetApp(
-      @Parameter(name = "appId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("appId")
-          String appId);
+  ResponseEntity<Tenant> adminTenantsGetTenant(
+      @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("id")
+          String id);
 
-  String PATH_ADMIN_APPS_LIST_APPS = "/api/v1/admin/apps";
+  String PATH_ADMIN_TENANTS_LIST_TENANTS = "/api/v1/admin/tenants";
 
   /**
-   * GET /api/v1/admin/apps
+   * GET /api/v1/admin/tenants
    *
    * @param page (optional)
    * @param pageSize (optional)
@@ -154,8 +159,8 @@ public interface AdminAppsApi {
    *     code 200)
    */
   @Operation(
-      operationId = "adminAppsListApps",
-      tags = {"admin-apps"},
+      operationId = "adminTenantsListTenants",
+      tags = {"admin-tenants"},
       responses = {
         @ApiResponse(
             responseCode = "200",
@@ -163,7 +168,7 @@ public interface AdminAppsApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = AdminAppsListApps200Response.class))
+                  schema = @Schema(implementation = AdminTenantsListTenants200Response.class))
             }),
         @ApiResponse(
             responseCode = "default",
@@ -176,9 +181,9 @@ public interface AdminAppsApi {
       })
   @RequestMapping(
       method = RequestMethod.GET,
-      value = AdminAppsApi.PATH_ADMIN_APPS_LIST_APPS,
+      value = AdminTenantsApi.PATH_ADMIN_TENANTS_LIST_TENANTS,
       produces = {"application/json"})
-  ResponseEntity<AdminAppsListApps200Response> adminAppsListApps(
+  ResponseEntity<AdminTenantsListTenants200Response> adminTenantsListTenants(
       @Parameter(name = "page", description = "", in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "page", required = false)
@@ -190,25 +195,27 @@ public interface AdminAppsApi {
           @Nullable
           Integer pageSize);
 
-  String PATH_ADMIN_APPS_SET_APP_STATUS = "/api/v1/admin/apps/{appId}/status";
+  String PATH_ADMIN_TENANTS_UPDATE_TENANT = "/api/v1/admin/tenants/{id}";
 
   /**
-   * PATCH /api/v1/admin/apps/{appId}/status
+   * PATCH /api/v1/admin/tenants/{id}
    *
-   * @param appId (required)
-   * @param adminAppsSetAppStatusRequest (required)
+   * @param id (required)
+   * @param updateTenantRequest (required)
    * @return The request has succeeded. (status code 200) or An unexpected error response. (status
    *     code 200)
    */
   @Operation(
-      operationId = "adminAppsSetAppStatus",
-      tags = {"admin-apps"},
+      operationId = "adminTenantsUpdateTenant",
+      tags = {"admin-tenants"},
       responses = {
         @ApiResponse(
             responseCode = "200",
             description = "The request has succeeded.",
             content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation = App.class))
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = Tenant.class))
             }),
         @ApiResponse(
             responseCode = "default",
@@ -221,56 +228,15 @@ public interface AdminAppsApi {
       })
   @RequestMapping(
       method = RequestMethod.PATCH,
-      value = AdminAppsApi.PATH_ADMIN_APPS_SET_APP_STATUS,
+      value = AdminTenantsApi.PATH_ADMIN_TENANTS_UPDATE_TENANT,
       produces = {"application/json"},
       consumes = {"application/json"})
-  ResponseEntity<App> adminAppsSetAppStatus(
-      @Parameter(name = "appId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("appId")
-          String appId,
-      @Parameter(name = "AdminAppsSetAppStatusRequest", description = "", required = true)
+  ResponseEntity<Tenant> adminTenantsUpdateTenant(
+      @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("id")
+          String id,
+      @Parameter(name = "UpdateTenantRequest", description = "", required = true)
           @Valid
           @RequestBody
-          AdminAppsSetAppStatusRequest adminAppsSetAppStatusRequest);
-
-  String PATH_ADMIN_APPS_UPDATE_APP = "/api/v1/admin/apps/{appId}";
-
-  /**
-   * PATCH /api/v1/admin/apps/{appId}
-   *
-   * @param appId (required)
-   * @param updateAppRequest (required)
-   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
-   *     code 200)
-   */
-  @Operation(
-      operationId = "adminAppsUpdateApp",
-      tags = {"admin-apps"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "The request has succeeded.",
-            content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation = App.class))
-            }),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
-            })
-      })
-  @RequestMapping(
-      method = RequestMethod.PATCH,
-      value = AdminAppsApi.PATH_ADMIN_APPS_UPDATE_APP,
-      produces = {"application/json"},
-      consumes = {"application/json"})
-  ResponseEntity<App> adminAppsUpdateApp(
-      @Parameter(name = "appId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("appId")
-          String appId,
-      @Parameter(name = "UpdateAppRequest", description = "", required = true) @Valid @RequestBody
-          UpdateAppRequest updateAppRequest);
+          UpdateTenantRequest updateTenantRequest);
 }

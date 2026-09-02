@@ -42,7 +42,7 @@ server {
     add_header Strict-Transport-Security "max-age=31536000" always;
 
     location / {
-        # VPS 暴露端口（容器内 Spring Boot 监听 :8080）
+        # VPS 暴露端口（容器内 Spring Boot 监听 :5105）
         # 改端口必须同步 deploy/saas-identity-platform-springboot.sh 的 -p
         proxy_pass http://127.0.0.1:8023;
 

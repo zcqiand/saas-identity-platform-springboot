@@ -7,44 +7,43 @@ package saas.identity.shared.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Generated;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import java.util.List;
-import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import saas.identity.shared.dto.CurrentUser;
-import saas.identity.shared.dto.EffectiveMenuNode;
 import saas.identity.shared.dto.ErrorResponse;
-import saas.identity.shared.dto.SwitchTenantResponse;
-import saas.identity.shared.dto.TenantMembership;
+import saas.identity.shared.dto.LoginRequest;
+import saas.identity.shared.dto.LoginResponse;
+import saas.identity.shared.dto.OidcCallbackRequest;
+import saas.identity.shared.dto.TokenRequest;
+import saas.identity.shared.dto.TokenResponse;
 
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-08-28T16:38:49.530507900+08:00[Asia/Shanghai]",
+    date = "2026-09-01T23:20:59.484585600+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
 @Validated
-@Tag(name = "me", description = "the me API")
-public interface MeApi {
+@Tag(name = "auth", description = "the auth API")
+public interface AuthApi {
 
-  String PATH_ME_GET_MY_MENUS = "/api/v1/me/menus";
+  String PATH_AUTH_LOGIN = "/api/v1/auth/login";
 
   /**
-   * GET /api/v1/me/menus
+   * POST /api/v1/auth/login
    *
+   * @param loginRequest (required)
    * @return The request has succeeded. (status code 200) or An unexpected error response. (status
    *     code 200)
    */
   @Operation(
-      operationId = "meGetMyMenus",
-      tags = {"me"},
+      operationId = "authLogin",
+      tags = {"auth"},
       responses = {
         @ApiResponse(
             responseCode = "200",
@@ -52,78 +51,7 @@ public interface MeApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = EffectiveMenuNode.class))
-            }),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
-            })
-      })
-  @RequestMapping(
-      method = RequestMethod.GET,
-      value = MeApi.PATH_ME_GET_MY_MENUS,
-      produces = {"application/json"})
-  ResponseEntity<Map<String, List<EffectiveMenuNode>>> meGetMyMenus();
-
-  String PATH_ME_LIST_MY_TENANTS = "/api/v1/me/tenants";
-
-  /**
-   * GET /api/v1/me/tenants
-   *
-   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
-   *     code 200)
-   */
-  @Operation(
-      operationId = "meListMyTenants",
-      tags = {"me"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "The request has succeeded.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = TenantMembership.class)))
-            }),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
-            })
-      })
-  @RequestMapping(
-      method = RequestMethod.GET,
-      value = MeApi.PATH_ME_LIST_MY_TENANTS,
-      produces = {"application/json"})
-  ResponseEntity<List<TenantMembership>> meListMyTenants();
-
-  String PATH_ME_SWITCH_TENANT = "/api/v1/me/tenants/{tenantId}/switch";
-
-  /**
-   * POST /api/v1/me/tenants/{tenantId}/switch
-   *
-   * @param tenantId (required)
-   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
-   *     code 200)
-   */
-  @Operation(
-      operationId = "meSwitchTenant",
-      tags = {"me"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "The request has succeeded.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = SwitchTenantResponse.class))
+                  schema = @Schema(implementation = LoginResponse.class))
             }),
         @ApiResponse(
             responseCode = "default",
@@ -136,24 +64,45 @@ public interface MeApi {
       })
   @RequestMapping(
       method = RequestMethod.POST,
-      value = MeApi.PATH_ME_SWITCH_TENANT,
-      produces = {"application/json"})
-  ResponseEntity<SwitchTenantResponse> meSwitchTenant(
-      @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("tenantId")
-          String tenantId);
+      value = AuthApi.PATH_AUTH_LOGIN,
+      produces = {"application/json"},
+      consumes = {"application/json"})
+  ResponseEntity<LoginResponse> authLogin(
+      @Parameter(name = "LoginRequest", description = "", required = true) @Valid @RequestBody
+          LoginRequest loginRequest);
 
-  String PATH_ME_WHOAMI = "/api/v1/me";
+  String PATH_AUTH_LOGOUT = "/api/v1/auth/logout";
 
   /**
-   * GET /api/v1/me
+   * POST /api/v1/auth/logout
    *
+   * @return There is no content to send for this request, but the headers may be useful. (status
+   *     code 204)
+   */
+  @Operation(
+      operationId = "authLogout",
+      tags = {"auth"},
+      responses = {
+        @ApiResponse(
+            responseCode = "204",
+            description =
+                "There is no content to send for this request, but the headers may be useful. ")
+      })
+  @RequestMapping(method = RequestMethod.POST, value = AuthApi.PATH_AUTH_LOGOUT)
+  ResponseEntity<Void> authLogout();
+
+  String PATH_AUTH_OIDC_CALLBACK = "/api/v1/auth/oidc/callback";
+
+  /**
+   * POST /api/v1/auth/oidc/callback
+   *
+   * @param oidcCallbackRequest (required)
    * @return The request has succeeded. (status code 200) or An unexpected error response. (status
    *     code 200)
    */
   @Operation(
-      operationId = "meWhoami",
-      tags = {"me"},
+      operationId = "authOidcCallback",
+      tags = {"auth"},
       responses = {
         @ApiResponse(
             responseCode = "200",
@@ -161,7 +110,7 @@ public interface MeApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = CurrentUser.class))
+                  schema = @Schema(implementation = TokenResponse.class))
             }),
         @ApiResponse(
             responseCode = "default",
@@ -173,8 +122,52 @@ public interface MeApi {
             })
       })
   @RequestMapping(
-      method = RequestMethod.GET,
-      value = MeApi.PATH_ME_WHOAMI,
-      produces = {"application/json"})
-  ResponseEntity<CurrentUser> meWhoami();
+      method = RequestMethod.POST,
+      value = AuthApi.PATH_AUTH_OIDC_CALLBACK,
+      produces = {"application/json"},
+      consumes = {"application/json"})
+  ResponseEntity<TokenResponse> authOidcCallback(
+      @Parameter(name = "OidcCallbackRequest", description = "", required = true)
+          @Valid
+          @RequestBody
+          OidcCallbackRequest oidcCallbackRequest);
+
+  String PATH_AUTH_REFRESH_TOKEN = "/api/v1/auth/refresh";
+
+  /**
+   * POST /api/v1/auth/refresh
+   *
+   * @param tokenRequest (required)
+   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
+   *     code 200)
+   */
+  @Operation(
+      operationId = "authRefreshToken",
+      tags = {"auth"},
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "The request has succeeded.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = TokenResponse.class))
+            }),
+        @ApiResponse(
+            responseCode = "default",
+            description = "An unexpected error response.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
+            })
+      })
+  @RequestMapping(
+      method = RequestMethod.POST,
+      value = AuthApi.PATH_AUTH_REFRESH_TOKEN,
+      produces = {"application/json"},
+      consumes = {"application/json"})
+  ResponseEntity<TokenResponse> authRefreshToken(
+      @Parameter(name = "TokenRequest", description = "", required = true) @Valid @RequestBody
+          TokenRequest tokenRequest);
 }
