@@ -10,8 +10,8 @@
 #
 # 与姊妹仓 saas-identity-platform-nextjs.sh 的差异:
 #   - 数据库：PostgreSQL 远程, DATABASE_URL 从 springboot.env 注入（无本地 ./data 卷）
-#   - 容器内是 Java 21 (Spring Boot 3.4) 监听 :5105 → -p 127.0.0.1:8023:5105
-#     （2026-09-02 端口分段 §6：saas 后端段 X05）
+#   - 容器内 Java 21 (Spring Boot 3.4) 监听 :5105；host=container=5105（ADR-0018 单层
+#     port 方案，docker run -p 127.0.0.1:5105:5105；saas 家族 X05 段）
 #   - 密钥走 ./springboot.env (DATABASE_URL/USERNAME/PASSWORD + CORS),由 setup-vps.sh 渲染时
 #     不预生成（fail-fast 不便）,本脚本首启自举。
 #   - JWT_SIGNING_KEY: v0.2.0 起 JwtIssuer(HS256) 构造 fail-fast 必填。缺失时本脚本
@@ -28,7 +28,6 @@ VERSION="${3:-latest}"
 IMAGE="${USERNAME}/saas-identity-platform-springboot:${VERSION}"
 BASE="/home/deploy/saas-identity-platform-springboot"
 CONTAINER_NAME="saas-identity-platform-springboot"
-HOST_PORT=8023
 
 # nginx domain（deploy 脚本渲染 nginx vhost 时用）
 NGINX_DOMAIN="${NGINX_DOMAIN:-saas-springboot.xiangru.uk}"
@@ -169,7 +168,7 @@ echo "→ docker run"
 docker run -d \
   --name "$CONTAINER_NAME" \
   --restart unless-stopped \
-  -p "127.0.0.1:${HOST_PORT}:5105" \
+  -p "127.0.0.1:5105:5105" \
   --env-file "$BASE/springboot.env" \
   "$IMAGE"
 
@@ -186,7 +185,7 @@ docker ps --filter name="$CONTAINER_NAME"
 # 200+body UP 时是真 ready)。
 #
 # ⚠️ v0.1.10 的 bug: 写的是当时的容器内部端口, 但 deploy 脚本
-# 跑在 HOST 上, 容器端口映射是 127.0.0.1:${HOST_PORT}:5105 (HOST_PORT=8023).
+# 跑在 HOST 上, 容器端口映射是 127.0.0.1:5105:5105 (host=container=5105).
 # host 上 wget 容器内部端口 = 连接 host 的同名端口 (没服务), connect-refused, 120 次都失败。
 # Docker HEALTHCHECK (Dockerfile:38) 走的是容器 network namespace 内的 127.0.0.1:5105,
 # 所以日志里 Spring DispatcherServlet init 出现一次是 Docker HEALTHCHECK 命中,
@@ -198,8 +197,8 @@ docker ps --filter name="$CONTAINER_NAME"
 # wget --tries=1 --timeout=3 -q: 不重试, 3s timeout, 静默。
 i=0
 while [ $i -lt 120 ]; do
-  if wget --tries=1 --timeout=3 -q "http://127.0.0.1:${HOST_PORT}/actuator/health" -O /dev/null 2>/dev/null; then
-    echo "→ /actuator/health 200 (host 127.0.0.1:${HOST_PORT}) after ${i}s"
+  if wget --tries=1 --timeout=3 -q "http://127.0.0.1:5105/actuator/health" -O /dev/null 2>/dev/null; then
+    echo "→ /actuator/health 200 (host 127.0.0.1:5105) after ${i}s"
     break
   fi
   # 容器实际死亡 (OOM / start-cmd failure / 立刻 crash) 提前终止循环, 立刻报失败。
