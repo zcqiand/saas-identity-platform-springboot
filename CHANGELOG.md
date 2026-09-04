@@ -2,6 +2,20 @@
 
 格式参照 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)。
 
+## [0.2.29] — 2026-09-04
+
+- fix(repository): `RoleMenuGrantRepository.findMenuIdsByRoleIds` native SQL
+  `ANY(:roleIds)` 多角色必炸 —— Hibernate 把 Collection&lt;UUID&gt; 展开成多占位符
+  （`ANY(?,?)`）PG 语法错；单角色恰好合法所以冒烟测不出。真库测试首跑抓出，
+  改 `IN (:roleIds)`。prod 主路径（MeService）此前已绕行 JdbcTemplate，本修
+  消灭 jdbc=null 回退分支的隐患。
+- test(repository): 删 @Disabled 三个月的 `UserRepositoryDataJpaTest`
+  （"Phase 5 Testcontainers"一直未兑现），新增真库版 `RepositoryPgTest`
+  （saas_test 硬依赖，连不上即败不 skip）：uuid[] unnest 平铺、IN + unnest +
+  DISTINCT、user 分页/status 过滤/唯一约束、真 FK 链（tenant→role→grant）。
+  H2 镜像不了的 uuid[]/jsonb/native enum 全走真方言。
+- ci.yml：L4 `-DexcludedGroups=pg`（CI=编译+mock / gate=真库分层，全家族统一）。
+
 ## [0.2.16] — 2026-08-28
 
 - fix(service): MeService.getMyMenus `unnest()` 查询改走 JdbcTemplate 直连，绕开

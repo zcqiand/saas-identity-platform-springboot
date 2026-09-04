@@ -30,7 +30,9 @@ jobs:
       - name: L3 compile
         run: mvn -q -DskipTests compile
       - name: L4 test
-        run: mvn -q test
+        # @Tag("pg") 真库测试集（RepositoryPgTest）硬依赖内网共享 PG，CI runner 不可达
+        # —— 按「CI=编译+mock 单测 / gate=真库全量」分层排除（lab-aspnetcore v0.2.27 同款）。
+        run: mvn -q test -DexcludedGroups=pg
 
   deploy:
     runs-on: ubuntu-latest
