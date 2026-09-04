@@ -37,7 +37,7 @@ class MeServiceGetMyMenusTest {
   private final MenuRepository menuRepository = mock(MenuRepository.class);
   private final AppRepository appRepository = mock(AppRepository.class);
   private final JwtIssuer jwt =
-      new JwtIssuer("unit-test-signing-key-0123456789abcdef0123", "ut-issuer", "ut-aud", 3600);
+      new JwtIssuer("unit-test-signing-key-0123456789abcdef0123", "ut-issuer", "ut-aud", 3600L);
 
   private MeService service() {
     return new MeService(

@@ -33,17 +33,30 @@ public class JwtIssuer {
 
   public JwtIssuer(
       @Value("${JWT_SIGNING_KEY:}") String signingKey,
-      @Value("${JWT_ISSUER:saas-identity-platform}") String issuer,
-      @Value("${JWT_AUDIENCE:saas-identity-platform-clients}") String audience,
-      @Value("${JWT_TTL_SECONDS:3600}") long ttlSeconds) {
+      @Value("${JWT_ISSUER:}") String issuer,
+      @Value("${JWT_AUDIENCE:}") String audience,
+      @Value("${JWT_TTL_SECONDS:}") Long ttlSecondsRaw) {
+    // ADR-0019：issuer/audience/ttl 缺失 throw,不允许 "saas-identity-platform" / 3600 字面兜底。
     if (signingKey == null || signingKey.isEmpty()) {
-      throw new IllegalStateException("JWT_SIGNING_KEY env not configured");
+      throw new IllegalStateException("JWT_SIGNING_KEY env not configured (ADR-0019 禁字面默认值)");
     }
     if (signingKey.getBytes(StandardCharsets.UTF_8).length < 32) {
       throw new IllegalStateException(
           "JWT_SIGNING_KEY must be >=32 bytes for HS256 (got "
               + signingKey.getBytes(StandardCharsets.UTF_8).length
               + ")");
+    }
+    if (issuer == null || issuer.isEmpty()) {
+      throw new IllegalStateException(
+          "JWT_ISSUER env required (ADR-0019 禁 \"saas-identity-platform\" 字面默认值)");
+    }
+    if (audience == null || audience.isEmpty()) {
+      throw new IllegalStateException(
+          "JWT_AUDIENCE env required (ADR-0019 禁 \"saas-identity-platform-clients\" 字面默认值)");
+    }
+    if (ttlSecondsRaw == null || ttlSecondsRaw <= 0) {
+      throw new IllegalStateException(
+          "JWT_TTL_SECONDS env required,正整数 (ADR-0019 禁 \"3600\" 字面默认值)");
     }
     MACSigner macSigner;
     try {
@@ -54,7 +67,7 @@ public class JwtIssuer {
     this.signer = macSigner;
     this.issuer = issuer;
     this.audience = audience;
-    this.ttlSeconds = ttlSeconds;
+    this.ttlSeconds = ttlSecondsRaw;
   }
 
   /** 签 access token。Claims: sub (userId), tenant_id, jti + 标准 iat/nbf/exp. */

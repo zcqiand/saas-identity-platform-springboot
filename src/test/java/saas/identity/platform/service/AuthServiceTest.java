@@ -35,7 +35,7 @@ class AuthServiceTest {
   private final AuditWriter auditWriter = mock(AuditWriter.class);
   // 与 SecurityConfig.jwtDecoder 同 key：login 签出的 token 必须能被本仓 decoder 验过
   private final JwtIssuer jwt =
-      new JwtIssuer("unit-test-signing-key-0123456789abcdef0123", "ut-issuer", "ut-aud", 3600);
+      new JwtIssuer("unit-test-signing-key-0123456789abcdef0123", "ut-issuer", "ut-aud", 3600L);
   private final AuthService service =
       new AuthService(userRepository, tenantRepository, jwt, auditWriter);
 

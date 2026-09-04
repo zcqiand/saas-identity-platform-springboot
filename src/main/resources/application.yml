@@ -16,10 +16,12 @@ spring:
   # M09.Database — PostgreSQL + Flyway (ADR-0007)
   # 默认指向 saas_dev (100.79.128.25)；可通过 DATABASE_NAME=saas_test / saas_prod 切换。
   # DATABASE_URL/JDBC_URL/DATABASE_NAME 三选一覆盖（见 scripts/lib/db-env.sh）。
+  #
+  # ADR-0019：DATABASE_URL 缺失 throw；JDBC_URL 兜底（dev 兼容）保留但要求显式声明。
   datasource:
-    url: ${DATABASE_URL:${JDBC_URL:jdbc:postgresql://100.79.128.25:5432/saas_dev}}
-    username: ${DATABASE_USER:postgres}
-    password: ${DATABASE_PASSWORD:qiand68+++}
+    url: ${DATABASE_URL:${JDBC_URL:}}
+    username: ${DATABASE_USER:}
+    password: ${DATABASE_PASSWORD:}
     driver-class-name: org.postgresql.Driver
     # stringtype=unspecified：AttributeConverter 输出的 String 以 unknown 类型绑定，
     # PG 按目标列解析成原生 enum（tenant_status/api_key_status/…）。否则 varchar →
