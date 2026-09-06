@@ -6,13 +6,8 @@
     "features": 15,
     "items": 49
   },
-  "warnings_total": 2,
-  "warnings": {
-    "已上线但无测试引用": [
-      "M09.F03.I02",
-      "M09.F03.I03"
-    ]
-  },
+  "warnings_total": 0,
+  "warnings": {},
   "unreachable_shipped": [],
   "function_map": {
     "M00.F01.I01": {
@@ -606,7 +601,12 @@
       "designs": [
         "docs\\design\\design-function-map.md"
       ],
-      "tests": [],
+      "tests": [
+        "filterByStatus()",
+        "findMenuIdsByRoleIds_anyAndUnnestOnRealPg()",
+        "findRoleIdsByUserId_unnestsUuidArrayOnRealPg()",
+        "saveAndFindByTenantId()"
+      ],
       "entry": []
     },
     "M09.F03.I03": {
@@ -620,7 +620,9 @@
       "designs": [
         "docs\\design\\design-function-map.md"
       ],
-      "tests": [],
+      "tests": [
+        "uniqueByTenantEmail()"
+      ],
       "entry": []
     },
     "M09.F03.I04": {
