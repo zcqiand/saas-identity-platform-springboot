@@ -6,7 +6,8 @@
 ## 1. 项目定位
 
 SaaS 多租户多应用身份平台的 Java 后端。Controller 与 DTO 由 shared 仓 TypeSpec codegen 全覆盖；
-手写 Service 与 Repository。对接 PostgreSQL（Flyway 迁移真源在 shared 仓）。
+手写 Service 与 Repository。对接 PostgreSQL（**DB-First，ADR-0025**：schema 由 shared 仓 schema-first 产；
+本仓 entity 由 `scripts/scaffold-entities.sh` 跑 Hibernate 反向工程从真库重生）。
 
 ## 2. 铁律
 
@@ -17,17 +18,20 @@ SaaS 多租户多应用身份平台的 Java 后端。Controller 与 DTO 由 shar
 - 禁止手写 Controller（codegen 替）
 - 禁止字段注入；一律构造器注入
 - 禁止跳过 TenantGuard 校验
+- 禁止手写 DB entity（scaffold 替，ADR-0025 D7）；手写 `@PreUpdate` 等业务逻辑通过 extends `Generated.<Entity>` 叠加
+- **禁止** Flyway / 数据库迁移工具依赖（schema 由 shared 仓统一管）
 
 ## 3. 技术栈与版本（钉死于 version-lock.json）
 
-Java 21 + Spring Boot 3.4 + Maven + JUnit5 + Spotless + SpotBugs。明细见 `version-lock.json`。
+Java 21 + Spring Boot 3.4 + Spring Data JPA + Hibernate（**DB-First via hibernate-tools**） + Maven + JUnit5 + Spotless + SpotBugs。明细见 `version-lock.json`。
 
 门禁命令见 `.harness/stack.json`。**不要改它来让门变松。**
 
 ## 4. 验收
 
 - suite 根目录跑 `python scripts/gate.py -p saas-identity-platform-springboot`
-- 改了 shared → `bash scripts/gen-shared.sh` 再跑门禁
+- 改了 shared API → `bash scripts/gen-shared.sh` 再跑门禁
+- DB schema 漂移：先确认 shared 已 `db:migrate`，再 `bash scripts/scaffold-entities.sh && git add src/main/java/saas/identity/platform/entity/Generated/ && git commit`
 
 ## 5. 指向别处
 

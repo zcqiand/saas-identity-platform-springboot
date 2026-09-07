@@ -50,18 +50,12 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <!-- M09.Database — JPA + Flyway + Hibernate (ADR-0007) -->
+        <!-- M09.Database — JPA + Hibernate (ADR-0007 + ADR-0025) -->
+        <!-- ADR-0025：删 Flyway；DB schema 由 shared 仓 drizzle-kit migrate 统一管理；
+             本仓 entity 由 hibernate-tools 反向工程从真库 scaffold（scripts/scaffold-entities.sh） -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-database-postgresql</artifactId>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
