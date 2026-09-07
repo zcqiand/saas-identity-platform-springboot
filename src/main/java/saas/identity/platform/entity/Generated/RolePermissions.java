@@ -1,0 +1,56 @@
+package saas.identity.platform.entity.Generated;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import java.time.OffsetDateTime;
+import java.util.UUID;
+
+/**
+ * DB-First scaffold：role_permissions（ADR-0025）。
+ * 由 scripts/scaffold-entities.mjs 从 saas_dev 真库反推生成。
+ * 手写业务逻辑（@PreUpdate、@Convert、@EntityListeners 等）
+ * 通过 extends RolePermissions 叠加在 src/main/java/.../entity/RolePermissions.java。
+ *
+ * 字段含义见 saas-identity-platform-shared/src/db/schema.ts rolePermissions。
+ */
+@Entity
+@Table(name = "role_permissions")
+public class RolePermissions {
+
+  @Column(name = "role_id", columnDefinition = "uuid", nullable = false)
+  private UUID roleId;
+
+  @Column(name = "permission_id", columnDefinition = "uuid", nullable = false)
+  private UUID permissionId;
+
+  @Column(name = "granted_at", columnDefinition = "timestamptz", nullable = false)
+  private OffsetDateTime grantedAt;
+
+  public UUID getRoleId() {
+    return roleId;
+  }
+
+  public void setRoleId(UUID roleId) {
+    this.roleId = roleId;
+  }
+
+  public UUID getPermissionId() {
+    return permissionId;
+  }
+
+  public void setPermissionId(UUID permissionId) {
+    this.permissionId = permissionId;
+  }
+
+  public OffsetDateTime getGrantedAt() {
+    return grantedAt;
+  }
+
+  public void setGrantedAt(OffsetDateTime grantedAt) {
+    this.grantedAt = grantedAt;
+  }
+}
