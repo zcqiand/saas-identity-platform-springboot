@@ -5,9 +5,14 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
+import saas.identity.shared.dto.ErrorResponse;
+import saas.identity.shared.dto.LockedAccountResponse;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -19,32 +24,40 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * ErrorResponse
+ * SessionsLoginDefaultResponse
  */
 
+@JsonTypeName("Sessions_login_default_response")
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
-public class ErrorResponse {
+public class SessionsLoginDefaultResponse {
 
   private String code;
 
   private String message;
 
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+  private OffsetDateTime lockedUntil;
+
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private @Nullable Integer remainingAttempts;
+
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private Map<String, Object> details = new HashMap<>();
 
-  public ErrorResponse() {
+  public SessionsLoginDefaultResponse() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public ErrorResponse(String code, String message) {
+  public SessionsLoginDefaultResponse(String code, String message, OffsetDateTime lockedUntil) {
     this.code = code;
     this.message = message;
+    this.lockedUntil = lockedUntil;
   }
 
-  public ErrorResponse code(String code) {
+  public SessionsLoginDefaultResponse code(String code) {
     this.code = code;
     return this;
   }
@@ -65,7 +78,7 @@ public class ErrorResponse {
     this.code = code;
   }
 
-  public ErrorResponse message(String message) {
+  public SessionsLoginDefaultResponse message(String message) {
     this.message = message;
     return this;
   }
@@ -86,12 +99,54 @@ public class ErrorResponse {
     this.message = message;
   }
 
-  public ErrorResponse details(Map<String, Object> details) {
+  public SessionsLoginDefaultResponse lockedUntil(OffsetDateTime lockedUntil) {
+    this.lockedUntil = lockedUntil;
+    return this;
+  }
+
+  /**
+   * Get lockedUntil
+   * @return lockedUntil
+   */
+  @NotNull @Valid 
+  @Schema(name = "lockedUntil", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("lockedUntil")
+  public OffsetDateTime getLockedUntil() {
+    return lockedUntil;
+  }
+
+  @JsonProperty("lockedUntil")
+  public void setLockedUntil(OffsetDateTime lockedUntil) {
+    this.lockedUntil = lockedUntil;
+  }
+
+  public SessionsLoginDefaultResponse remainingAttempts(@Nullable Integer remainingAttempts) {
+    this.remainingAttempts = remainingAttempts;
+    return this;
+  }
+
+  /**
+   * Get remainingAttempts
+   * @return remainingAttempts
+   */
+  
+  @Schema(name = "remainingAttempts", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("remainingAttempts")
+  public @Nullable Integer getRemainingAttempts() {
+    return remainingAttempts;
+  }
+
+  @JsonProperty("remainingAttempts")
+  public void setRemainingAttempts(@Nullable Integer remainingAttempts) {
+    this.remainingAttempts = remainingAttempts;
+  }
+
+  public SessionsLoginDefaultResponse details(Map<String, Object> details) {
     this.details = details;
     return this;
   }
 
-  public ErrorResponse putDetailsItem(String key, Object detailsItem) {
+  public SessionsLoginDefaultResponse putDetailsItem(String key, Object detailsItem) {
     if (this.details == null) {
       this.details = new HashMap<>();
     }
@@ -123,23 +178,27 @@ public class ErrorResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ErrorResponse errorResponse = (ErrorResponse) o;
-    return Objects.equals(this.code, errorResponse.code) &&
-        Objects.equals(this.message, errorResponse.message) &&
-        Objects.equals(this.details, errorResponse.details);
+    SessionsLoginDefaultResponse sessionsLoginDefaultResponse = (SessionsLoginDefaultResponse) o;
+    return Objects.equals(this.code, sessionsLoginDefaultResponse.code) &&
+        Objects.equals(this.message, sessionsLoginDefaultResponse.message) &&
+        Objects.equals(this.lockedUntil, sessionsLoginDefaultResponse.lockedUntil) &&
+        Objects.equals(this.remainingAttempts, sessionsLoginDefaultResponse.remainingAttempts) &&
+        Objects.equals(this.details, sessionsLoginDefaultResponse.details);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(code, message, details);
+    return Objects.hash(code, message, lockedUntil, remainingAttempts, details);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ErrorResponse {\n");
+    sb.append("class SessionsLoginDefaultResponse {\n");
     sb.append("    code: ").append(toIndentedString(code)).append("\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
+    sb.append("    lockedUntil: ").append(toIndentedString(lockedUntil)).append("\n");
+    sb.append("    remainingAttempts: ").append(toIndentedString(remainingAttempts)).append("\n");
     sb.append("    details: ").append(toIndentedString(details)).append("\n");
     sb.append("}");
     return sb.toString();

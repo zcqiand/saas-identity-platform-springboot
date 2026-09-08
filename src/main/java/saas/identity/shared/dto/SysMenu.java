@@ -6,10 +6,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.time.OffsetDateTime;
 import java.util.UUID;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
 import saas.identity.shared.dto.SysMenuType;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -23,11 +22,11 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * EffectiveMenuNode
+ * SysMenu
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
-public class EffectiveMenuNode {
+public class SysMenu {
 
   private UUID id;
 
@@ -53,26 +52,30 @@ public class EffectiveMenuNode {
 
   private Integer sortOrder;
 
-  private List<@Valid EffectiveMenuNode> children = new ArrayList<>();
+  private Integer status;
 
-  public EffectiveMenuNode() {
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+  private OffsetDateTime createdAt;
+
+  public SysMenu() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public EffectiveMenuNode(UUID id, String clientId, UUID parentId, String title, SysMenuType type, Integer sortOrder, List<@Valid EffectiveMenuNode> children) {
+  public SysMenu(UUID id, String clientId, UUID parentId, String title, SysMenuType type, Integer sortOrder, Integer status, OffsetDateTime createdAt) {
     this.id = id;
     this.clientId = clientId;
     this.parentId = parentId;
     this.title = title;
     this.type = type;
     this.sortOrder = sortOrder;
-    this.children = children;
+    this.status = status;
+    this.createdAt = createdAt;
   }
 
-  public EffectiveMenuNode id(UUID id) {
+  public SysMenu id(UUID id) {
     this.id = id;
     return this;
   }
@@ -93,7 +96,7 @@ public class EffectiveMenuNode {
     this.id = id;
   }
 
-  public EffectiveMenuNode clientId(String clientId) {
+  public SysMenu clientId(String clientId) {
     this.clientId = clientId;
     return this;
   }
@@ -114,7 +117,7 @@ public class EffectiveMenuNode {
     this.clientId = clientId;
   }
 
-  public EffectiveMenuNode parentId(UUID parentId) {
+  public SysMenu parentId(UUID parentId) {
     this.parentId = parentId;
     return this;
   }
@@ -135,7 +138,7 @@ public class EffectiveMenuNode {
     this.parentId = parentId;
   }
 
-  public EffectiveMenuNode title(String title) {
+  public SysMenu title(String title) {
     this.title = title;
     return this;
   }
@@ -156,7 +159,7 @@ public class EffectiveMenuNode {
     this.title = title;
   }
 
-  public EffectiveMenuNode type(SysMenuType type) {
+  public SysMenu type(SysMenuType type) {
     this.type = type;
     return this;
   }
@@ -177,7 +180,7 @@ public class EffectiveMenuNode {
     this.type = type;
   }
 
-  public EffectiveMenuNode path(@Nullable String path) {
+  public SysMenu path(@Nullable String path) {
     this.path = path;
     return this;
   }
@@ -198,7 +201,7 @@ public class EffectiveMenuNode {
     this.path = path;
   }
 
-  public EffectiveMenuNode component(@Nullable String component) {
+  public SysMenu component(@Nullable String component) {
     this.component = component;
     return this;
   }
@@ -219,7 +222,7 @@ public class EffectiveMenuNode {
     this.component = component;
   }
 
-  public EffectiveMenuNode perms(@Nullable String perms) {
+  public SysMenu perms(@Nullable String perms) {
     this.perms = perms;
     return this;
   }
@@ -240,7 +243,7 @@ public class EffectiveMenuNode {
     this.perms = perms;
   }
 
-  public EffectiveMenuNode icon(@Nullable String icon) {
+  public SysMenu icon(@Nullable String icon) {
     this.icon = icon;
     return this;
   }
@@ -261,7 +264,7 @@ public class EffectiveMenuNode {
     this.icon = icon;
   }
 
-  public EffectiveMenuNode sortOrder(Integer sortOrder) {
+  public SysMenu sortOrder(Integer sortOrder) {
     this.sortOrder = sortOrder;
     return this;
   }
@@ -282,33 +285,46 @@ public class EffectiveMenuNode {
     this.sortOrder = sortOrder;
   }
 
-  public EffectiveMenuNode children(List<@Valid EffectiveMenuNode> children) {
-    this.children = children;
-    return this;
-  }
-
-  public EffectiveMenuNode addChildrenItem(EffectiveMenuNode childrenItem) {
-    if (this.children == null) {
-      this.children = new ArrayList<>();
-    }
-    this.children.add(childrenItem);
+  public SysMenu status(Integer status) {
+    this.status = status;
     return this;
   }
 
   /**
-   * Get children
-   * @return children
+   * Get status
+   * @return status
    */
-  @NotNull @Valid 
-  @Schema(name = "children", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("children")
-  public List<@Valid EffectiveMenuNode> getChildren() {
-    return children;
+  @NotNull 
+  @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("status")
+  public Integer getStatus() {
+    return status;
   }
 
-  @JsonProperty("children")
-  public void setChildren(List<@Valid EffectiveMenuNode> children) {
-    this.children = children;
+  @JsonProperty("status")
+  public void setStatus(Integer status) {
+    this.status = status;
+  }
+
+  public SysMenu createdAt(OffsetDateTime createdAt) {
+    this.createdAt = createdAt;
+    return this;
+  }
+
+  /**
+   * Get createdAt
+   * @return createdAt
+   */
+  @NotNull @Valid 
+  @Schema(name = "createdAt", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("createdAt")
+  public OffsetDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  @JsonProperty("createdAt")
+  public void setCreatedAt(OffsetDateTime createdAt) {
+    this.createdAt = createdAt;
   }
 
   @Override
@@ -319,29 +335,30 @@ public class EffectiveMenuNode {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    EffectiveMenuNode effectiveMenuNode = (EffectiveMenuNode) o;
-    return Objects.equals(this.id, effectiveMenuNode.id) &&
-        Objects.equals(this.clientId, effectiveMenuNode.clientId) &&
-        Objects.equals(this.parentId, effectiveMenuNode.parentId) &&
-        Objects.equals(this.title, effectiveMenuNode.title) &&
-        Objects.equals(this.type, effectiveMenuNode.type) &&
-        Objects.equals(this.path, effectiveMenuNode.path) &&
-        Objects.equals(this.component, effectiveMenuNode.component) &&
-        Objects.equals(this.perms, effectiveMenuNode.perms) &&
-        Objects.equals(this.icon, effectiveMenuNode.icon) &&
-        Objects.equals(this.sortOrder, effectiveMenuNode.sortOrder) &&
-        Objects.equals(this.children, effectiveMenuNode.children);
+    SysMenu sysMenu = (SysMenu) o;
+    return Objects.equals(this.id, sysMenu.id) &&
+        Objects.equals(this.clientId, sysMenu.clientId) &&
+        Objects.equals(this.parentId, sysMenu.parentId) &&
+        Objects.equals(this.title, sysMenu.title) &&
+        Objects.equals(this.type, sysMenu.type) &&
+        Objects.equals(this.path, sysMenu.path) &&
+        Objects.equals(this.component, sysMenu.component) &&
+        Objects.equals(this.perms, sysMenu.perms) &&
+        Objects.equals(this.icon, sysMenu.icon) &&
+        Objects.equals(this.sortOrder, sysMenu.sortOrder) &&
+        Objects.equals(this.status, sysMenu.status) &&
+        Objects.equals(this.createdAt, sysMenu.createdAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, clientId, parentId, title, type, path, component, perms, icon, sortOrder, children);
+    return Objects.hash(id, clientId, parentId, title, type, path, component, perms, icon, sortOrder, status, createdAt);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class EffectiveMenuNode {\n");
+    sb.append("class SysMenu {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    clientId: ").append(toIndentedString(clientId)).append("\n");
     sb.append("    parentId: ").append(toIndentedString(parentId)).append("\n");
@@ -352,7 +369,8 @@ public class EffectiveMenuNode {
     sb.append("    perms: ").append(toIndentedString(perms)).append("\n");
     sb.append("    icon: ").append(toIndentedString(icon)).append("\n");
     sb.append("    sortOrder: ").append(toIndentedString(sortOrder)).append("\n");
-    sb.append("    children: ").append(toIndentedString(children)).append("\n");
+    sb.append("    status: ").append(toIndentedString(status)).append("\n");
+    sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("}");
     return sb.toString();
   }

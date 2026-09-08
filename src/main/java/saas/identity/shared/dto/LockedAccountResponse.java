@@ -5,8 +5,8 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.OffsetDateTime;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
@@ -19,32 +19,36 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * ErrorResponse
+ * LockedAccountResponse
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
-public class ErrorResponse {
+public class LockedAccountResponse {
 
   private String code;
 
   private String message;
 
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  private Map<String, Object> details = new HashMap<>();
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+  private OffsetDateTime lockedUntil;
 
-  public ErrorResponse() {
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private @Nullable Integer remainingAttempts;
+
+  public LockedAccountResponse() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public ErrorResponse(String code, String message) {
+  public LockedAccountResponse(String code, String message, OffsetDateTime lockedUntil) {
     this.code = code;
     this.message = message;
+    this.lockedUntil = lockedUntil;
   }
 
-  public ErrorResponse code(String code) {
+  public LockedAccountResponse code(String code) {
     this.code = code;
     return this;
   }
@@ -54,7 +58,7 @@ public class ErrorResponse {
    * @return code
    */
   @NotNull 
-  @Schema(name = "code", example = "BAD_REQUEST", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "code", example = "ACCOUNT_LOCKED", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("code")
   public String getCode() {
     return code;
@@ -65,7 +69,7 @@ public class ErrorResponse {
     this.code = code;
   }
 
-  public ErrorResponse message(String message) {
+  public LockedAccountResponse message(String message) {
     this.message = message;
     return this;
   }
@@ -86,33 +90,46 @@ public class ErrorResponse {
     this.message = message;
   }
 
-  public ErrorResponse details(Map<String, Object> details) {
-    this.details = details;
-    return this;
-  }
-
-  public ErrorResponse putDetailsItem(String key, Object detailsItem) {
-    if (this.details == null) {
-      this.details = new HashMap<>();
-    }
-    this.details.put(key, detailsItem);
+  public LockedAccountResponse lockedUntil(OffsetDateTime lockedUntil) {
+    this.lockedUntil = lockedUntil;
     return this;
   }
 
   /**
-   * Get details
-   * @return details
+   * Get lockedUntil
+   * @return lockedUntil
    */
-  
-  @Schema(name = "details", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("details")
-  public Map<String, Object> getDetails() {
-    return details;
+  @NotNull @Valid 
+  @Schema(name = "lockedUntil", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("lockedUntil")
+  public OffsetDateTime getLockedUntil() {
+    return lockedUntil;
   }
 
-  @JsonProperty("details")
-  public void setDetails(Map<String, Object> details) {
-    this.details = details;
+  @JsonProperty("lockedUntil")
+  public void setLockedUntil(OffsetDateTime lockedUntil) {
+    this.lockedUntil = lockedUntil;
+  }
+
+  public LockedAccountResponse remainingAttempts(@Nullable Integer remainingAttempts) {
+    this.remainingAttempts = remainingAttempts;
+    return this;
+  }
+
+  /**
+   * Get remainingAttempts
+   * @return remainingAttempts
+   */
+  
+  @Schema(name = "remainingAttempts", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("remainingAttempts")
+  public @Nullable Integer getRemainingAttempts() {
+    return remainingAttempts;
+  }
+
+  @JsonProperty("remainingAttempts")
+  public void setRemainingAttempts(@Nullable Integer remainingAttempts) {
+    this.remainingAttempts = remainingAttempts;
   }
 
   @Override
@@ -123,24 +140,26 @@ public class ErrorResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ErrorResponse errorResponse = (ErrorResponse) o;
-    return Objects.equals(this.code, errorResponse.code) &&
-        Objects.equals(this.message, errorResponse.message) &&
-        Objects.equals(this.details, errorResponse.details);
+    LockedAccountResponse lockedAccountResponse = (LockedAccountResponse) o;
+    return Objects.equals(this.code, lockedAccountResponse.code) &&
+        Objects.equals(this.message, lockedAccountResponse.message) &&
+        Objects.equals(this.lockedUntil, lockedAccountResponse.lockedUntil) &&
+        Objects.equals(this.remainingAttempts, lockedAccountResponse.remainingAttempts);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(code, message, details);
+    return Objects.hash(code, message, lockedUntil, remainingAttempts);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ErrorResponse {\n");
+    sb.append("class LockedAccountResponse {\n");
     sb.append("    code: ").append(toIndentedString(code)).append("\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
-    sb.append("    details: ").append(toIndentedString(details)).append("\n");
+    sb.append("    lockedUntil: ").append(toIndentedString(lockedUntil)).append("\n");
+    sb.append("    remainingAttempts: ").append(toIndentedString(remainingAttempts)).append("\n");
     sb.append("}");
     return sb.toString();
   }

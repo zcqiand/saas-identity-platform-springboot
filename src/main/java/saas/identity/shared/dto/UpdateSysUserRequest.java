@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import org.springframework.lang.Nullable;
-import saas.identity.shared.dto.TenantStatus;
+import saas.identity.shared.dto.SysUserStatus;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -19,40 +19,64 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * UpdateTenantRequest
+ * UpdateSysUserRequest
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
-public class UpdateTenantRequest {
+public class UpdateSysUserRequest {
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
-  private @Nullable String name;
+  private @Nullable String email;
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
-  private @Nullable TenantStatus status;
+  private @Nullable String mobile;
 
-  public UpdateTenantRequest name(@Nullable String name) {
-    this.name = name;
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private @Nullable SysUserStatus status;
+
+  public UpdateSysUserRequest email(@Nullable String email) {
+    this.email = email;
     return this;
   }
 
   /**
-   * Get name
-   * @return name
+   * Get email
+   * @return email
    */
-  @Size(min = 2, max = 128) 
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("name")
-  public @Nullable String getName() {
-    return name;
+  @jakarta.validation.constraints.Email 
+  @Schema(name = "email", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("email")
+  public @Nullable String getEmail() {
+    return email;
   }
 
-  @JsonProperty("name")
-  public void setName(@Nullable String name) {
-    this.name = name;
+  @JsonProperty("email")
+  public void setEmail(@Nullable String email) {
+    this.email = email;
   }
 
-  public UpdateTenantRequest status(@Nullable TenantStatus status) {
+  public UpdateSysUserRequest mobile(@Nullable String mobile) {
+    this.mobile = mobile;
+    return this;
+  }
+
+  /**
+   * Get mobile
+   * @return mobile
+   */
+  
+  @Schema(name = "mobile", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("mobile")
+  public @Nullable String getMobile() {
+    return mobile;
+  }
+
+  @JsonProperty("mobile")
+  public void setMobile(@Nullable String mobile) {
+    this.mobile = mobile;
+  }
+
+  public UpdateSysUserRequest status(@Nullable SysUserStatus status) {
     this.status = status;
     return this;
   }
@@ -64,12 +88,12 @@ public class UpdateTenantRequest {
   @Valid 
   @Schema(name = "status", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("status")
-  public @Nullable TenantStatus getStatus() {
+  public @Nullable SysUserStatus getStatus() {
     return status;
   }
 
   @JsonProperty("status")
-  public void setStatus(@Nullable TenantStatus status) {
+  public void setStatus(@Nullable SysUserStatus status) {
     this.status = status;
   }
 
@@ -81,21 +105,23 @@ public class UpdateTenantRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    UpdateTenantRequest updateTenantRequest = (UpdateTenantRequest) o;
-    return Objects.equals(this.name, updateTenantRequest.name) &&
-        Objects.equals(this.status, updateTenantRequest.status);
+    UpdateSysUserRequest updateSysUserRequest = (UpdateSysUserRequest) o;
+    return Objects.equals(this.email, updateSysUserRequest.email) &&
+        Objects.equals(this.mobile, updateSysUserRequest.mobile) &&
+        Objects.equals(this.status, updateSysUserRequest.status);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, status);
+    return Objects.hash(email, mobile, status);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class UpdateTenantRequest {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("class UpdateSysUserRequest {\n");
+    sb.append("    email: ").append(toIndentedString(email)).append("\n");
+    sb.append("    mobile: ").append(toIndentedString(mobile)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("}");
     return sb.toString();

@@ -1,186 +1,217 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import org.springframework.lang.Nullable;
+import saas.identity.shared.dto.SysUser;
+import saas.identity.shared.dto.TenantMember;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import java.util.*;
-import java.util.Objects;
-import java.util.UUID;
-import org.springframework.lang.Nullable;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** LoginResponse */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-02T23:27:00.762429900+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * LoginResponse
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class LoginResponse {
 
-  private String accessToken;
+  private SysUser user;
 
-  private String refreshToken;
+  private List<@Valid TenantMember> availableTenants = new ArrayList<>();
 
-  private String tokenType;
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private @Nullable String accessToken;
 
-  private Integer expiresIn;
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private @Nullable String refreshToken;
 
-  private UUID userId;
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private @Nullable String tokenType;
 
-  private UUID currentTenantId;
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private @Nullable Integer expiresIn;
+
+  private String clientId;
 
   public LoginResponse() {
     super();
   }
 
-  /** Constructor with only required parameters */
-  public LoginResponse(
-      String accessToken,
-      String refreshToken,
-      String tokenType,
-      Integer expiresIn,
-      UUID userId,
-      UUID currentTenantId) {
-    this.accessToken = accessToken;
-    this.refreshToken = refreshToken;
-    this.tokenType = tokenType;
-    this.expiresIn = expiresIn;
-    this.userId = userId;
-    this.currentTenantId = currentTenantId;
+  /**
+   * Constructor with only required parameters
+   */
+  public LoginResponse(SysUser user, List<@Valid TenantMember> availableTenants, String clientId) {
+    this.user = user;
+    this.availableTenants = availableTenants;
+    this.clientId = clientId;
   }
 
-  public LoginResponse accessToken(String accessToken) {
+  public LoginResponse user(SysUser user) {
+    this.user = user;
+    return this;
+  }
+
+  /**
+   * Get user
+   * @return user
+   */
+  @NotNull @Valid 
+  @Schema(name = "user", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("user")
+  public SysUser getUser() {
+    return user;
+  }
+
+  @JsonProperty("user")
+  public void setUser(SysUser user) {
+    this.user = user;
+  }
+
+  public LoginResponse availableTenants(List<@Valid TenantMember> availableTenants) {
+    this.availableTenants = availableTenants;
+    return this;
+  }
+
+  public LoginResponse addAvailableTenantsItem(TenantMember availableTenantsItem) {
+    if (this.availableTenants == null) {
+      this.availableTenants = new ArrayList<>();
+    }
+    this.availableTenants.add(availableTenantsItem);
+    return this;
+  }
+
+  /**
+   * Get availableTenants
+   * @return availableTenants
+   */
+  @NotNull @Valid 
+  @Schema(name = "availableTenants", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("availableTenants")
+  public List<@Valid TenantMember> getAvailableTenants() {
+    return availableTenants;
+  }
+
+  @JsonProperty("availableTenants")
+  public void setAvailableTenants(List<@Valid TenantMember> availableTenants) {
+    this.availableTenants = availableTenants;
+  }
+
+  public LoginResponse accessToken(@Nullable String accessToken) {
     this.accessToken = accessToken;
     return this;
   }
 
   /**
    * Get accessToken
-   *
    * @return accessToken
    */
-  @NotNull
-  @Schema(name = "accessToken", requiredMode = Schema.RequiredMode.REQUIRED)
+  
+  @Schema(name = "accessToken", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("accessToken")
-  public String getAccessToken() {
+  public @Nullable String getAccessToken() {
     return accessToken;
   }
 
   @JsonProperty("accessToken")
-  public void setAccessToken(String accessToken) {
+  public void setAccessToken(@Nullable String accessToken) {
     this.accessToken = accessToken;
   }
 
-  public LoginResponse refreshToken(String refreshToken) {
+  public LoginResponse refreshToken(@Nullable String refreshToken) {
     this.refreshToken = refreshToken;
     return this;
   }
 
   /**
    * Get refreshToken
-   *
    * @return refreshToken
    */
-  @NotNull
-  @Schema(name = "refreshToken", requiredMode = Schema.RequiredMode.REQUIRED)
+  
+  @Schema(name = "refreshToken", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("refreshToken")
-  public String getRefreshToken() {
+  public @Nullable String getRefreshToken() {
     return refreshToken;
   }
 
   @JsonProperty("refreshToken")
-  public void setRefreshToken(String refreshToken) {
+  public void setRefreshToken(@Nullable String refreshToken) {
     this.refreshToken = refreshToken;
   }
 
-  public LoginResponse tokenType(String tokenType) {
+  public LoginResponse tokenType(@Nullable String tokenType) {
     this.tokenType = tokenType;
     return this;
   }
 
   /**
    * Get tokenType
-   *
    * @return tokenType
    */
-  @NotNull
-  @Schema(name = "tokenType", requiredMode = Schema.RequiredMode.REQUIRED)
+  
+  @Schema(name = "tokenType", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("tokenType")
-  public String getTokenType() {
+  public @Nullable String getTokenType() {
     return tokenType;
   }
 
   @JsonProperty("tokenType")
-  public void setTokenType(String tokenType) {
+  public void setTokenType(@Nullable String tokenType) {
     this.tokenType = tokenType;
   }
 
-  public LoginResponse expiresIn(Integer expiresIn) {
+  public LoginResponse expiresIn(@Nullable Integer expiresIn) {
     this.expiresIn = expiresIn;
     return this;
   }
 
   /**
    * Get expiresIn
-   *
    * @return expiresIn
    */
-  @NotNull
-  @Schema(name = "expiresIn", requiredMode = Schema.RequiredMode.REQUIRED)
+  
+  @Schema(name = "expiresIn", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("expiresIn")
-  public Integer getExpiresIn() {
+  public @Nullable Integer getExpiresIn() {
     return expiresIn;
   }
 
   @JsonProperty("expiresIn")
-  public void setExpiresIn(Integer expiresIn) {
+  public void setExpiresIn(@Nullable Integer expiresIn) {
     this.expiresIn = expiresIn;
   }
 
-  public LoginResponse userId(UUID userId) {
-    this.userId = userId;
+  public LoginResponse clientId(String clientId) {
+    this.clientId = clientId;
     return this;
   }
 
   /**
-   * Get userId
-   *
-   * @return userId
+   * Get clientId
+   * @return clientId
    */
-  @NotNull
-  @Valid
-  @Schema(name = "userId", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("userId")
-  public UUID getUserId() {
-    return userId;
+  @NotNull 
+  @Schema(name = "clientId", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("clientId")
+  public String getClientId() {
+    return clientId;
   }
 
-  @JsonProperty("userId")
-  public void setUserId(UUID userId) {
-    this.userId = userId;
-  }
-
-  public LoginResponse currentTenantId(UUID currentTenantId) {
-    this.currentTenantId = currentTenantId;
-    return this;
-  }
-
-  /**
-   * Get currentTenantId
-   *
-   * @return currentTenantId
-   */
-  @NotNull
-  @Valid
-  @Schema(name = "currentTenantId", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("currentTenantId")
-  public UUID getCurrentTenantId() {
-    return currentTenantId;
-  }
-
-  @JsonProperty("currentTenantId")
-  public void setCurrentTenantId(UUID currentTenantId) {
-    this.currentTenantId = currentTenantId;
+  @JsonProperty("clientId")
+  public void setClientId(String clientId) {
+    this.clientId = clientId;
   }
 
   @Override
@@ -192,37 +223,41 @@ public class LoginResponse {
       return false;
     }
     LoginResponse loginResponse = (LoginResponse) o;
-    return Objects.equals(this.accessToken, loginResponse.accessToken)
-        && Objects.equals(this.refreshToken, loginResponse.refreshToken)
-        && Objects.equals(this.tokenType, loginResponse.tokenType)
-        && Objects.equals(this.expiresIn, loginResponse.expiresIn)
-        && Objects.equals(this.userId, loginResponse.userId)
-        && Objects.equals(this.currentTenantId, loginResponse.currentTenantId);
+    return Objects.equals(this.user, loginResponse.user) &&
+        Objects.equals(this.availableTenants, loginResponse.availableTenants) &&
+        Objects.equals(this.accessToken, loginResponse.accessToken) &&
+        Objects.equals(this.refreshToken, loginResponse.refreshToken) &&
+        Objects.equals(this.tokenType, loginResponse.tokenType) &&
+        Objects.equals(this.expiresIn, loginResponse.expiresIn) &&
+        Objects.equals(this.clientId, loginResponse.clientId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(accessToken, refreshToken, tokenType, expiresIn, userId, currentTenantId);
+    return Objects.hash(user, availableTenants, accessToken, refreshToken, tokenType, expiresIn, clientId);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class LoginResponse {\n");
+    sb.append("    user: ").append(toIndentedString(user)).append("\n");
+    sb.append("    availableTenants: ").append(toIndentedString(availableTenants)).append("\n");
     sb.append("    accessToken: ").append(toIndentedString(accessToken)).append("\n");
     sb.append("    refreshToken: ").append(toIndentedString(refreshToken)).append("\n");
     sb.append("    tokenType: ").append(toIndentedString(tokenType)).append("\n");
     sb.append("    expiresIn: ").append(toIndentedString(expiresIn)).append("\n");
-    sb.append("    userId: ").append(toIndentedString(userId)).append("\n");
-    sb.append("    currentTenantId: ").append(toIndentedString(currentTenantId)).append("\n");
+    sb.append("    clientId: ").append(toIndentedString(clientId)).append("\n");
     sb.append("}");
     return sb.toString();
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.lang.Nullable;
-import saas.identity.shared.dto.Tenant;
+import saas.identity.shared.dto.SysRole;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -21,14 +21,14 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * AdminTenantsListTenants200Response
+ * TenantRolesListSysRoles200Response
  */
 
-@JsonTypeName("AdminTenants_listTenants_200_response")
+@JsonTypeName("TenantRoles_listSysRoles_200_response")
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
-public class AdminTenantsListTenants200Response {
+public class TenantRolesListSysRoles200Response {
 
-  private List<@Valid Tenant> items = new ArrayList<>();
+  private List<@Valid SysRole> items = new ArrayList<>();
 
   private Integer page;
 
@@ -36,26 +36,26 @@ public class AdminTenantsListTenants200Response {
 
   private Long total;
 
-  public AdminTenantsListTenants200Response() {
+  public TenantRolesListSysRoles200Response() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public AdminTenantsListTenants200Response(List<@Valid Tenant> items, Integer page, Integer pageSize, Long total) {
+  public TenantRolesListSysRoles200Response(List<@Valid SysRole> items, Integer page, Integer pageSize, Long total) {
     this.items = items;
     this.page = page;
     this.pageSize = pageSize;
     this.total = total;
   }
 
-  public AdminTenantsListTenants200Response items(List<@Valid Tenant> items) {
+  public TenantRolesListSysRoles200Response items(List<@Valid SysRole> items) {
     this.items = items;
     return this;
   }
 
-  public AdminTenantsListTenants200Response addItemsItem(Tenant itemsItem) {
+  public TenantRolesListSysRoles200Response addItemsItem(SysRole itemsItem) {
     if (this.items == null) {
       this.items = new ArrayList<>();
     }
@@ -70,16 +70,16 @@ public class AdminTenantsListTenants200Response {
   @NotNull @Valid 
   @Schema(name = "items", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("items")
-  public List<@Valid Tenant> getItems() {
+  public List<@Valid SysRole> getItems() {
     return items;
   }
 
   @JsonProperty("items")
-  public void setItems(List<@Valid Tenant> items) {
+  public void setItems(List<@Valid SysRole> items) {
     this.items = items;
   }
 
-  public AdminTenantsListTenants200Response page(Integer page) {
+  public TenantRolesListSysRoles200Response page(Integer page) {
     this.page = page;
     return this;
   }
@@ -100,7 +100,7 @@ public class AdminTenantsListTenants200Response {
     this.page = page;
   }
 
-  public AdminTenantsListTenants200Response pageSize(Integer pageSize) {
+  public TenantRolesListSysRoles200Response pageSize(Integer pageSize) {
     this.pageSize = pageSize;
     return this;
   }
@@ -121,7 +121,7 @@ public class AdminTenantsListTenants200Response {
     this.pageSize = pageSize;
   }
 
-  public AdminTenantsListTenants200Response total(Long total) {
+  public TenantRolesListSysRoles200Response total(Long total) {
     this.total = total;
     return this;
   }
@@ -150,11 +150,11 @@ public class AdminTenantsListTenants200Response {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    AdminTenantsListTenants200Response adminTenantsListTenants200Response = (AdminTenantsListTenants200Response) o;
-    return Objects.equals(this.items, adminTenantsListTenants200Response.items) &&
-        Objects.equals(this.page, adminTenantsListTenants200Response.page) &&
-        Objects.equals(this.pageSize, adminTenantsListTenants200Response.pageSize) &&
-        Objects.equals(this.total, adminTenantsListTenants200Response.total);
+    TenantRolesListSysRoles200Response tenantRolesListSysRoles200Response = (TenantRolesListSysRoles200Response) o;
+    return Objects.equals(this.items, tenantRolesListSysRoles200Response.items) &&
+        Objects.equals(this.page, tenantRolesListSysRoles200Response.page) &&
+        Objects.equals(this.pageSize, tenantRolesListSysRoles200Response.pageSize) &&
+        Objects.equals(this.total, tenantRolesListSysRoles200Response.total);
   }
 
   @Override
@@ -165,7 +165,7 @@ public class AdminTenantsListTenants200Response {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class AdminTenantsListTenants200Response {\n");
+    sb.append("class TenantRolesListSysRoles200Response {\n");
     sb.append("    items: ").append(toIndentedString(items)).append("\n");
     sb.append("    page: ").append(toIndentedString(page)).append("\n");
     sb.append("    pageSize: ").append(toIndentedString(pageSize)).append("\n");

@@ -5,12 +5,13 @@
  */
 package saas.identity.shared.api;
 
-import saas.identity.shared.dto.CreateSysRoleRequest;
+import saas.identity.shared.dto.AdminClientsListClients200Response;
+import saas.identity.shared.dto.AdminClientsSetClientStatusRequest;
+import saas.identity.shared.dto.CreateOAuthClientRequest;
 import saas.identity.shared.dto.ErrorResponse;
 import org.springframework.lang.Nullable;
-import saas.identity.shared.dto.SysRole;
-import saas.identity.shared.dto.TenantRolesListSysRoles200Response;
-import saas.identity.shared.dto.UpdateSysRoleRequest;
+import saas.identity.shared.dto.OAuthClient;
+import saas.identity.shared.dto.UpdateOAuthClientRequest;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -37,24 +38,23 @@ import jakarta.annotation.Generated;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 @Validated
-@Tag(name = "tenant-roles", description = "the tenant-roles API")
-public interface TenantRolesApi {
+@Tag(name = "admin-clients", description = "the admin-clients API")
+public interface AdminClientsApi {
 
-    String PATH_TENANT_ROLES_CREATE_SYS_ROLE = "/api/v1/tenants/{tenantId}/roles";
+    String PATH_ADMIN_CLIENTS_CREATE_CLIENT = "/api/v1/admin/clients";
     /**
-     * POST /api/v1/tenants/{tenantId}/roles
+     * POST /api/v1/admin/clients
      *
-     * @param tenantId  (required)
-     * @param createSysRoleRequest  (required)
+     * @param createOAuthClientRequest  (required)
      * @return The request has succeeded. (status code 200)
      *         or An unexpected error response. (status code 200)
      */
     @Operation(
-        operationId = "tenantRolesCreateSysRole",
-        tags = { "tenant-roles" },
+        operationId = "adminClientsCreateClient",
+        tags = { "admin-clients" },
         responses = {
             @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = SysRole.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = OAuthClient.class))
             }),
             @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
@@ -63,28 +63,26 @@ public interface TenantRolesApi {
     )
     @RequestMapping(
         method = RequestMethod.POST,
-        value = TenantRolesApi.PATH_TENANT_ROLES_CREATE_SYS_ROLE,
+        value = AdminClientsApi.PATH_ADMIN_CLIENTS_CREATE_CLIENT,
         produces = { "application/json" },
         consumes = { "application/json" }
     )
-    ResponseEntity<SysRole> tenantRolesCreateSysRole(
-        @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("tenantId") String tenantId,
-        @Parameter(name = "CreateSysRoleRequest", description = "", required = true) @Valid @RequestBody CreateSysRoleRequest createSysRoleRequest
+    ResponseEntity<OAuthClient> adminClientsCreateClient(
+        @Parameter(name = "CreateOAuthClientRequest", description = "", required = true) @Valid @RequestBody CreateOAuthClientRequest createOAuthClientRequest
     );
 
 
-    String PATH_TENANT_ROLES_DELETE_SYS_ROLE = "/api/v1/tenants/{tenantId}/roles/{roleId}";
+    String PATH_ADMIN_CLIENTS_DELETE_CLIENT = "/api/v1/admin/clients/{clientId}";
     /**
-     * DELETE /api/v1/tenants/{tenantId}/roles/{roleId}
+     * DELETE /api/v1/admin/clients/{clientId}
      *
-     * @param tenantId  (required)
-     * @param roleId  (required)
+     * @param clientId  (required)
      * @return There is no content to send for this request, but the headers may be useful.  (status code 204)
      *         or An unexpected error response. (status code 200)
      */
     @Operation(
-        operationId = "tenantRolesDeleteSysRole",
-        tags = { "tenant-roles" },
+        operationId = "adminClientsDeleteClient",
+        tags = { "admin-clients" },
         responses = {
             @ApiResponse(responseCode = "204", description = "There is no content to send for this request, but the headers may be useful. "),
             @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
@@ -94,30 +92,28 @@ public interface TenantRolesApi {
     )
     @RequestMapping(
         method = RequestMethod.DELETE,
-        value = TenantRolesApi.PATH_TENANT_ROLES_DELETE_SYS_ROLE,
+        value = AdminClientsApi.PATH_ADMIN_CLIENTS_DELETE_CLIENT,
         produces = { "application/json" }
     )
-    ResponseEntity<Void> tenantRolesDeleteSysRole(
-        @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("tenantId") String tenantId,
-        @Parameter(name = "roleId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("roleId") String roleId
+    ResponseEntity<Void> adminClientsDeleteClient(
+        @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("clientId") String clientId
     );
 
 
-    String PATH_TENANT_ROLES_GET_SYS_ROLE = "/api/v1/tenants/{tenantId}/roles/{roleId}";
+    String PATH_ADMIN_CLIENTS_GET_CLIENT = "/api/v1/admin/clients/{clientId}";
     /**
-     * GET /api/v1/tenants/{tenantId}/roles/{roleId}
+     * GET /api/v1/admin/clients/{clientId}
      *
-     * @param tenantId  (required)
-     * @param roleId  (required)
+     * @param clientId  (required)
      * @return The request has succeeded. (status code 200)
      *         or An unexpected error response. (status code 200)
      */
     @Operation(
-        operationId = "tenantRolesGetSysRole",
-        tags = { "tenant-roles" },
+        operationId = "adminClientsGetClient",
+        tags = { "admin-clients" },
         responses = {
             @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = SysRole.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = OAuthClient.class))
             }),
             @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
@@ -126,32 +122,29 @@ public interface TenantRolesApi {
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = TenantRolesApi.PATH_TENANT_ROLES_GET_SYS_ROLE,
+        value = AdminClientsApi.PATH_ADMIN_CLIENTS_GET_CLIENT,
         produces = { "application/json" }
     )
-    ResponseEntity<SysRole> tenantRolesGetSysRole(
-        @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("tenantId") String tenantId,
-        @Parameter(name = "roleId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("roleId") String roleId
+    ResponseEntity<OAuthClient> adminClientsGetClient(
+        @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("clientId") String clientId
     );
 
 
-    String PATH_TENANT_ROLES_LIST_SYS_ROLES = "/api/v1/tenants/{tenantId}/roles";
+    String PATH_ADMIN_CLIENTS_LIST_CLIENTS = "/api/v1/admin/clients";
     /**
-     * GET /api/v1/tenants/{tenantId}/roles
+     * GET /api/v1/admin/clients
      *
-     * @param tenantId  (required)
-     * @param clientId  (required)
      * @param page  (optional)
      * @param pageSize  (optional)
      * @return The request has succeeded. (status code 200)
      *         or An unexpected error response. (status code 200)
      */
     @Operation(
-        operationId = "tenantRolesListSysRoles",
-        tags = { "tenant-roles" },
+        operationId = "adminClientsListClients",
+        tags = { "admin-clients" },
         responses = {
             @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = TenantRolesListSysRoles200Response.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = AdminClientsListClients200Response.class))
             }),
             @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
@@ -160,33 +153,30 @@ public interface TenantRolesApi {
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = TenantRolesApi.PATH_TENANT_ROLES_LIST_SYS_ROLES,
+        value = AdminClientsApi.PATH_ADMIN_CLIENTS_LIST_CLIENTS,
         produces = { "application/json" }
     )
-    ResponseEntity<TenantRolesListSysRoles200Response> tenantRolesListSysRoles(
-        @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("tenantId") String tenantId,
-        @NotNull @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "clientId", required = true) String clientId,
+    ResponseEntity<AdminClientsListClients200Response> adminClientsListClients(
         @Parameter(name = "page", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "page", required = false) @Nullable Integer page,
         @Parameter(name = "pageSize", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "pageSize", required = false) @Nullable Integer pageSize
     );
 
 
-    String PATH_TENANT_ROLES_UPDATE_SYS_ROLE = "/api/v1/tenants/{tenantId}/roles/{roleId}";
+    String PATH_ADMIN_CLIENTS_SET_CLIENT_STATUS = "/api/v1/admin/clients/{clientId}/status";
     /**
-     * PATCH /api/v1/tenants/{tenantId}/roles/{roleId}
+     * PATCH /api/v1/admin/clients/{clientId}/status
      *
-     * @param tenantId  (required)
-     * @param roleId  (required)
-     * @param updateSysRoleRequest  (required)
+     * @param clientId  (required)
+     * @param adminClientsSetClientStatusRequest  (required)
      * @return The request has succeeded. (status code 200)
      *         or An unexpected error response. (status code 200)
      */
     @Operation(
-        operationId = "tenantRolesUpdateSysRole",
-        tags = { "tenant-roles" },
+        operationId = "adminClientsSetClientStatus",
+        tags = { "admin-clients" },
         responses = {
             @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = SysRole.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = OAuthClient.class))
             }),
             @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
@@ -195,14 +185,46 @@ public interface TenantRolesApi {
     )
     @RequestMapping(
         method = RequestMethod.PATCH,
-        value = TenantRolesApi.PATH_TENANT_ROLES_UPDATE_SYS_ROLE,
+        value = AdminClientsApi.PATH_ADMIN_CLIENTS_SET_CLIENT_STATUS,
         produces = { "application/json" },
         consumes = { "application/json" }
     )
-    ResponseEntity<SysRole> tenantRolesUpdateSysRole(
-        @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("tenantId") String tenantId,
-        @Parameter(name = "roleId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("roleId") String roleId,
-        @Parameter(name = "UpdateSysRoleRequest", description = "", required = true) @Valid @RequestBody UpdateSysRoleRequest updateSysRoleRequest
+    ResponseEntity<OAuthClient> adminClientsSetClientStatus(
+        @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("clientId") String clientId,
+        @Parameter(name = "AdminClientsSetClientStatusRequest", description = "", required = true) @Valid @RequestBody AdminClientsSetClientStatusRequest adminClientsSetClientStatusRequest
+    );
+
+
+    String PATH_ADMIN_CLIENTS_UPDATE_CLIENT = "/api/v1/admin/clients/{clientId}";
+    /**
+     * PATCH /api/v1/admin/clients/{clientId}
+     *
+     * @param clientId  (required)
+     * @param updateOAuthClientRequest  (required)
+     * @return The request has succeeded. (status code 200)
+     *         or An unexpected error response. (status code 200)
+     */
+    @Operation(
+        operationId = "adminClientsUpdateClient",
+        tags = { "admin-clients" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = OAuthClient.class))
+            }),
+            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.PATCH,
+        value = AdminClientsApi.PATH_ADMIN_CLIENTS_UPDATE_CLIENT,
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    ResponseEntity<OAuthClient> adminClientsUpdateClient(
+        @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("clientId") String clientId,
+        @Parameter(name = "UpdateOAuthClientRequest", description = "", required = true) @Valid @RequestBody UpdateOAuthClientRequest updateOAuthClientRequest
     );
 
 }

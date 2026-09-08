@@ -2,12 +2,10 @@ package saas.identity.shared.dto;
 
 import java.net.URI;
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import org.springframework.lang.Nullable;
-import saas.identity.shared.dto.TenantStatus;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -19,40 +17,27 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * UpdateTenantRequest
+ * AdminClientsSetClientStatusRequest
  */
 
+@JsonTypeName("AdminClients_setClientStatus_request")
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
-public class UpdateTenantRequest {
+public class AdminClientsSetClientStatusRequest {
 
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  private @Nullable String name;
+  private Integer status;
 
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  private @Nullable TenantStatus status;
-
-  public UpdateTenantRequest name(@Nullable String name) {
-    this.name = name;
-    return this;
+  public AdminClientsSetClientStatusRequest() {
+    super();
   }
 
   /**
-   * Get name
-   * @return name
+   * Constructor with only required parameters
    */
-  @Size(min = 2, max = 128) 
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("name")
-  public @Nullable String getName() {
-    return name;
+  public AdminClientsSetClientStatusRequest(Integer status) {
+    this.status = status;
   }
 
-  @JsonProperty("name")
-  public void setName(@Nullable String name) {
-    this.name = name;
-  }
-
-  public UpdateTenantRequest status(@Nullable TenantStatus status) {
+  public AdminClientsSetClientStatusRequest status(Integer status) {
     this.status = status;
     return this;
   }
@@ -61,15 +46,15 @@ public class UpdateTenantRequest {
    * Get status
    * @return status
    */
-  @Valid 
-  @Schema(name = "status", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @NotNull 
+  @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("status")
-  public @Nullable TenantStatus getStatus() {
+  public Integer getStatus() {
     return status;
   }
 
   @JsonProperty("status")
-  public void setStatus(@Nullable TenantStatus status) {
+  public void setStatus(Integer status) {
     this.status = status;
   }
 
@@ -81,21 +66,19 @@ public class UpdateTenantRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    UpdateTenantRequest updateTenantRequest = (UpdateTenantRequest) o;
-    return Objects.equals(this.name, updateTenantRequest.name) &&
-        Objects.equals(this.status, updateTenantRequest.status);
+    AdminClientsSetClientStatusRequest adminClientsSetClientStatusRequest = (AdminClientsSetClientStatusRequest) o;
+    return Objects.equals(this.status, adminClientsSetClientStatusRequest.status);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, status);
+    return Objects.hash(status);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class UpdateTenantRequest {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("class AdminClientsSetClientStatusRequest {\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("}");
     return sb.toString();

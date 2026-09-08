@@ -17,19 +17,21 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Gets or Sets TenantStatus
+ * Gets or Sets SysMenuType
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
-public enum TenantStatus {
+public enum SysMenuType {
   
-  ACTIVE("active"),
+  DIRECTORY("directory"),
   
-  SUSPENDED("suspended");
+  MENU("menu"),
+  
+  BUTTON("button");
 
   private final String value;
 
-  TenantStatus(String value) {
+  SysMenuType(String value) {
     this.value = value;
   }
 
@@ -44,8 +46,8 @@ public enum TenantStatus {
   }
 
   @JsonCreator
-  public static TenantStatus fromValue(String value) {
-    for (TenantStatus b : TenantStatus.values()) {
+  public static SysMenuType fromValue(String value) {
+    for (SysMenuType b : SysMenuType.values()) {
       if (b.value.equals(value)) {
         return b;
       }

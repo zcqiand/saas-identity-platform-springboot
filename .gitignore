@@ -5,6 +5,7 @@ build/
 coverage/
 .state/trace.json
 .state/gate.json
+.state/tree-change.json.bak
 target/
 .vscode/
 

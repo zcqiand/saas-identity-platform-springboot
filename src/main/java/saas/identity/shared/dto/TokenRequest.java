@@ -1,29 +1,35 @@
 package saas.identity.shared.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
+import org.springframework.lang.Nullable;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import java.util.*;
-import java.util.Objects;
-import java.util.UUID;
-import org.springframework.lang.Nullable;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** TokenRequest */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-02T23:27:00.762429900+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * TokenRequest
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class TokenRequest {
 
-  /** Gets or Sets grantType */
+  /**
+   * Gets or Sets grantType
+   */
   public enum GrantTypeEnum {
     AUTHORIZATION_CODE("authorization_code"),
-
+    
     REFRESH_TOKEN("refresh_token");
 
     private final String value;
@@ -61,12 +67,10 @@ public class TokenRequest {
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private @Nullable String refreshToken;
 
-  private UUID clientId;
+  private String clientId;
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private @Nullable String clientSecret;
-
-  private UUID tenantId;
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private @Nullable String redirectUri;
@@ -75,11 +79,12 @@ public class TokenRequest {
     super();
   }
 
-  /** Constructor with only required parameters */
-  public TokenRequest(GrantTypeEnum grantType, UUID clientId, UUID tenantId) {
+  /**
+   * Constructor with only required parameters
+   */
+  public TokenRequest(GrantTypeEnum grantType, String clientId) {
     this.grantType = grantType;
     this.clientId = clientId;
-    this.tenantId = tenantId;
   }
 
   public TokenRequest grantType(GrantTypeEnum grantType) {
@@ -89,10 +94,9 @@ public class TokenRequest {
 
   /**
    * Get grantType
-   *
    * @return grantType
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "grantType", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("grantType")
   public GrantTypeEnum getGrantType() {
@@ -111,9 +115,9 @@ public class TokenRequest {
 
   /**
    * Get code
-   *
    * @return code
    */
+  
   @Schema(name = "code", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("code")
   public @Nullable String getCode() {
@@ -132,9 +136,9 @@ public class TokenRequest {
 
   /**
    * Get refreshToken
-   *
    * @return refreshToken
    */
+  
   @Schema(name = "refreshToken", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("refreshToken")
   public @Nullable String getRefreshToken() {
@@ -146,26 +150,24 @@ public class TokenRequest {
     this.refreshToken = refreshToken;
   }
 
-  public TokenRequest clientId(UUID clientId) {
+  public TokenRequest clientId(String clientId) {
     this.clientId = clientId;
     return this;
   }
 
   /**
    * Get clientId
-   *
    * @return clientId
    */
-  @NotNull
-  @Valid
+  @NotNull 
   @Schema(name = "clientId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("clientId")
-  public UUID getClientId() {
+  public String getClientId() {
     return clientId;
   }
 
   @JsonProperty("clientId")
-  public void setClientId(UUID clientId) {
+  public void setClientId(String clientId) {
     this.clientId = clientId;
   }
 
@@ -176,9 +178,9 @@ public class TokenRequest {
 
   /**
    * Get clientSecret
-   *
    * @return clientSecret
    */
+  
   @Schema(name = "clientSecret", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("clientSecret")
   public @Nullable String getClientSecret() {
@@ -190,29 +192,6 @@ public class TokenRequest {
     this.clientSecret = clientSecret;
   }
 
-  public TokenRequest tenantId(UUID tenantId) {
-    this.tenantId = tenantId;
-    return this;
-  }
-
-  /**
-   * Get tenantId
-   *
-   * @return tenantId
-   */
-  @NotNull
-  @Valid
-  @Schema(name = "tenantId", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("tenantId")
-  public UUID getTenantId() {
-    return tenantId;
-  }
-
-  @JsonProperty("tenantId")
-  public void setTenantId(UUID tenantId) {
-    this.tenantId = tenantId;
-  }
-
   public TokenRequest redirectUri(@Nullable String redirectUri) {
     this.redirectUri = redirectUri;
     return this;
@@ -220,9 +199,9 @@ public class TokenRequest {
 
   /**
    * Get redirectUri
-   *
    * @return redirectUri
    */
+  
   @Schema(name = "redirectUri", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("redirectUri")
   public @Nullable String getRedirectUri() {
@@ -243,19 +222,17 @@ public class TokenRequest {
       return false;
     }
     TokenRequest tokenRequest = (TokenRequest) o;
-    return Objects.equals(this.grantType, tokenRequest.grantType)
-        && Objects.equals(this.code, tokenRequest.code)
-        && Objects.equals(this.refreshToken, tokenRequest.refreshToken)
-        && Objects.equals(this.clientId, tokenRequest.clientId)
-        && Objects.equals(this.clientSecret, tokenRequest.clientSecret)
-        && Objects.equals(this.tenantId, tokenRequest.tenantId)
-        && Objects.equals(this.redirectUri, tokenRequest.redirectUri);
+    return Objects.equals(this.grantType, tokenRequest.grantType) &&
+        Objects.equals(this.code, tokenRequest.code) &&
+        Objects.equals(this.refreshToken, tokenRequest.refreshToken) &&
+        Objects.equals(this.clientId, tokenRequest.clientId) &&
+        Objects.equals(this.clientSecret, tokenRequest.clientSecret) &&
+        Objects.equals(this.redirectUri, tokenRequest.redirectUri);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(
-        grantType, code, refreshToken, clientId, clientSecret, tenantId, redirectUri);
+    return Objects.hash(grantType, code, refreshToken, clientId, clientSecret, redirectUri);
   }
 
   @Override
@@ -267,16 +244,17 @@ public class TokenRequest {
     sb.append("    refreshToken: ").append(toIndentedString(refreshToken)).append("\n");
     sb.append("    clientId: ").append(toIndentedString(clientId)).append("\n");
     sb.append("    clientSecret: ").append(toIndentedString(clientSecret)).append("\n");
-    sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
     sb.append("    redirectUri: ").append(toIndentedString(redirectUri)).append("\n");
     sb.append("}");
     return sb.toString();
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

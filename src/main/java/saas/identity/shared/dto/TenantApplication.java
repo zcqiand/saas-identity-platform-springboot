@@ -2,14 +2,13 @@ package saas.identity.shared.dto;
 
 import java.net.URI;
 import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
-import saas.identity.shared.dto.TenantStatus;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -21,43 +20,43 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * Tenant
+ * TenantApplication
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
-public class Tenant {
+public class TenantApplication {
 
   private UUID id;
 
-  private String tenantKey;
+  private UUID tenantId;
 
-  private String name;
+  private String clientId;
 
-  private TenantStatus status;
+  private Integer status;
+
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+  private @Nullable OffsetDateTime expireTime;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private OffsetDateTime createdAt;
 
-  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-  private OffsetDateTime updatedAt;
-
-  public Tenant() {
+  public TenantApplication() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public Tenant(UUID id, String tenantKey, String name, TenantStatus status, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
+  public TenantApplication(UUID id, UUID tenantId, String clientId, Integer status, OffsetDateTime createdAt) {
     this.id = id;
-    this.tenantKey = tenantKey;
-    this.name = name;
+    this.tenantId = tenantId;
+    this.clientId = clientId;
     this.status = status;
     this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
   }
 
-  public Tenant id(UUID id) {
+  public TenantApplication id(UUID id) {
     this.id = id;
     return this;
   }
@@ -78,49 +77,49 @@ public class Tenant {
     this.id = id;
   }
 
-  public Tenant tenantKey(String tenantKey) {
-    this.tenantKey = tenantKey;
+  public TenantApplication tenantId(UUID tenantId) {
+    this.tenantId = tenantId;
     return this;
   }
 
   /**
-   * Get tenantKey
-   * @return tenantKey
+   * Get tenantId
+   * @return tenantId
    */
-  @NotNull @Size(min = 2, max = 64) 
-  @Schema(name = "tenantKey", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("tenantKey")
-  public String getTenantKey() {
-    return tenantKey;
+  @NotNull @Valid 
+  @Schema(name = "tenantId", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("tenantId")
+  public UUID getTenantId() {
+    return tenantId;
   }
 
-  @JsonProperty("tenantKey")
-  public void setTenantKey(String tenantKey) {
-    this.tenantKey = tenantKey;
+  @JsonProperty("tenantId")
+  public void setTenantId(UUID tenantId) {
+    this.tenantId = tenantId;
   }
 
-  public Tenant name(String name) {
-    this.name = name;
+  public TenantApplication clientId(String clientId) {
+    this.clientId = clientId;
     return this;
   }
 
   /**
-   * Get name
-   * @return name
+   * Get clientId
+   * @return clientId
    */
-  @NotNull @Size(min = 2, max = 128) 
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("name")
-  public String getName() {
-    return name;
+  @NotNull 
+  @Schema(name = "clientId", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("clientId")
+  public String getClientId() {
+    return clientId;
   }
 
-  @JsonProperty("name")
-  public void setName(String name) {
-    this.name = name;
+  @JsonProperty("clientId")
+  public void setClientId(String clientId) {
+    this.clientId = clientId;
   }
 
-  public Tenant status(TenantStatus status) {
+  public TenantApplication status(Integer status) {
     this.status = status;
     return this;
   }
@@ -129,19 +128,40 @@ public class Tenant {
    * Get status
    * @return status
    */
-  @NotNull @Valid 
+  @NotNull 
   @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("status")
-  public TenantStatus getStatus() {
+  public Integer getStatus() {
     return status;
   }
 
   @JsonProperty("status")
-  public void setStatus(TenantStatus status) {
+  public void setStatus(Integer status) {
     this.status = status;
   }
 
-  public Tenant createdAt(OffsetDateTime createdAt) {
+  public TenantApplication expireTime(@Nullable OffsetDateTime expireTime) {
+    this.expireTime = expireTime;
+    return this;
+  }
+
+  /**
+   * Get expireTime
+   * @return expireTime
+   */
+  @Valid 
+  @Schema(name = "expireTime", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("expireTime")
+  public @Nullable OffsetDateTime getExpireTime() {
+    return expireTime;
+  }
+
+  @JsonProperty("expireTime")
+  public void setExpireTime(@Nullable OffsetDateTime expireTime) {
+    this.expireTime = expireTime;
+  }
+
+  public TenantApplication createdAt(OffsetDateTime createdAt) {
     this.createdAt = createdAt;
     return this;
   }
@@ -162,27 +182,6 @@ public class Tenant {
     this.createdAt = createdAt;
   }
 
-  public Tenant updatedAt(OffsetDateTime updatedAt) {
-    this.updatedAt = updatedAt;
-    return this;
-  }
-
-  /**
-   * Get updatedAt
-   * @return updatedAt
-   */
-  @NotNull @Valid 
-  @Schema(name = "updatedAt", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("updatedAt")
-  public OffsetDateTime getUpdatedAt() {
-    return updatedAt;
-  }
-
-  @JsonProperty("updatedAt")
-  public void setUpdatedAt(OffsetDateTime updatedAt) {
-    this.updatedAt = updatedAt;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -191,30 +190,30 @@ public class Tenant {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Tenant tenant = (Tenant) o;
-    return Objects.equals(this.id, tenant.id) &&
-        Objects.equals(this.tenantKey, tenant.tenantKey) &&
-        Objects.equals(this.name, tenant.name) &&
-        Objects.equals(this.status, tenant.status) &&
-        Objects.equals(this.createdAt, tenant.createdAt) &&
-        Objects.equals(this.updatedAt, tenant.updatedAt);
+    TenantApplication tenantApplication = (TenantApplication) o;
+    return Objects.equals(this.id, tenantApplication.id) &&
+        Objects.equals(this.tenantId, tenantApplication.tenantId) &&
+        Objects.equals(this.clientId, tenantApplication.clientId) &&
+        Objects.equals(this.status, tenantApplication.status) &&
+        Objects.equals(this.expireTime, tenantApplication.expireTime) &&
+        Objects.equals(this.createdAt, tenantApplication.createdAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantKey, name, status, createdAt, updatedAt);
+    return Objects.hash(id, tenantId, clientId, status, expireTime, createdAt);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Tenant {\n");
+    sb.append("class TenantApplication {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    tenantKey: ").append(toIndentedString(tenantKey)).append("\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
+    sb.append("    clientId: ").append(toIndentedString(clientId)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
+    sb.append("    expireTime: ").append(toIndentedString(expireTime)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
-    sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("}");
     return sb.toString();
   }

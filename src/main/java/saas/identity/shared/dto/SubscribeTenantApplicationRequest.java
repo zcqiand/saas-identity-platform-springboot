@@ -2,8 +2,11 @@ package saas.identity.shared.dto;
 
 import java.net.URI;
 import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import java.time.OffsetDateTime;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
@@ -16,74 +19,30 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * LoginRequest
+ * SubscribeTenantApplicationRequest
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
-public class LoginRequest {
-
-  private String username;
-
-  private String password;
+public class SubscribeTenantApplicationRequest {
 
   private String clientId;
 
-  public LoginRequest() {
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+  private @Nullable OffsetDateTime expireTime;
+
+  public SubscribeTenantApplicationRequest() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public LoginRequest(String username, String password, String clientId) {
-    this.username = username;
-    this.password = password;
+  public SubscribeTenantApplicationRequest(String clientId) {
     this.clientId = clientId;
   }
 
-  public LoginRequest username(String username) {
-    this.username = username;
-    return this;
-  }
-
-  /**
-   * Get username
-   * @return username
-   */
-  @NotNull @Size(min = 1, max = 64) 
-  @Schema(name = "username", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("username")
-  public String getUsername() {
-    return username;
-  }
-
-  @JsonProperty("username")
-  public void setUsername(String username) {
-    this.username = username;
-  }
-
-  public LoginRequest password(String password) {
-    this.password = password;
-    return this;
-  }
-
-  /**
-   * Get password
-   * @return password
-   */
-  @NotNull @Size(min = 1, max = 128) 
-  @Schema(name = "password", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("password")
-  public String getPassword() {
-    return password;
-  }
-
-  @JsonProperty("password")
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
-  public LoginRequest clientId(String clientId) {
+  public SubscribeTenantApplicationRequest clientId(String clientId) {
     this.clientId = clientId;
     return this;
   }
@@ -104,6 +63,27 @@ public class LoginRequest {
     this.clientId = clientId;
   }
 
+  public SubscribeTenantApplicationRequest expireTime(@Nullable OffsetDateTime expireTime) {
+    this.expireTime = expireTime;
+    return this;
+  }
+
+  /**
+   * Get expireTime
+   * @return expireTime
+   */
+  @Valid 
+  @Schema(name = "expireTime", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("expireTime")
+  public @Nullable OffsetDateTime getExpireTime() {
+    return expireTime;
+  }
+
+  @JsonProperty("expireTime")
+  public void setExpireTime(@Nullable OffsetDateTime expireTime) {
+    this.expireTime = expireTime;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -112,24 +92,22 @@ public class LoginRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    LoginRequest loginRequest = (LoginRequest) o;
-    return Objects.equals(this.username, loginRequest.username) &&
-        Objects.equals(this.password, loginRequest.password) &&
-        Objects.equals(this.clientId, loginRequest.clientId);
+    SubscribeTenantApplicationRequest subscribeTenantApplicationRequest = (SubscribeTenantApplicationRequest) o;
+    return Objects.equals(this.clientId, subscribeTenantApplicationRequest.clientId) &&
+        Objects.equals(this.expireTime, subscribeTenantApplicationRequest.expireTime);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(username, password, clientId);
+    return Objects.hash(clientId, expireTime);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class LoginRequest {\n");
-    sb.append("    username: ").append(toIndentedString(username)).append("\n");
-    sb.append("    password: ").append(toIndentedString(password)).append("\n");
+    sb.append("class SubscribeTenantApplicationRequest {\n");
     sb.append("    clientId: ").append(toIndentedString(clientId)).append("\n");
+    sb.append("    expireTime: ").append(toIndentedString(expireTime)).append("\n");
     sb.append("}");
     return sb.toString();
   }

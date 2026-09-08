@@ -2,6 +2,7 @@ package saas.identity.shared.dto;
 
 import java.net.URI;
 import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import org.springframework.lang.Nullable;
@@ -16,32 +17,35 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * LoginRequest
+ * CreateSysUserRequest
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
-public class LoginRequest {
+public class CreateSysUserRequest {
 
   private String username;
 
   private String password;
 
-  private String clientId;
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private @Nullable String email;
 
-  public LoginRequest() {
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private @Nullable String mobile;
+
+  public CreateSysUserRequest() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public LoginRequest(String username, String password, String clientId) {
+  public CreateSysUserRequest(String username, String password) {
     this.username = username;
     this.password = password;
-    this.clientId = clientId;
   }
 
-  public LoginRequest username(String username) {
+  public CreateSysUserRequest username(String username) {
     this.username = username;
     return this;
   }
@@ -62,7 +66,7 @@ public class LoginRequest {
     this.username = username;
   }
 
-  public LoginRequest password(String password) {
+  public CreateSysUserRequest password(String password) {
     this.password = password;
     return this;
   }
@@ -71,7 +75,7 @@ public class LoginRequest {
    * Get password
    * @return password
    */
-  @NotNull @Size(min = 1, max = 128) 
+  @NotNull 
   @Schema(name = "password", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("password")
   public String getPassword() {
@@ -83,25 +87,46 @@ public class LoginRequest {
     this.password = password;
   }
 
-  public LoginRequest clientId(String clientId) {
-    this.clientId = clientId;
+  public CreateSysUserRequest email(@Nullable String email) {
+    this.email = email;
     return this;
   }
 
   /**
-   * Get clientId
-   * @return clientId
+   * Get email
+   * @return email
    */
-  @NotNull 
-  @Schema(name = "clientId", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("clientId")
-  public String getClientId() {
-    return clientId;
+  @jakarta.validation.constraints.Email 
+  @Schema(name = "email", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("email")
+  public @Nullable String getEmail() {
+    return email;
   }
 
-  @JsonProperty("clientId")
-  public void setClientId(String clientId) {
-    this.clientId = clientId;
+  @JsonProperty("email")
+  public void setEmail(@Nullable String email) {
+    this.email = email;
+  }
+
+  public CreateSysUserRequest mobile(@Nullable String mobile) {
+    this.mobile = mobile;
+    return this;
+  }
+
+  /**
+   * Get mobile
+   * @return mobile
+   */
+  
+  @Schema(name = "mobile", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("mobile")
+  public @Nullable String getMobile() {
+    return mobile;
+  }
+
+  @JsonProperty("mobile")
+  public void setMobile(@Nullable String mobile) {
+    this.mobile = mobile;
   }
 
   @Override
@@ -112,24 +137,26 @@ public class LoginRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    LoginRequest loginRequest = (LoginRequest) o;
-    return Objects.equals(this.username, loginRequest.username) &&
-        Objects.equals(this.password, loginRequest.password) &&
-        Objects.equals(this.clientId, loginRequest.clientId);
+    CreateSysUserRequest createSysUserRequest = (CreateSysUserRequest) o;
+    return Objects.equals(this.username, createSysUserRequest.username) &&
+        Objects.equals(this.password, createSysUserRequest.password) &&
+        Objects.equals(this.email, createSysUserRequest.email) &&
+        Objects.equals(this.mobile, createSysUserRequest.mobile);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(username, password, clientId);
+    return Objects.hash(username, password, email, mobile);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class LoginRequest {\n");
+    sb.append("class CreateSysUserRequest {\n");
     sb.append("    username: ").append(toIndentedString(username)).append("\n");
     sb.append("    password: ").append(toIndentedString(password)).append("\n");
-    sb.append("    clientId: ").append(toIndentedString(clientId)).append("\n");
+    sb.append("    email: ").append(toIndentedString(email)).append("\n");
+    sb.append("    mobile: ").append(toIndentedString(mobile)).append("\n");
     sb.append("}");
     return sb.toString();
   }
