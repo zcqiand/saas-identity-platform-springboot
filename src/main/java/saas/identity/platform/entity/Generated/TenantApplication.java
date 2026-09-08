@@ -10,13 +10,11 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 /**
- * DB-First scaffold：tenant_application（ADR-0025）。
- * 由 scripts/scaffold-entities.mjs 从 saas_dev 真库反推生成。
- * 手写业务逻辑（@PreUpdate、@Convert、@EntityListeners 等）
- * 通过 extends TenantApplication 叠加在 src/main/java/.../entity/TenantApplication.java。
+ * DB-First scaffold：tenant_application（ADR-0025）。 由 scripts/scaffold-entities.mjs 从 saas_dev
+ * 真库反推生成。 手写业务逻辑（@PreUpdate、@Convert、@EntityListeners 等） 通过 extends TenantApplication 叠加在
+ * src/main/java/.../entity/TenantApplication.java。
  *
- * 字段含义见 saas-identity-platform-shared/src/db/schema.ts tenantApplication。
-
+ * <p>字段含义见 saas-identity-platform-shared/src/db/schema.ts tenantApplication。
  */
 @Entity
 @Table(name = "tenant_application")

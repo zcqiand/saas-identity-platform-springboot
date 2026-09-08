@@ -10,13 +10,11 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 /**
- * DB-First scaffold：oauth_access_token（ADR-0025）。
- * 由 scripts/scaffold-entities.mjs 从 saas_dev 真库反推生成。
- * 手写业务逻辑（@PreUpdate、@Convert、@EntityListeners 等）
- * 通过 extends OauthAccessToken 叠加在 src/main/java/.../entity/OauthAccessToken.java。
+ * DB-First scaffold：oauth_access_token（ADR-0025）。 由 scripts/scaffold-entities.mjs 从 saas_dev
+ * 真库反推生成。 手写业务逻辑（@PreUpdate、@Convert、@EntityListeners 等） 通过 extends OauthAccessToken 叠加在
+ * src/main/java/.../entity/OauthAccessToken.java。
  *
- * 字段含义见 saas-identity-platform-shared/src/db/schema.ts oauthAccessToken。
-
+ * <p>字段含义见 saas-identity-platform-shared/src/db/schema.ts oauthAccessToken。
  */
 @Entity
 @Table(name = "oauth_access_token")

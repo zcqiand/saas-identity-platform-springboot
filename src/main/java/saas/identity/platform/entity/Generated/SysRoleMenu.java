@@ -8,13 +8,12 @@ import jakarta.persistence.Table;
 import java.util.UUID;
 
 /**
- * DB-First scaffold：sys_role_menu（ADR-0025）。
- * 由 scripts/scaffold-entities.mjs 从 saas_dev 真库反推生成。
- * 手写业务逻辑（@PreUpdate、@Convert、@EntityListeners 等）
- * 通过 extends SysRoleMenu 叠加在 src/main/java/.../entity/SysRoleMenu.java。
+ * DB-First scaffold：sys_role_menu（ADR-0025）。 由 scripts/scaffold-entities.mjs 从 saas_dev 真库反推生成。
+ * 手写业务逻辑（@PreUpdate、@Convert、@EntityListeners 等） 通过 extends SysRoleMenu 叠加在
+ * src/main/java/.../entity/SysRoleMenu.java。
  *
- * 字段含义见 saas-identity-platform-shared/src/db/schema.ts sysRoleMenu。
- * Composite PK：role_id + menu_id → 单独 SysRoleMenuId 类。
+ * <p>字段含义见 saas-identity-platform-shared/src/db/schema.ts sysRoleMenu。 Composite PK：role_id +
+ * menu_id → 单独 SysRoleMenuId 类。
  */
 @Entity
 @Table(name = "sys_role_menu")

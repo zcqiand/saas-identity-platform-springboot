@@ -7,8 +7,8 @@ import java.util.UUID;
 /**
  * DB-First scaffold：sys_role_menu composite PK（ADR-0025）。
  *
- * 由 scripts/scaffold-entities.mjs 从 saas_dev 真库反推生成。
- * 配套 @IdClass(SysRoleMenuId.class) 用在 SysRoleMenu。
+ * <p>由 scripts/scaffold-entities.mjs 从 saas_dev 真库反推生成。 配套 @IdClass(SysRoleMenuId.class) 用在
+ * SysRoleMenu。
  */
 public class SysRoleMenuId implements Serializable {
 
@@ -43,8 +43,7 @@ public class SysRoleMenuId implements Serializable {
     if (this == o) return true;
     if (!(o instanceof SysRoleMenuId)) return false;
     SysRoleMenuId that = (SysRoleMenuId) o;
-    return         Objects.equals(roleId, that.roleId) &&
-        Objects.equals(menuId, that.menuId);
+    return Objects.equals(roleId, that.roleId) && Objects.equals(menuId, that.menuId);
   }
 
   @Override

@@ -7,8 +7,8 @@ import java.util.UUID;
 /**
  * DB-First scaffold：tenant_member_role composite PK（ADR-0025）。
  *
- * 由 scripts/scaffold-entities.mjs 从 saas_dev 真库反推生成。
- * 配套 @IdClass(TenantMemberRoleId.class) 用在 TenantMemberRole。
+ * <p>由 scripts/scaffold-entities.mjs 从 saas_dev 真库反推生成。 配套 @IdClass(TenantMemberRoleId.class) 用在
+ * TenantMemberRole。
  */
 public class TenantMemberRoleId implements Serializable {
 
@@ -43,8 +43,7 @@ public class TenantMemberRoleId implements Serializable {
     if (this == o) return true;
     if (!(o instanceof TenantMemberRoleId)) return false;
     TenantMemberRoleId that = (TenantMemberRoleId) o;
-    return         Objects.equals(memberId, that.memberId) &&
-        Objects.equals(roleId, that.roleId);
+    return Objects.equals(memberId, that.memberId) && Objects.equals(roleId, that.roleId);
   }
 
   @Override

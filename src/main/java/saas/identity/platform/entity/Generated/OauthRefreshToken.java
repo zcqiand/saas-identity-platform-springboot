@@ -10,13 +10,11 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 /**
- * DB-First scaffold：oauth_refresh_token（ADR-0025）。
- * 由 scripts/scaffold-entities.mjs 从 saas_dev 真库反推生成。
- * 手写业务逻辑（@PreUpdate、@Convert、@EntityListeners 等）
- * 通过 extends OauthRefreshToken 叠加在 src/main/java/.../entity/OauthRefreshToken.java。
+ * DB-First scaffold：oauth_refresh_token（ADR-0025）。 由 scripts/scaffold-entities.mjs 从 saas_dev
+ * 真库反推生成。 手写业务逻辑（@PreUpdate、@Convert、@EntityListeners 等） 通过 extends OauthRefreshToken 叠加在
+ * src/main/java/.../entity/OauthRefreshToken.java。
  *
- * 字段含义见 saas-identity-platform-shared/src/db/schema.ts oauthRefreshToken。
-
+ * <p>字段含义见 saas-identity-platform-shared/src/db/schema.ts oauthRefreshToken。
  */
 @Entity
 @Table(name = "oauth_refresh_token")

@@ -10,13 +10,11 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 /**
- * DB-First scaffold：sys_menu（ADR-0025）。
- * 由 scripts/scaffold-entities.mjs 从 saas_dev 真库反推生成。
- * 手写业务逻辑（@PreUpdate、@Convert、@EntityListeners 等）
- * 通过 extends SysMenu 叠加在 src/main/java/.../entity/SysMenu.java。
+ * DB-First scaffold：sys_menu（ADR-0025）。 由 scripts/scaffold-entities.mjs 从 saas_dev 真库反推生成。
+ * 手写业务逻辑（@PreUpdate、@Convert、@EntityListeners 等） 通过 extends SysMenu 叠加在
+ * src/main/java/.../entity/SysMenu.java。
  *
- * 字段含义见 saas-identity-platform-shared/src/db/schema.ts sysMenu。
-
+ * <p>字段含义见 saas-identity-platform-shared/src/db/schema.ts sysMenu。
  */
 @Entity
 @Table(name = "sys_menu")
