@@ -16,6 +16,7 @@ import java.util.UUID;
  * 通过 extends OauthCode 叠加在 src/main/java/.../entity/OauthCode.java。
  *
  * 字段含义见 saas-identity-platform-shared/src/db/schema.ts oauthCode。
+
  */
 @Entity
 @Table(name = "oauth_code")

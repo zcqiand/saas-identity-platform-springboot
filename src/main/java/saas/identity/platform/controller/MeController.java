@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.RestController;
 import saas.identity.platform.entity.Generated.SysMenu;
 import saas.identity.platform.entity.Generated.SysRoleMenu;
@@ -56,6 +59,10 @@ public class MeController implements MeApi {
   @Override
   public ResponseEntity<CurrentUser> meWhoami() {
     CurrentUser u = new CurrentUser();
+    UUID userId = currentUserId();
+    if (userId != null) {
+      u.setCurrentTenantId(userId); // 占位：tenantId 后续接 meListMyTenants 拿真值
+    }
     return ResponseEntity.ok(u);
   }
 
@@ -71,11 +78,62 @@ public class MeController implements MeApi {
     return ResponseEntity.ok(r);
   }
 
+  /**
+   * M04.F04.I08 — 当前用户有效菜单装配。
+   *
+   * <p>userId 提取路径（M04.F04 §2.3 + ADR-0020 路线 A）：
+   * <ul>
+   *   <li>生产：JwtAuthenticationToken.getToken().getSubject() === userId（UUID string）</li>
+   *   <li>测试：@WithMockUser 时 principal 是 User，getName() 返回 username（仍可作为 lookup key）</li>
+   *   <li>无认证：返回 Map.of()</li>
+   * </ul>
+   */
   @Override
   public ResponseEntity<Map<String, List<EffectiveMenuNode>>> meGetMyMenus(String clientId) {
-    // skeleton：当前未接 JWT，从 query 拿 userId（开发期方便测试）
-    // 接入 JWT 后：UUID userId = UUID.fromString(jwt.getSubject());
-    return ResponseEntity.ok(Map.of());
+    UUID userId = currentUserId();
+    if (userId == null) {
+      return ResponseEntity.ok(Map.of());
+    }
+    return ResponseEntity.ok(assembleMenus(userId));
+  }
+
+  /**
+   * 从 SecurityContextHolder 提取当前用户 ID。
+   *
+   * <p>支持三种 principal：
+   * <ol>
+   *   <li>Jwt（生产 + smoke test）：subject = userId</li>
+   *   <li>User / UsernamePasswordAuthenticationToken（@WithMockUser 测试）：name = username</li>
+   *   <li>无认证（permitAll 路径意外走到）：null</li>
+   * </ol>
+   *
+   * 返回 null 表示无认证上下文，由调用方决定回退策略。
+   */
+  private UUID currentUserId() {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (auth == null || !auth.isAuthenticated()) {
+      return null;
+    }
+    Object principal = auth.getPrincipal();
+    // 生产：Jwt principal
+    if (principal instanceof Jwt jwt) {
+      try {
+        return UUID.fromString(jwt.getSubject());
+      } catch (IllegalArgumentException e) {
+        return null;
+      }
+    }
+    // 测试：User principal — name 可能是 username 或 "user"
+    String name = auth.getName();
+    if (name == null) {
+      return null;
+    }
+    try {
+      return UUID.fromString(name);
+    } catch (IllegalArgumentException e) {
+      // 测试场景：username 不是 UUID 格式；assembleMenus 找不到 member 时返回 Map.of()
+      return null;
+    }
   }
 
   /**

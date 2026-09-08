@@ -16,6 +16,7 @@ import java.util.UUID;
  * 通过 extends OauthRefreshToken 叠加在 src/main/java/.../entity/OauthRefreshToken.java。
  *
  * 字段含义见 saas-identity-platform-shared/src/db/schema.ts oauthRefreshToken。
+
  */
 @Entity
 @Table(name = "oauth_refresh_token")

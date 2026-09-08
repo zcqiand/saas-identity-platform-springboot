@@ -186,6 +186,32 @@ async function main() {
   }
 
   // 3. 读所有列
+  // 3a. 查 composite PK（PG information_schema.table_constraints）
+  //  - table_name → array of PK column names (in order)
+  //  - 单列 PK 不需要 IdClass，scaffold 沿用现有 @GeneratedValue UUID 模式
+  //  - 2+ 列 PK 需要生成 {Table}Id @IdClass
+  const { rows: pkRows } = await client.query(`
+    SELECT tc.table_name, kcu.column_name, kcu.ordinal_position
+    FROM information_schema.table_constraints tc
+    JOIN information_schema.key_column_usage kcu
+      ON tc.constraint_name = kcu.constraint_name
+     AND tc.table_schema = kcu.table_schema
+    WHERE tc.table_schema = 'public'
+      AND tc.constraint_type = 'PRIMARY KEY'
+    ORDER BY tc.table_name, kcu.ordinal_position
+  `);
+  const compositePKs = new Map(); // tableName -> [columnName, ...]
+  const singlePKCol = new Map();  // tableName -> columnName
+  const pkColsByTable = new Map();
+  for (const r of pkRows) {
+    if (!pkColsByTable.has(r.table_name)) pkColsByTable.set(r.table_name, []);
+    pkColsByTable.get(r.table_name).push(r.column_name);
+  }
+  for (const [tableName, cols] of pkColsByTable) {
+    if (cols.length >= 2) compositePKs.set(tableName, cols);
+    else if (cols.length === 1) singlePKCol.set(tableName, cols[0]);
+  }
+
   for (const tbl of filtered) {
     const { rows: cols } = await client.query(
       `
@@ -199,6 +225,8 @@ async function main() {
     );
 
     const className = snakeToPascal(tbl.table_name);
+    const pkCols = compositePKs.get(tbl.table_name) ?? null;
+    const isCompositePK = pkCols != null;
 
     // 收集 imports
     const importsSet = new Set([
@@ -206,9 +234,14 @@ async function main() {
       "jakarta.persistence.Table",
       "jakarta.persistence.Id",
       "jakarta.persistence.Column",
-      "jakarta.persistence.GeneratedValue",
-      "jakarta.persistence.GenerationType",
     ]);
+    if (!isCompositePK) {
+      importsSet.add("jakarta.persistence.GeneratedValue");
+      importsSet.add("jakarta.persistence.GenerationType");
+    }
+    if (isCompositePK) {
+      importsSet.add("jakarta.persistence.IdClass");
+    }
     for (const c of cols) {
       const mapped = mapJavaType(c.data_type, c.udt_name);
       mapped.imports?.forEach((i) => importsSet.add(i));
@@ -221,13 +254,16 @@ async function main() {
       const mapped = mapJavaType(c.data_type, c.udt_name);
       const camel = snakeToCamel(c.column_name);
       const nullable = c.is_nullable === "YES";
+      const isPKCol = isCompositePK && pkCols.includes(c.column_name);
 
       let annotations = [];
-      if (c.column_name === "id") {
+      if (!isCompositePK && c.column_name === singlePKCol.get(tbl.table_name)) {
         annotations.push("@Id");
         annotations.push(
           '@GeneratedValue(strategy = GenerationType.UUID)',
         );
+      } else if (isPKCol) {
+        annotations.push("@Id");
       }
       let colDef = `name = "${c.column_name}"`;
       if (mapped.columnType) colDef += `, columnDefinition = "${mapped.columnType}"`;
@@ -256,6 +292,13 @@ async function main() {
       })
       .join("\n\n");
 
+    const idClassAnnotation = isCompositePK
+      ? `\n@IdClass(${className}Id.class)`
+      : "";
+    const classHeader = isCompositePK
+      ? ` * Composite PK：${pkCols.join(" + ")} → 单独 ${className}Id 类。`
+      : "";
+
     const java = `package saas.identity.platform.entity.Generated;
 
 ${imports.map((i) => `import ${i};`).join("\n")}
@@ -267,9 +310,10 @@ ${imports.map((i) => `import ${i};`).join("\n")}
  * 通过 extends ${className} 叠加在 src/main/java/.../entity/${className}.java。
  *
  * 字段含义见 saas-identity-platform-shared/src/db/schema.ts ${snakeToCamel(tbl.table_name)}。
+${classHeader}
  */
 @Entity
-@Table(name = "${tbl.table_name}")
+@Table(name = "${tbl.table_name}")${idClassAnnotation}
 public class ${className} {
 
 ${fields.join("\n\n")}
@@ -281,11 +325,123 @@ ${accessors}
     const outPath = resolve(OUTPUT_DIR, `${className}.java`);
     mkdirSync(OUTPUT_DIR, { recursive: true });
     writeFileSync(outPath, java);
-    console.log(`[scaffold-entities]   → ${tbl.table_name} → entity/Generated/${className}.java (${cols.length} 字段)`);
+    console.log(
+      `[scaffold-entities]   → ${tbl.table_name} → entity/Generated/${className}.java (${cols.length} 字段${isCompositePK ? ", composite PK " + pkCols.join("+") : ""})`,
+    );
+
+    // composite PK → 额外生成 <Table>Id.java
+    if (isCompositePK) {
+      emitIdClass(tbl.table_name, className, pkCols, cols);
+    }
   }
 
   await client.end();
   console.log(`[scaffold-entities] OK — ${filtered.length} entity 类已生成到 ${OUTPUT_DIR}`);
+}
+
+/**
+ * emitIdClass — composite PK 表生成 {Table}Id.java（@IdClass 配套类）。
+ *
+ * - 实现 Serializable（JPA 要求）
+ * - 实现 equals + hashCode（基于所有 PK 字段）
+ * - 包含默认构造器 + 全参构造器 + 各字段 getter/setter
+ * - 包路径与 entity 同：saas.identity.platform.entity.Generated
+ */
+function emitIdClass(tableName, entityClassName, pkColNames, allCols) {
+  const pkColInfos = pkColNames.map((colName) => {
+    const col = allCols.find((c) => c.column_name === colName);
+    return {
+      colName,
+      javaField: snakeToCamel(colName),
+      javaType: mapJavaType(col.data_type, col.udt_name).java,
+      import: mapJavaType(col.data_type, col.udt_name).imports?.[0],
+    };
+  });
+
+  const imports = new Set([
+    "java.io.Serializable",
+    "java.util.Objects",
+  ]);
+  for (const info of pkColInfos) {
+    if (info.import) imports.add(info.import);
+  }
+  const sortedImports = Array.from(imports).sort();
+
+  const fields = pkColInfos
+    .map((i) => `  private ${i.javaType} ${i.javaField};`)
+    .join("\n");
+
+  const ctor = pkColInfos
+    .map((i) => `${i.javaType} ${i.javaField}`)
+    .join(", ");
+
+  const accessors = pkColInfos
+    .map((i) => {
+      const pascal = i.javaField[0].toUpperCase() + i.javaField.slice(1);
+      return [
+        `  public ${i.javaType} get${pascal}() {`,
+        `    return ${i.javaField};`,
+        `  }`,
+        ``,
+        `  public void set${pascal}(${i.javaType} ${i.javaField}) {`,
+        `    this.${i.javaField} = ${i.javaField};`,
+        `  }`,
+      ].join("\n");
+    })
+    .join("\n\n");
+
+  const equalsBody = pkColInfos
+    .map((i) => `        Objects.equals(${i.javaField}, that.${i.javaField})`)
+    .join(" &&\n");
+
+  const hashBody = pkColInfos
+    .map((i) => `${i.javaField}`)
+    .join(", ");
+
+  const java = `package saas.identity.platform.entity.Generated;
+
+${sortedImports.map((i) => `import ${i};`).join("\n")}
+
+/**
+ * DB-First scaffold：${tableName} composite PK（ADR-0025）。
+ *
+ * 由 scripts/scaffold-entities.mjs 从 saas_dev 真库反推生成。
+ * 配套 @IdClass(${entityClassName}Id.class) 用在 ${entityClassName}。
+ */
+public class ${entityClassName}Id implements Serializable {
+
+${fields}
+
+  public ${entityClassName}Id() {}
+
+  public ${entityClassName}Id(${ctor}) {
+${pkColInfos
+      .map((i) => `    this.${i.javaField} = ${i.javaField};`)
+      .join("\n")}
+  }
+
+${accessors}
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof ${entityClassName}Id)) return false;
+    ${entityClassName}Id that = (${entityClassName}Id) o;
+    return ${equalsBody};
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(${hashBody});
+  }
+}
+`;
+
+  const outPath = resolve(OUTPUT_DIR, `${entityClassName}Id.java`);
+  writeFileSync(outPath, java);
+  console.log(
+    `[scaffold-entities]   → ${tableName} → entity/Generated/${entityClassName}Id.java (PK class for ${pkColNames.join("+")})`,
+  );
 }
 
 main().catch((err) => {

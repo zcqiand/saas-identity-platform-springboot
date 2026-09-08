@@ -16,6 +16,7 @@ import java.util.UUID;
  * 通过 extends SysRole 叠加在 src/main/java/.../entity/SysRole.java。
  *
  * 字段含义见 saas-identity-platform-shared/src/db/schema.ts sysRole。
+
  */
 @Entity
 @Table(name = "sys_role")

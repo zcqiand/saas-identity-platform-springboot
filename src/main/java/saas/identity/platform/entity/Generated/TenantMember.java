@@ -16,6 +16,7 @@ import java.util.UUID;
  * 通过 extends TenantMember 叠加在 src/main/java/.../entity/TenantMember.java。
  *
  * 字段含义见 saas-identity-platform-shared/src/db/schema.ts tenantMember。
+
  */
 @Entity
 @Table(name = "tenant_member")

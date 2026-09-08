@@ -16,6 +16,7 @@ import java.util.UUID;
  * 通过 extends OauthClient 叠加在 src/main/java/.../entity/OauthClient.java。
  *
  * 字段含义见 saas-identity-platform-shared/src/db/schema.ts oauthClient。
+
  */
 @Entity
 @Table(name = "oauth_client")

@@ -16,6 +16,7 @@ import java.util.UUID;
  * 通过 extends OauthAccessToken 叠加在 src/main/java/.../entity/OauthAccessToken.java。
  *
  * 字段含义见 saas-identity-platform-shared/src/db/schema.ts oauthAccessToken。
+
  */
 @Entity
 @Table(name = "oauth_access_token")

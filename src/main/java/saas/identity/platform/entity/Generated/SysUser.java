@@ -16,6 +16,7 @@ import java.util.UUID;
  * 通过 extends SysUser 叠加在 src/main/java/.../entity/SysUser.java。
  *
  * 字段含义见 saas-identity-platform-shared/src/db/schema.ts sysUser。
+
  */
 @Entity
 @Table(name = "sys_user")
