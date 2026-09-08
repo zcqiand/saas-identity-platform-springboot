@@ -57,6 +57,7 @@ const PG_TYPE_MAP = {
   text: { java: "String" },
   "character varying": { java: "String" },
   integer: { java: "Integer", box: true },
+  smallint: { java: "Short", box: true },
   bigint: { java: "Long", box: true },
   boolean: { java: "Boolean", box: true },
   jsonb: {
