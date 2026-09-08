@@ -18,10 +18,10 @@ flowchart TD
 
 | 步骤 | 名称 | 角色 | 输入 | 输出 | 状态流转 | 支撑功能子项 |
 |---|---|---|---|---|---|---|
-| S01 | 授权码签发 | 资源方应用（client） | client_id / redirect_uri / scopes / 用户会话 | saas-code-{ts}-{rand}（TTL 10min，落 oauth_codes） | code: issued → consumed | M04.F02.I06 |
-| S02 | 授权码换令牌 | 资源方应用 | code + client 凭据 + redirect_uri | access token（HS256 JwtIssuer）+ refresh_token（TTL 7d） | code: issued → consumed; refresh: active | M04.F02.I07 |
+| S01 | 授权码签发 | 资源方应用（client） | client_id / redirect_uri / scopes / 用户会话 | saas-code-{ts}-{rand}（TTL 10min，落 oauth_codes） | code: issued → consumed | M04.F03.I07 |
+| S02 | 授权码换令牌 | 资源方应用 | code + client 凭据 + redirect_uri | access token（HS256 JwtIssuer）+ refresh_token（TTL 7d） | code: issued → consumed; refresh: active | M04.F03.I08 |
 | S03 | 访问资源 | 资源方应用 | Bearer access token | 资源方本地校验后的业务响应 | — | （资源方仓条目） |
-| S04 | 令牌刷新 | 资源方应用 | refresh_token | 新 access + 新 refresh（旋转换发） | refresh: old → consumed, new → active | M04.F02.I08 |
+| S04 | 令牌刷新 | 资源方应用 | refresh_token | 新 access + 新 refresh（旋转换发） | refresh: old → consumed, new → active | M04.F03.I09 |
 
 ### 评审时问这四个问题
 
@@ -40,4 +40,42 @@ flowchart TD
 | M09.F03.I03 | 菜单树装配（menuIds → menus 表 + 父链补全） | 接口 | GET /me/menus 装配链路第二步；同上 |
 | M09.F03.I04 | app 分组映射（按 app.code 输出 Map<appCode, List<EffectiveMenuNode>>） | 接口 | GET /me/menus 装配链路第三步；同上 |
 
-（本批次 FLOW-OAUTH-01 登记的 M04.F02.I06-I08 均已归入授权码流程。）
+（本批次 FLOW-OAUTH-01 登记的 M04.F03.I07-I09 均已归入授权码流程。）
+
+## FLOW-MENU-01 平台级菜单 CRUD 与结构维护（v0.2.x，NSwag codegen from shared tsp routes/admin-app-menus.tsp）
+
+> 平台 admin 在某 OAuth 应用（appId）下增删改菜单节点，并维护节点之间的父链 / 排序。
+
+```mermaid
+flowchart TD
+    M1[创建菜单节点] --> M2[列表展示]
+    M2 --> M3[更新菜单 / 切换父级]
+    M2 --> M4[同级排序]
+    M3 --> M5[删除菜单]
+    M4 --> M2
+```
+
+| 步骤 | 名称 | 角色 | 输入 | 输出 | 状态流转 | 支撑功能子项 |
+|---|---|---|---|---|---|---|
+| M1 | 创建菜单节点 | 平台 admin | appId + Menu payload | 新 Menu 记录（status=active） | — | M08.F01.I02 |
+| M2 | 列表展示 | 平台 admin | appId | Menu[]（扁平列表，前端按 parentId 自构树） | — | M08.F01.I01 |
+| M3 | 更新菜单 / 切换父级 | 平台 admin | menuId + patch / {parentId} | 更新后的 Menu | — | M08.F01.I04 / M08.F02.I07 |
+| M4 | 同级排序 | 平台 admin | menuId + ReorderMenuRequest（menuIds 数组） | sortOrder 更新后的 Menu[] | — | M08.F02.I06 |
+| M5 | 删除菜单 | 平台 admin | menuId | 204 / 404 | menus.DELETE | M08.F01.I05 |
+
+## FLOW-ROLE-MENU-01 角色 ↔ 菜单 授权读写（v0.2.x，NSwag codegen from shared tsp routes/tenant-role-menus.tsp）
+
+> tenant admin 在某角色下整批设置 / 查询 / 清空菜单授权。
+
+```mermaid
+flowchart TD
+    R1[查角色已授权菜单] --> R2[整批设置]
+    R2 --> R1
+    R1 --> R3[清空]
+```
+
+| 步骤 | 名称 | 角色 | 输入 | 输出 | 状态流转 | 支撑功能子项 |
+|---|---|---|---|---|---|---|
+| R1 | 查角色已授权菜单 | tenant admin | roleId | RoleMenuGrant{roleId,tenantId,menuIds,updatedAt} | — | M09.F01.I01 |
+| R2 | 整批设置 | tenant admin | roleId + SetRoleMenusRequest{menuIds:[]} | RoleMenuGrant（UPSERT 整批替换） | role_menu_grants: 旧 menuIds → 新 menuIds | M09.F02.I01 |
+| R3 | 清空 | tenant admin | roleId | 204 | role_menu_grants.DELETE | M09.F02.I03 |

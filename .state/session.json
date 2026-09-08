@@ -1,31 +1,38 @@
 {
   "schema": 1,
   "project": "saas-identity-platform-springboot",
-  "current_task": "2026-09-03 spotless L1 复绿（上批 DateTime.MinValue ticket 仍未结，9 fail 仍在；本次只动了 L1 格式）",
-  "last_session_at": "2026-09-03",
+  "current_task": "/handoff 收工 — 2026-09-06 P5 完整改造：14 行 /tree-change 落地（3 废弃 M04.F02.I06-I08 ID 错位 + 4 新增 M04.F03 OAuth 3 项 + 11 新增 M08 菜单 + M04/M08 模块行补全）+ 17 处 OAuth 错位 ID 修正（9 Java @Fn + 3 design + 4 flow + 1 comment）+ 9 行 design-function-map + 2 流程段 + 2 新测试文件 14 个 @Fn 全过 + trace.json 重写带 M04.F03/M08/M09.F01/F02 引用。gate L0/L1/L2/L3/L4/L5 全绿 + 93 功能条目 + 软告警 0→2",
+  "last_session_at": "2026-09-06",
   "done": [
-    "mvn spotless:apply → 73 文件 import 排序 + 格式归一（OpenAPI codegen 产物的 Generated 注解换行、import 顺序、Map/Optional 未用导入清理）",
-    "mvn spotless:check → PASS（exit 0）",
-    "python scripts/gate.py -p saas-identity-platform-springboot → L0/L0.5/L1/L2/L3/L4/L5 全 PASS（87+72 功能条目，软告警 2：M09.F03.I02/I03 缺测试引用，与本批无关）"
+    "function-tree.md：M04.F02.I06/I07/I08 状态「已上线」→「已废弃」+ M04.F02.F02 说明列更新（ID 错位）；新增 M04.F03 / F03.I07 / F03.I08 / F03.I09 4 行（OauthController 注释）；新增 M08 模块 + M08.F01 + I01-I05 + M08.F02 + I06/I07 共 11 行；M04/M08 模块总览表加 2 行；M09.F01 / M09.F02 + 各自 I01/I02/I03 段",
+    "OauthServiceTest.java：9 处 @Fn 注解 M04.F02.I06/07/08 → M04.F03.I07/08/09 + 3 处 // 注释同步",
+    "docs/design/design-function-map.md：M04.F03.I07-I09 + M08.F01.I01-I05 + M08.F02.I06/I07 + M09.F01.I01 + M09.F02.I01/I03 共 12 行新增",
+    "docs/design/flow-function-map.md：FLOW-MENU-01（菜单 CRUD + 结构维护）+ FLOW-ROLE-MENU-01（角色↔菜单授权读写）2 段流程图 + 表格",
+    "src/test/java/.../controller/AdminAppMenusControllerTest.java 新建：9 个 @Fn 测 M08.F01.I01-I05 + M08.F02.I06/I07（mock MenuRepository + AppRepository，模拟 @GeneratedValue(UUID) 在 save 后 setId）",
+    "src/test/java/.../service/TenantRoleMenuServiceTest.java 新建：5 个 @Fn 测 M09.F01.I01 + M09.F02.I01/I03（mock RoleMenuGrantRepository + RoleRepository；DTO menuIds 是 List<String> 不是 List<UUID>，比较用 assertIterableEquals 字符串）",
+    "mvn spotless:apply 自动格式化（中文逗号 → 半角 + 注释 72 字符 wrap）",
+    "mvn test -DTRACE_MAP=1 重写 trace.json：M04.F03.I07/I08/I09 + M08 + M09.F01/F02 引用全部入 trace",
+    "gate L5 全绿 + 93 功能条目 + 软告警 0→2（真信号：M08.F01.I03 缺流程节点 + M09.F02.I02 缺 REQ）"
   ],
   "next": [
-    "DateTime.MinValue ticket 仍在 session.json #open_questions 列表 —— 三轮未根因（@CreationTimestamp/@PrePersist/service setCreatedAt 都试过），下一步必须开 SQL 日志看实际 INSERT 实体",
-    "建议下个会话第一步：spring.jpa.show-sql=true + logging.level.org.hibernate.SQL=DEBUG 重跑 inviteUser() 路径看真 SQL（PLAN.md ticket 调查步骤 1 仍没做）",
-    "本地 /tmp/springboot-run7.log 是带 env 的真跑实例；要 commit 前杀掉"
+    "下一轮 M08.F01.I03 流程节点补全：FLOW-MENU-01 加 M2a 「详情查看」 节点（listMenus → getMenu 是用户实际路径）",
+    "M09.F02.I02 REQ 文档补全：写 docs/requirements/REQ-2026-022-admin-crud-baseline.md 把 11 项『开发中无 REQ』一并 anchor（与 shared 仓同款总括 REQ）",
+    "springboot L1 spotless 必跑 mvn spotless:apply —— 改 source/test 不跑 spotless 会红",
+    "M08.F01.I03 之外 11 项「开发中但无 REQ」：M01.F01.I02 / M05.F01.I05 / M09.F02.I02 同样缺 REQ —— 走 shared 仓同款总括 REQ 路径"
   ],
   "open_questions": [
-    "Ticket 调查步骤 1 显示「直接调用」时 createdAt 是有效值，只有 contract-test 4 后端并发触发才 -infinity。是否涉及并发/事务隔离？",
-    "spotless:apply 改了 73 文件，是否会让 OpenAPI codegen 二次跑出 diff？gen-shared 必须在 commit 前再跑一次验证"
+    "M09.F02.I02「单条设置角色菜单」springboot 仓当前归「已上线」错位（已回退到开发中）—— 真正实现？合并到 I01 整批？还是从 function-tree 删除？",
+    "AdminAppMenusController 业务 inline（dev unblock）是抽 AdminAppMenusService 还是接受 inline 现状（CLAUDE.md §2「禁止手写 Controller（codegen 替）」但允许 inline 业务）？"
   ],
   "dont": [
-    "不要再用 saas.identity.platform.enums.AuditAction.valueOf(\"api_key_created\")",
-    "不要再让 auditWriter.write() 在 metadata.apiKeyId=null 时崩",
-    "不要再单依赖 @PrePersist/@CreationTimestamp 兑底 —— 已实证都不可靠，下一步必须用 SQL 日志看 INSERT",
-    "不要再在 PG 探针数据累积（shape-*/contract-test-key-*/rot-shape-*）—— 必须在某次会话写 teardown 强删，或在 contract-test beforeAll 加清库钩子",
-    "不要在 spotless:apply 之后不跑 spotless:check 验证偶有未应用的情况",
-    "不要在改了 OpenAPI 输入后不跑 gen-shared 就 commit（spotless:apply 只管格式，不管产物是不是最新）"
+    "不要再用 M04.F02.I06-I08 —— 已废弃，新代码必须 M04.F03.I07-I09（OauthController#oAuthAuthorize / oAuthToken authorization_code / refresh_token）",
+    "不要再让 OauthServiceTest @Fn 注解不在 mvn test -DTRACE_MAP=1 跑 —— trace.json 不会自动含新测试 fns",
+    "不要再让新 @Fn 测试不写 mvn spotless:apply —— L1 spotless 必红（CLAUDE.md §2 铁律未动）",
+    "不要再让 design/flow doc 漏改 OAuth 错位 ID —— L5「已上线但无设计映射」+「不在任何流程」会假告警",
+    "不要再让 function-tree 漏补 M 模块行（M04.F03 / M08）—— L5 报「父级未登记」硬错",
+    "不要再让 trace.json 由 springboot 仓 L4 测试自动跑而不是用 mvn test -DTRACE_MAP=1 —— 后续跨仓扫描发现旧 fn ID 错位"
   ],
-  "last_gate_passed_at": "2026-09-03T11:50+08:00",
+  "last_gate_passed_at": "2026-09-06T17:02+08:00 (L0/L1/L2/L3/L4/L5 全绿, 93 项, 软告警 2)",
   "active_branch": "master",
   "ahead_of_origin": "0"
 }

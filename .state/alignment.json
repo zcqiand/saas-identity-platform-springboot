@@ -2,12 +2,19 @@
   "schema": 1,
   "project": "saas-identity-platform-springboot",
   "functions": {
-    "modules": 8,
-    "features": 15,
-    "items": 49
+    "modules": 9,
+    "features": 21,
+    "items": 63
   },
-  "warnings_total": 0,
-  "warnings": {},
+  "warnings_total": 2,
+  "warnings": {
+    "已上线但不在任何流程且非孤儿白名单": [
+      "M08.F01.I03"
+    ],
+    "开发中但无需求文档引用": [
+      "M09.F02.I02"
+    ]
+  },
   "unreachable_shipped": [],
   "function_map": {
     "M00.F01.I01": {
@@ -19,7 +26,8 @@
       "designs": [],
       "tests": [
         "annotationIsReadable()",
-        "list_returnsPage()"
+        "list_returnsPage()",
+        "output\\saas-identity-platform-contract-test\\tests\\admin-tenants.test.ts:1024 (path)"
       ],
       "entry": []
     },
@@ -31,7 +39,8 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "create_returnsTenant()"
+        "create_returnsTenant()",
+        "output\\saas-identity-platform-contract-test\\tests\\admin-tenants.test.ts:1024 (path)"
       ],
       "entry": []
     },
@@ -82,6 +91,10 @@
       "flows": [],
       "designs": [],
       "tests": [
+        "output\\saas-identity-platform-contract-test\\tests\\me.test.ts:612 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\me.test.ts:755 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\path.test.ts:1066 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\path.test.ts:1111 (path)",
         "whoami_returnsCurrentUser()",
         "whoami_throwsIfUserMissing()"
       ],
@@ -95,7 +108,9 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "listMyTenants_excludesRemoved()"
+        "listMyTenants_excludesRemoved()",
+        "output\\saas-identity-platform-contract-test\\tests\\me-tenants.test.ts:19 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\me-tenants.test.ts:525 (path)"
       ],
       "entry": []
     },
@@ -107,6 +122,8 @@
       "flows": [],
       "designs": [],
       "tests": [
+        "output\\saas-identity-platform-contract-test\\tests\\me-switch.test.ts:2204 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\me-switch.test.ts:729 (path)",
         "switchTenant_returnsToken()",
         "switchTenant_throwsIfNotMember()"
       ],
@@ -120,7 +137,11 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "listUsers_returnsPage()"
+        "listUsers_returnsPage()",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-users-read.test.ts:2491 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-users-read.test.ts:957 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-users-write-2.test.ts:1237 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-users-write.test.ts:985 (path)"
       ],
       "entry": []
     },
@@ -137,7 +158,12 @@
       ],
       "tests": [
         "createUser_returnsUser()",
-        "createUser_writesAuditEvent()"
+        "createUser_writesAuditEvent()",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-users-read.test.ts:2491 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-users-read.test.ts:957 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-users-write-2.test.ts:1237 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-users-write.test.ts:53 (annot)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-users-write.test.ts:985 (path)"
       ],
       "entry": []
     },
@@ -149,7 +175,8 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "getUser_throwsNoSuchIfMissing()"
+        "getUser_throwsNoSuchIfMissing()",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-users-read.test.ts:3661 (path)"
       ],
       "entry": []
     },
@@ -161,6 +188,7 @@
       "flows": [],
       "designs": [],
       "tests": [
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-users-read.test.ts:3661 (path)",
         "updateUser_throwsNoSuchIfMissing()"
       ],
       "entry": []
@@ -173,7 +201,8 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "deleteUser_throwsIfMissing()"
+        "deleteUser_throwsIfMissing()",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-users-read.test.ts:3661 (path)"
       ],
       "entry": []
     },
@@ -227,7 +256,9 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "list_returnsPage()"
+        "list_returnsPage()",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:1078 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-write.test.ts:1167 (path)"
       ],
       "entry": []
     },
@@ -239,7 +270,9 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "create_returnsRole()"
+        "create_returnsRole()",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:1078 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-write.test.ts:1167 (path)"
       ],
       "entry": []
     },
@@ -252,7 +285,8 @@
       "designs": [],
       "tests": [
         "get_returnsRole()",
-        "get_throwsIfMissing()"
+        "get_throwsIfMissing()",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:2381 (path)"
       ],
       "entry": []
     },
@@ -264,6 +298,7 @@
       "flows": [],
       "designs": [],
       "tests": [
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:2381 (path)",
         "update_appliesAndSaves()"
       ],
       "entry": []
@@ -277,7 +312,8 @@
       "designs": [],
       "tests": [
         "delete_noopWhenMissing()",
-        "delete_removesWhenPresent()"
+        "delete_removesWhenPresent()",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:2381 (path)"
       ],
       "entry": []
     },
@@ -303,7 +339,10 @@
       "designs": [],
       "tests": [
         "login_success_returnsToken()",
-        "login_success_writesAuditEvent()"
+        "login_success_writesAuditEvent()",
+        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:1221 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:1537 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:2331 (path)"
       ],
       "entry": []
     },
@@ -328,7 +367,8 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "oidcCallback_returnsMockToken()"
+        "oidcCallback_returnsMockToken()",
+        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:6226 (path)"
       ],
       "entry": []
     },
@@ -340,6 +380,8 @@
       "flows": [],
       "designs": [],
       "tests": [
+        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:4255 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:5439 (path)",
         "refresh_badToken_throws()",
         "refresh_returnsNewToken()"
       ],
@@ -353,7 +395,8 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "logout_isNoop()"
+        "logout_isNoop()",
+        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:3307 (path)"
       ],
       "entry": []
     },
@@ -374,7 +417,9 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "output\\saas-identity-platform-contract-test\\tests\\admin-apps-write.test.ts:888 (path)"
+      ],
       "entry": []
     },
     "M04.F01.I02": {
@@ -384,7 +429,9 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "output\\saas-identity-platform-contract-test\\tests\\admin-apps-write.test.ts:888 (path)"
+      ],
       "entry": []
     },
     "M04.F01.I03": {
@@ -419,6 +466,36 @@
     },
     "M04.F02.I06": {
       "name": "授权码签发",
+      "status": "已废弃",
+      "type": "接口",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": []
+    },
+    "M04.F02.I07": {
+      "name": "令牌交换",
+      "status": "已废弃",
+      "type": "接口",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": []
+    },
+    "M04.F02.I08": {
+      "name": "令牌刷新",
+      "status": "已废弃",
+      "type": "接口",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": []
+    },
+    "M04.F03.I07": {
+      "name": "授权码签发",
       "status": "已上线",
       "type": "接口",
       "requirements": [],
@@ -431,12 +508,14 @@
       "tests": [
         "authorize_happyPath_returnsCode()",
         "authorize_inactiveApp_throws()",
-        "authorize_invalidClient_throws()"
+        "authorize_invalidClient_throws()",
+        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:1738 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:2639 (path)"
       ],
       "entry": []
     },
-    "M04.F02.I07": {
-      "name": "令牌交换",
+    "M04.F03.I08": {
+      "name": "令牌交换（authorization_code grant）",
       "status": "已上线",
       "type": "接口",
       "requirements": [],
@@ -447,6 +526,10 @@
         "docs\\design\\design-function-map.md"
       ],
       "tests": [
+        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:3423 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:4655 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:5703 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:6653 (path)",
         "token_alreadyConsumed_throws()",
         "token_authorizationCode_happyPath()",
         "token_expired_throws()",
@@ -454,8 +537,8 @@
       ],
       "entry": []
     },
-    "M04.F02.I08": {
-      "name": "令牌刷新",
+    "M04.F03.I09": {
+      "name": "令牌刷新（refresh_token grant）",
       "status": "已上线",
       "type": "接口",
       "requirements": [],
@@ -466,6 +549,11 @@
         "docs\\design\\design-function-map.md"
       ],
       "tests": [
+        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:3423 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:4655 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:5146 (annot)",
+        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:5703 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:6653 (path)",
         "token_refreshTokenReuse_throws()",
         "token_refreshToken_happyPath()"
       ],
@@ -479,7 +567,11 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "list_returnsPage()"
+        "list_returnsPage()",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-api-keys-delete.test.ts:966 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-api-keys-read.test.ts:536 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-api-keys-write.test.ts:1160 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-misc-write.test.ts:1091 (path)"
       ],
       "entry": []
     },
@@ -493,7 +585,11 @@
       "tests": [
         "create_mustNotPresetId()",
         "create_returnsResponseWithSecret()",
-        "entityMustUseGeneratedId()"
+        "entityMustUseGeneratedId()",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-api-keys-delete.test.ts:966 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-api-keys-read.test.ts:536 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-api-keys-write.test.ts:1160 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-misc-write.test.ts:1091 (path)"
       ],
       "entry": []
     },
@@ -536,7 +632,8 @@
       ],
       "tests": [
         "delete_removesRow()",
-        "delete_throwsIfMissing()"
+        "delete_throwsIfMissing()",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-api-keys-delete.test.ts:62 (annot)"
       ],
       "entry": []
     },
@@ -548,7 +645,11 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "list_returnsPage()"
+        "list_returnsPage()",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-audit-read.test.ts:2683 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-audit-read.test.ts:4010 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-audit-read.test.ts:910 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-misc-write.test.ts:1190 (path)"
       ],
       "entry": []
     },
@@ -560,7 +661,8 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "list_byActorUsesActorQuery()"
+        "list_byActorUsesActorQuery()",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-audit-read.test.ts:5139 (path)"
       ],
       "entry": []
     },
@@ -590,6 +692,191 @@
       ],
       "entry": []
     },
+    "M08.F01.I01": {
+      "name": "菜单树",
+      "status": "已上线",
+      "type": "接口",
+      "requirements": [],
+      "flows": [
+        "docs\\design\\flow-function-map.md"
+      ],
+      "designs": [
+        "docs\\design\\design-function-map.md"
+      ],
+      "tests": [
+        "listMenus_filtersByAppId()",
+        "output\\saas-identity-platform-contract-test\\tests\\admin-app-menus-write.test.ts:1054 (path)"
+      ],
+      "entry": []
+    },
+    "M08.F01.I02": {
+      "name": "创建菜单",
+      "status": "已上线",
+      "type": "接口",
+      "requirements": [],
+      "flows": [
+        "docs\\design\\flow-function-map.md"
+      ],
+      "designs": [
+        "docs\\design\\design-function-map.md"
+      ],
+      "tests": [
+        "createMenu_savesWithResolvedAppId()",
+        "output\\saas-identity-platform-contract-test\\tests\\admin-app-menus-write.test.ts:1054 (path)"
+      ],
+      "entry": []
+    },
+    "M08.F01.I03": {
+      "name": "菜单详情",
+      "status": "已上线",
+      "type": "接口",
+      "requirements": [],
+      "flows": [],
+      "designs": [
+        "docs\\design\\design-function-map.md"
+      ],
+      "tests": [
+        "getMenu_returnsFound()",
+        "getMenu_wrongApp_throwsNotFound()"
+      ],
+      "entry": []
+    },
+    "M08.F01.I04": {
+      "name": "更新菜单",
+      "status": "已上线",
+      "type": "接口",
+      "requirements": [],
+      "flows": [
+        "docs\\design\\flow-function-map.md"
+      ],
+      "designs": [
+        "docs\\design\\design-function-map.md"
+      ],
+      "tests": [
+        "updateMenu_appliesPatch()"
+      ],
+      "entry": []
+    },
+    "M08.F01.I05": {
+      "name": "删除菜单",
+      "status": "已上线",
+      "type": "接口",
+      "requirements": [],
+      "flows": [
+        "docs\\design\\flow-function-map.md"
+      ],
+      "designs": [
+        "docs\\design\\design-function-map.md"
+      ],
+      "tests": [
+        "deleteMenu_notFound_throws()",
+        "deleteMenu_returns204()"
+      ],
+      "entry": []
+    },
+    "M08.F02.I06": {
+      "name": "同级排序",
+      "status": "已上线",
+      "type": "接口",
+      "requirements": [],
+      "flows": [
+        "docs\\design\\flow-function-map.md"
+      ],
+      "designs": [
+        "docs\\design\\design-function-map.md"
+      ],
+      "tests": [
+        "reorderMenus_returnsUpdatedList()"
+      ],
+      "entry": []
+    },
+    "M08.F02.I07": {
+      "name": "切换父级",
+      "status": "已上线",
+      "type": "接口",
+      "requirements": [],
+      "flows": [
+        "docs\\design\\flow-function-map.md"
+      ],
+      "designs": [
+        "docs\\design\\design-function-map.md"
+      ],
+      "tests": [
+        "moveMenu_updatesParentId()"
+      ],
+      "entry": []
+    },
+    "M09.F01.I01": {
+      "name": "角色已授权菜单 ID 查询",
+      "status": "已上线",
+      "type": "接口",
+      "requirements": [],
+      "flows": [
+        "docs\\design\\flow-function-map.md"
+      ],
+      "designs": [
+        "docs\\design\\design-function-map.md"
+      ],
+      "tests": [
+        "get_returnsGrant()",
+        "get_roleNotFound_throws()",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-role-menus-write.test.ts:1223 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:3698 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-write.test.ts:1271 (path)"
+      ],
+      "entry": []
+    },
+    "M09.F02.I01": {
+      "name": "整批设置角色菜单（PUT 整批替换语义）",
+      "status": "已上线",
+      "type": "接口",
+      "requirements": [],
+      "flows": [
+        "docs\\design\\flow-function-map.md"
+      ],
+      "designs": [
+        "docs\\design\\design-function-map.md"
+      ],
+      "tests": [
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-role-menus-write.test.ts:1223 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-role-menus-write.test.ts:62 (annot)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:3698 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-write.test.ts:1271 (path)",
+        "set_replacesMenuIds()"
+      ],
+      "entry": []
+    },
+    "M09.F02.I02": {
+      "name": "单条设置角色菜单",
+      "status": "开发中",
+      "type": "接口",
+      "requirements": [],
+      "flows": [],
+      "designs": [],
+      "tests": [],
+      "entry": []
+    },
+    "M09.F02.I03": {
+      "name": "清空角色菜单",
+      "status": "已上线",
+      "type": "接口",
+      "requirements": [],
+      "flows": [
+        "docs\\design\\flow-function-map.md"
+      ],
+      "designs": [
+        "docs\\design\\design-function-map.md"
+      ],
+      "tests": [
+        "clear_deletesGrant()",
+        "clear_noExistingGrant_doesNothing()",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-role-menus-write.test.ts:1223 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:3698 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-write.test.ts:1271 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-write.test.ts:513 (annot)"
+      ],
+      "entry": []
+    },
     "M09.F03.I02": {
       "name": "角色授权菜单 ID 查询（membership.roleIds → role_menu_grants.menuIds）",
       "status": "已上线",
@@ -605,6 +892,8 @@
         "filterByStatus()",
         "findMenuIdsByRoleIds_anyAndUnnestOnRealPg()",
         "findRoleIdsByUserId_unnestsUuidArrayOnRealPg()",
+        "output\\saas-identity-platform-contract-test\\tests\\me.test.ts:1845 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\me.test.ts:2074 (path)",
         "saveAndFindByTenantId()"
       ],
       "entry": []
@@ -621,6 +910,8 @@
         "docs\\design\\design-function-map.md"
       ],
       "tests": [
+        "output\\saas-identity-platform-contract-test\\tests\\me.test.ts:1845 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\me.test.ts:2074 (path)",
         "uniqueByTenantEmail()"
       ],
       "entry": []
@@ -639,7 +930,9 @@
       "tests": [
         "getMyMenus_groupNotGranted_keptAsContainerIfChildGranted()",
         "getMyMenus_noRoles_returnsEmptyMap()",
-        "getMyMenus_returnsTreeGroupedByAppCode()"
+        "getMyMenus_returnsTreeGroupedByAppCode()",
+        "output\\saas-identity-platform-contract-test\\tests\\me.test.ts:1845 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\me.test.ts:2074 (path)"
       ],
       "entry": []
     }

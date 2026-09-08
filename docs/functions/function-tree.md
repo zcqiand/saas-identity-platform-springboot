@@ -13,6 +13,7 @@
 | M04 | OAuth2 Provider | 平台级应用 CRUD、授权码/令牌流程 | 规划 |
 | M05 | API Key 管理 | tenant-scoped Key 生命周期 | 规划 |
 | M06 | 审计日志 | tenant-scoped 审计事件、留存策略 | 规划 |
+| M08 | 菜单 | 应用下树形菜单 CRUD、结构维护（NSwag codegen from shared tsp routes/admin-app-menus.tsp） | 已上线 |
 | M09 | 菜单授权 | 当前用户有效菜单（按 app.code 分组） | 开发中 |
 
 ---
@@ -28,11 +29,11 @@
 
 | 子项 ID | 名称 | 类型 | 交付 | 说明 | 状态 |
 |---|---|---|---|---|---|
-| M00.F01.I01 | 租户列表（平台） | 页面 | 前端+后端 |  | 规划 |
-| M00.F01.I02 | 创建租户 | 按钮 | 仅前端 |  | 规划 |
-| M00.F01.I03 | 租户详情 | 页面 | 仅前端 |  | 规划 |
-| M00.F01.I04 | 更新租户 | 按钮 | 仅前端 |  | 规划 |
-| M00.F01.I05 | 删除租户 | 按钮 | 仅前端 |  | 规划 |
+| M00.F01.I01 | 租户列表（平台） | 接口 | 前端+后端 |  | 规划 |
+| M00.F01.I02 | 创建租户 | 接口 | 前端+后端 |  | 规划 |
+| M00.F01.I03 | 租户详情 | 接口 | 前端+后端 |  | 规划 |
+| M00.F01.I04 | 更新租户 | 接口 | 前端+后端 |  | 规划 |
+| M00.F01.I05 | 删除租户 | 接口 | 前端+后端 |  | 规划 |
 
 ### M00.F02 当前用户跨租户切换
 
@@ -133,7 +134,8 @@
 | 功能 ID | 功能名称 | 说明 | 状态 |
 |---|---|---|---|
 | M04.F01 | OAuth 应用 CRUD（平台级） | （说明待补） | 规划 |
-| M04.F02 | 授权码签发与令牌交换/刷新 | （说明待补） | 规划 |
+| M04.F02 | 授权码签发与令牌交换/刷新 | （说明待补，springboot 仓 2026-09-06 废弃其下 I06-I08，ID 错位） | 规划 |
+| M04.F03 | OAuth 授权码签发与令牌交换/刷新（NSwag codegen from shared tsp routes/oauth.tsp） | OauthController 实现 + OauthServiceTest 覆盖 | 已上线 |
 
 ### M04.F01 OAuth 应用 CRUD（平台级）
 
@@ -149,9 +151,17 @@
 
 | 子项 ID | 名称 | 类型 | 交付 | 说明 | 状态 |
 |---|---|---|---|---|---|
-| M04.F02.I06 | 授权码签发 | 接口 | 前端+后端 |  | 已上线 |
-| M04.F02.I07 | 令牌交换 | 接口 | 前端+后端 |  | 已上线 |
-| M04.F02.I08 | 令牌刷新 | 接口 | 前端+后端 |  | 已上线 |
+| M04.F02.I06 | 授权码签发 | 接口 | 前端+后端 | ID 错位——springboot 仓原误登此为 OAuth 流程，2026-09-06 改登 M04.F03.I07；本 ID 废弃 | 已废弃 |
+| M04.F02.I07 | 令牌交换 | 接口 | 前端+后端 | ID 错位同上，应为 M04.F03.I08 | 已废弃 |
+| M04.F02.I08 | 令牌刷新 | 接口 | 前端+后端 | ID 错位同上，应为 M04.F03.I09 | 已废弃 |
+
+### M04.F03 OAuth 授权码签发与令牌交换/刷新（NSwag codegen from shared tsp routes/oauth.tsp）
+
+| 子项 ID | 名称 | 类型 | 交付 | 说明 | 状态 |
+|---|---|---|---|---|---|
+| M04.F03.I07 | 授权码签发 | 接口 | 前端+后端 | OauthController#oAuthAuthorize → POST /api/v1/oauth/authorize；saas-code-{ts}-{rand} 落 oauth_codes（TTL 10min） | 已上线 |
+| M04.F03.I08 | 令牌交换（authorization_code grant） | 接口 | 前端+后端 | OauthController#oAuthToken grantType=authorization_code → POST /api/v1/oauth/token | 已上线 |
+| M04.F03.I09 | 令牌刷新（refresh_token grant） | 接口 | 前端+后端 | 同 op 按 grantType 路由，refresh 走旋转换发（旧 consumed 新写入） | 已上线 |
 
 ---
 
@@ -179,6 +189,7 @@
 |---|---|---|---|
 | M06.F01 | 审计事件查询（tenant-scoped） | （说明待补） | 规划 |
 | M06.F02 | 审计留存策略 | （说明待补） | 规划 |
+| M06.F03 | 审计写入助手（写端点副作用） | （说明待补） | 规划 |
 
 ### M06.F01 审计事件查询（tenant-scoped）
 
@@ -196,11 +207,53 @@
 
 ---
 
+## M08 菜单（应用下，NSwag codegen from shared tsp routes/admin-app-menus.tsp）
+
+| 功能 ID | 功能名称 | 说明 | 状态 |
+|---|---|---|---|
+| M08.F01 | 菜单 CRUD（应用下） | 列表 / 创建 / 详情 / 更新 / 删除 | 已上线 |
+| M08.F02 | 菜单结构维护（排序 / 父级） | 同级排序 / 切换父级 | 已上线 |
+
+### M08.F01 菜单 CRUD（应用下）
+
+| 子项 ID | 名称 | 类型 | 交付 | 说明 | 状态 |
+|---|---|---|---|---|---|
+| M08.F01.I01 | 菜单树 | 接口 | 前端+后端 | GET /admin/apps/{appId}/menus，扁平列表（前端按 parentId 自构树） | 已上线 |
+| M08.F01.I02 | 创建菜单 | 接口 | 前端+后端 | POST /admin/apps/{appId}/menus | 已上线 |
+| M08.F01.I03 | 菜单详情 | 接口 | 前端+后端 | GET /admin/apps/{appId}/menus/{menuId} | 已上线 |
+| M08.F01.I04 | 更新菜单 | 接口 | 前端+后端 | PATCH /admin/apps/{appId}/menus/{menuId} | 已上线 |
+| M08.F01.I05 | 删除菜单 | 接口 | 前端+后端 | DELETE /admin/apps/{appId}/menus/{menuId} | 已上线 |
+
+### M08.F02 菜单结构维护（排序 / 父级）
+
+| 子项 ID | 名称 | 类型 | 交付 | 说明 | 状态 |
+|---|---|---|---|---|---|
+| M08.F02.I06 | 同级排序 | 接口 | 前端+后端 | PUT /admin/apps/{appId}/menus/{menuId}/reorder，按 sortOrder 数组顺序写 | 已上线 |
+| M08.F02.I07 | 切换父级 | 接口 | 前端+后端 | PATCH /admin/apps/{appId}/menus/{menuId}/parent | 已上线 |
+
+---
+
 ## M09 菜单授权
 
 | 功能 ID | 功能名称 | 说明 | 状态 |
 |---|---|---|---|
+| M09.F01 | 角色菜单授权查询 | （说明待补） | 已上线 |
+| M09.F02 | 角色菜单授权设置 | 整批 / 清空 | 已上线 |
 | M09.F03 | 当前用户有效菜单（按 app.code 分组） | （说明待补） | 已上线 |
+
+### M09.F01 角色菜单授权查询
+
+| 子项 ID | 名称 | 类型 | 交付 | 说明 | 状态 |
+|---|---|---|---|---|---|
+| M09.F01.I01 | 角色已授权菜单 ID 查询 | 接口 | 前端+后端 | GET /tenants/{tenantId}/roles/{roleId}/menus → RoleMenuGrant{roleId,tenantId,menuIds,updatedAt} | 已上线 |
+
+### M09.F02 角色菜单授权设置
+
+| 子项 ID | 名称 | 类型 | 交付 | 说明 | 状态 |
+|---|---|---|---|---|---|
+| M09.F02.I01 | 整批设置角色菜单（PUT 整批替换语义） | 接口 | 前端+后端 | PUT /tenants/{tenantId}/roles/{roleId}/menus → RoleMenuGrant | 已上线 |
+| M09.F02.I02 | 单条设置角色菜单 | 接口 | 前端+后端 | （说明待补；tsp 无独立端点，2026-09-06 状态回退到「开发中」等待真正实现或合并到 I01） | 开发中 |
+| M09.F02.I03 | 清空角色菜单 | 接口 | 前端+后端 | DELETE /tenants/{tenantId}/roles/{roleId}/menus | 已上线 |
 
 ### M09.F03 当前用户有效菜单（按 app.code 分组）
 

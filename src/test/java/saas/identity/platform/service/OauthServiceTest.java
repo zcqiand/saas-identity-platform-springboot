@@ -92,10 +92,10 @@ class OauthServiceTest {
     return user;
   }
 
-  // ===== M04.F02.I06 Authorize =====
+  // ===== M04.F03.I07 Authorize =====
 
   @Test
-  @Fn({"M04.F02.I06"})
+  @Fn({"M04.F03.I07"})
   void authorize_happyPath_returnsCode() {
     when(appRepository.findByClientId(APP_ID.toString())).thenReturn(Optional.of(mockApp()));
     when(oauthCodeRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
@@ -115,7 +115,7 @@ class OauthServiceTest {
   }
 
   @Test
-  @Fn({"M04.F02.I06"})
+  @Fn({"M04.F03.I07"})
   void authorize_invalidClient_throws() {
     when(appRepository.findByClientId(any())).thenReturn(Optional.empty());
 
@@ -131,7 +131,7 @@ class OauthServiceTest {
   }
 
   @Test
-  @Fn({"M04.F02.I06"})
+  @Fn({"M04.F03.I07"})
   void authorize_inactiveApp_throws() {
     AppEntity app = mockApp();
     app.setStatus(AppStatus.DISABLED);
@@ -148,10 +148,10 @@ class OauthServiceTest {
     assertThrows(OauthService.InvalidClientException.class, () -> service.authorize(req));
   }
 
-  // ===== M04.F02.I07 Token authorization_code =====
+  // ===== M04.F03.I08 Token authorization_code =====
 
   @Test
-  @Fn({"M04.F02.I07"})
+  @Fn({"M04.F03.I08"})
   void token_authorizationCode_happyPath() {
     when(appRepository.findByClientId(APP_ID.toString())).thenReturn(Optional.of(mockApp()));
     Page<UserEntity> userPage = new PageImpl<>(List.of(mockUser()));
@@ -185,7 +185,7 @@ class OauthServiceTest {
   }
 
   @Test
-  @Fn({"M04.F02.I07"})
+  @Fn({"M04.F03.I08"})
   void token_alreadyConsumed_throws() {
     OauthCodeEntity consumed = new OauthCodeEntity();
     consumed.setCode("c1");
@@ -210,7 +210,7 @@ class OauthServiceTest {
   }
 
   @Test
-  @Fn({"M04.F02.I07"})
+  @Fn({"M04.F03.I08"})
   void token_expired_throws() {
     OauthCodeEntity expired = new OauthCodeEntity();
     expired.setCode("e1");
@@ -234,7 +234,7 @@ class OauthServiceTest {
   }
 
   @Test
-  @Fn({"M04.F02.I07"})
+  @Fn({"M04.F03.I08"})
   void token_redirectUriMismatch_throws() {
     OauthCodeEntity code = new OauthCodeEntity();
     code.setCode("m1");
@@ -257,10 +257,10 @@ class OauthServiceTest {
     assertThrows(OauthService.InvalidGrantException.class, () -> service.token(req));
   }
 
-  // ===== M04.F02.I08 Token refresh_token =====
+  // ===== M04.F03.I09 Token refresh_token =====
 
   @Test
-  @Fn({"M04.F02.I08"})
+  @Fn({"M04.F03.I09"})
   void token_refreshToken_happyPath() {
     when(appRepository.findByClientId(APP_ID.toString())).thenReturn(Optional.of(mockApp()));
     OauthCodeEntity refresh = new OauthCodeEntity();
@@ -286,7 +286,7 @@ class OauthServiceTest {
   }
 
   @Test
-  @Fn({"M04.F02.I08"})
+  @Fn({"M04.F03.I09"})
   void token_refreshTokenReuse_throws() {
     OauthCodeEntity refresh = new OauthCodeEntity();
     refresh.setCode("rt2");
