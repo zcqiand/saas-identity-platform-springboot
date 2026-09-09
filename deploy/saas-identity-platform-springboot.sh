@@ -52,9 +52,15 @@ if [ ! -f "$BASE/springboot.env" ]; then
       printf 'DATABASE_PASSWORD=%s\n' "$DATABASE_PASSWORD"
       printf 'DATABASE_NAME=saas_prod\n'
       printf 'SERVER_PORT=5105\n'
+      printf 'PG_HOST=100.79.128.25\n'
+      printf 'PG_PORT=5432\n'
+      printf 'PG_USER=postgres\n'
+      printf 'PG_PASSWORD=changeme\n'
+      printf 'PG_DATABASE=saas_prod\n'
       # 默认 CORS 白名单：react SPA + saas-nextjs + 本仓域名。运维可在 setup-vps 之后手工追加 origin。
       printf 'SAAS_CORS_ALLOWED_ORIGINS=https://%s,https://saas-react.xiangru.uk,https://saas-nextjs.xiangru.uk\n' "$NGINX_DOMAIN"
       # JWT 三件套显式写(JwtIssuer @Value 默认值兜底是反模式,禁;值=契约文件值)
+      printf 'JWT_AUTHORITY=https://auth.example.com\n'
       printf 'JWT_ISSUER=saas-identity-platform\n'
       printf 'JWT_AUDIENCE=saas-identity-platform-clients\n'
       printf 'JWT_TTL_SECONDS=3600\n'
@@ -172,6 +178,12 @@ if [ -f "$BASE/springboot.env" ]; then
   }
   append_if_missing DATABASE_NAME 'saas_prod'
   append_if_missing SERVER_PORT '5105'
+  append_if_missing PG_HOST '100.79.128.25'
+  append_if_missing PG_PORT '5432'
+  append_if_missing PG_USER 'postgres'
+  append_if_missing PG_PASSWORD 'changeme'
+  append_if_missing PG_DATABASE 'saas_prod'
+  append_if_missing JWT_AUTHORITY 'https://auth.example.com'
   append_if_missing JWT_ISSUER 'saas-identity-platform'
   append_if_missing JWT_AUDIENCE 'saas-identity-platform-clients'
   append_if_missing JWT_TTL_SECONDS '3600'
