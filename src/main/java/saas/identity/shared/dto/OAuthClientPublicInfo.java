@@ -1,25 +1,18 @@
 package saas.identity.shared.dto;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import org.springframework.lang.Nullable;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
-
-
-import java.util.*;
 import jakarta.annotation.Generated;
+import jakarta.validation.constraints.*;
+import java.util.*;
+import java.util.Objects;
+import org.springframework.lang.Nullable;
 
-/**
- * OAuthClientPublicInfo
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+/** OAuthClientPublicInfo */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 public class OAuthClientPublicInfo {
 
   private String clientId;
@@ -32,9 +25,7 @@ public class OAuthClientPublicInfo {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
+  /** Constructor with only required parameters */
   public OAuthClientPublicInfo(String clientId, String clientName, Integer status) {
     this.clientId = clientId;
     this.clientName = clientName;
@@ -48,9 +39,10 @@ public class OAuthClientPublicInfo {
 
   /**
    * Get clientId
+   *
    * @return clientId
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "clientId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("clientId")
   public String getClientId() {
@@ -69,9 +61,10 @@ public class OAuthClientPublicInfo {
 
   /**
    * Get clientName
+   *
    * @return clientName
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "clientName", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("clientName")
   public String getClientName() {
@@ -90,9 +83,10 @@ public class OAuthClientPublicInfo {
 
   /**
    * Get status
+   *
    * @return status
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("status")
   public Integer getStatus() {
@@ -113,9 +107,9 @@ public class OAuthClientPublicInfo {
       return false;
     }
     OAuthClientPublicInfo oauthClientPublicInfo = (OAuthClientPublicInfo) o;
-    return Objects.equals(this.clientId, oauthClientPublicInfo.clientId) &&
-        Objects.equals(this.clientName, oauthClientPublicInfo.clientName) &&
-        Objects.equals(this.status, oauthClientPublicInfo.status);
+    return Objects.equals(this.clientId, oauthClientPublicInfo.clientId)
+        && Objects.equals(this.clientName, oauthClientPublicInfo.clientName)
+        && Objects.equals(this.status, oauthClientPublicInfo.status);
   }
 
   @Override
@@ -135,11 +129,9 @@ public class OAuthClientPublicInfo {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
-

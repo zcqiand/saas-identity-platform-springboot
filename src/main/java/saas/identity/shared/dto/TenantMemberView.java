@@ -1,30 +1,21 @@
 package saas.identity.shared.dto;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import org.springframework.lang.Nullable;
-import saas.identity.shared.dto.SysUser;
-import saas.identity.shared.dto.TenantMember;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
-
-
 import java.util.*;
-import jakarta.annotation.Generated;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import org.springframework.lang.Nullable;
 
-/**
- * TenantMemberView
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+/** TenantMemberView */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 public class TenantMemberView {
 
   private TenantMember member;
@@ -37,9 +28,7 @@ public class TenantMemberView {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
+  /** Constructor with only required parameters */
   public TenantMemberView(TenantMember member, SysUser user, List<String> roles) {
     this.member = member;
     this.user = user;
@@ -53,9 +42,11 @@ public class TenantMemberView {
 
   /**
    * Get member
+   *
    * @return member
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "member", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("member")
   public TenantMember getMember() {
@@ -74,9 +65,11 @@ public class TenantMemberView {
 
   /**
    * Get user
+   *
    * @return user
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "user", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("user")
   public SysUser getUser() {
@@ -103,9 +96,10 @@ public class TenantMemberView {
 
   /**
    * Get roles
+   *
    * @return roles
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "roles", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("roles")
   public List<String> getRoles() {
@@ -126,9 +120,9 @@ public class TenantMemberView {
       return false;
     }
     TenantMemberView tenantMemberView = (TenantMemberView) o;
-    return Objects.equals(this.member, tenantMemberView.member) &&
-        Objects.equals(this.user, tenantMemberView.user) &&
-        Objects.equals(this.roles, tenantMemberView.roles);
+    return Objects.equals(this.member, tenantMemberView.member)
+        && Objects.equals(this.user, tenantMemberView.user)
+        && Objects.equals(this.roles, tenantMemberView.roles);
   }
 
   @Override
@@ -148,11 +142,9 @@ public class TenantMemberView {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
-

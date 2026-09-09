@@ -2,7 +2,6 @@ package saas.identity.platform.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -20,9 +19,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import saas.identity.platform.entity.Generated.OauthAccessToken;
-import saas.identity.platform.entity.Generated.OauthCode;
-import saas.identity.platform.entity.Generated.OauthRefreshToken;
 import saas.identity.platform.entity.Generated.SysUser;
 import saas.identity.platform.repository.OauthAccessTokenRepository;
 import saas.identity.platform.repository.OauthCodeRepository;
@@ -32,8 +28,8 @@ import saas.identity.platform.security.JwtIssuer;
 import saas.identity.shared.dto.LoginRequest;
 
 /**
- * M01.F04 登录流程测试 — 密码正确 / 错误 / 失败锁定。
- * 注：sessionsLogin / sessionsOidcCallback / sessionsRefreshToken 全 4 路都覆盖。
+ * M01.F04 登录流程测试 — 密码正确 / 错误 / 失败锁定。 注：sessionsLogin / sessionsOidcCallback / sessionsRefreshToken
+ * 全 4 路都覆盖。
  */
 @WebMvcTest(AuthController.class)
 class AuthControllerLoginTest {
@@ -55,7 +51,8 @@ class AuthControllerLoginTest {
     existingUser.setId(java.util.UUID.fromString("11111111-1111-1111-1111-111111111111"));
     existingUser.setUsername("alice");
     // bcrypt hash of "password" (cost 10) — generated via BCryptPasswordEncoder at test time
-    existingUser.setPassword(new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode("password"));
+    existingUser.setPassword(
+        new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode("password"));
     existingUser.setEmail("alice@example.com");
     existingUser.setStatus((short) 1);
     existingUser.setFailedAttempts(0);
@@ -74,10 +71,11 @@ class AuthControllerLoginTest {
     req.setPassword("password");
     req.setClientId("lab-management");
 
-    mvc.perform(post("/api/v1/auth/login")
-            .with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json.writeValueAsString(req)))
+    mvc.perform(
+            post("/api/v1/auth/login")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json.writeValueAsString(req)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.accessToken").value("jwt_access_token"))
         .andExpect(jsonPath("$.clientId").value("lab-management"))
@@ -97,15 +95,18 @@ class AuthControllerLoginTest {
     req.setPassword("WRONG");
     req.setClientId("lab-management");
 
-    mvc.perform(post("/api/v1/auth/login")
-            .with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json.writeValueAsString(req)))
+    mvc.perform(
+            post("/api/v1/auth/login")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json.writeValueAsString(req)))
         .andExpect(status().is4xxClientError());
 
     assertEquals(5, existingUser.getFailedAttempts());
-    assertEquals(true, existingUser.getLockedUntil() != null
-        && existingUser.getLockedUntil().isAfter(OffsetDateTime.now()));
+    assertEquals(
+        true,
+        existingUser.getLockedUntil() != null
+            && existingUser.getLockedUntil().isAfter(OffsetDateTime.now()));
   }
 
   @Test
@@ -119,10 +120,11 @@ class AuthControllerLoginTest {
     req.setPassword("password");
     req.setClientId("lab-management");
 
-    mvc.perform(post("/api/v1/auth/login")
-            .with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json.writeValueAsString(req)))
+    mvc.perform(
+            post("/api/v1/auth/login")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json.writeValueAsString(req)))
         .andExpect(status().isLocked());
   }
 }

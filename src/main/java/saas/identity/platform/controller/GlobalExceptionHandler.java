@@ -11,10 +11,7 @@ import saas.identity.shared.dto.ErrorResponse;
 /**
  * 全局异常 → HTTP 状态映射（M04.F04 + ADR-0020 错误契约）。
  *
- * - 资源不存在 → 404
- * - 参数非法 → 400
- * - 鉴权失败 → 403
- * - 其他 → 500
+ * <p>- 资源不存在 → 404 - 参数非法 → 400 - 鉴权失败 → 403 - 其他 → 500
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {

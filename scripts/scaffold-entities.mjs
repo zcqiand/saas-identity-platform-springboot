@@ -35,9 +35,15 @@ try {
 }
 const { Client } = pg;
 
-const DATABASE_URL =
-  process.env.DATABASE_URL ??
-  "postgresql://postgres:qiand68%2B%2B%2B@100.79.128.25:5432/saas_dev";
+// DATABASE_URL 必填。CLAUDE.md §2「禁止 env 默认值兜底」：连接串含 secret，
+// 不允许在脚本里写字面量兜底；缺则 fail-fast 让调用者补 env / .env.local。
+const DATABASE_URL = process.env.DATABASE_URL;
+if (!DATABASE_URL) {
+  console.error("[scaffold-entities] FATAL: DATABASE_URL 未设（CLAUDE.md §2 禁字面量兜底）");
+  console.error("[scaffold-entities]        dev 加载 .env.local；prod 由 deploy 脚本注入 env-file。");
+  console.error("[scaffold-entities]        fix: export DATABASE_URL='postgresql://postgres:***@host:5432/dbname'");
+  process.exit(2);
+}
 
 const OUTPUT_DIR = resolve(
   ROOT,

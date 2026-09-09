@@ -25,7 +25,8 @@ public class AdminTenantsController implements AdminTenantsApi {
   }
 
   @Override
-  public ResponseEntity<AdminTenantsListTenants200Response> adminTenantsListTenants(Integer page, Integer pageSize) {
+  public ResponseEntity<AdminTenantsListTenants200Response> adminTenantsListTenants(
+      Integer page, Integer pageSize) {
     int p = page == null ? 0 : page;
     int ps = pageSize == null ? 20 : pageSize;
     Page<Tenant> pg = tenants.findAll(PageRequest.of(p, ps));
@@ -38,7 +39,8 @@ public class AdminTenantsController implements AdminTenantsApi {
   }
 
   @Override
-  public ResponseEntity<saas.identity.shared.dto.Tenant> adminTenantsCreateTenant(CreateTenantRequest body) {
+  public ResponseEntity<saas.identity.shared.dto.Tenant> adminTenantsCreateTenant(
+      CreateTenantRequest body) {
     Tenant t = tenants.save(toEntity(body));
     return ResponseEntity.ok(toDto(t));
   }
@@ -51,7 +53,8 @@ public class AdminTenantsController implements AdminTenantsApi {
   }
 
   @Override
-  public ResponseEntity<saas.identity.shared.dto.Tenant> adminTenantsUpdateTenant(String id, UpdateTenantRequest body) {
+  public ResponseEntity<saas.identity.shared.dto.Tenant> adminTenantsUpdateTenant(
+      String id, UpdateTenantRequest body) {
     UUID uuid = UUID.fromString(id);
     Tenant t = tenants.findById(uuid).orElseThrow(() -> new NoSuchElementException("tenant " + id));
     if (body.getName() != null) t.setName(body.getName());

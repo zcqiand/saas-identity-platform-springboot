@@ -5,138 +5,182 @@
  */
 package saas.identity.shared.api;
 
-import saas.identity.shared.dto.ErrorResponse;
-import saas.identity.shared.dto.SetSysRoleMenusRequest;
-import saas.identity.shared.dto.SysRoleMenu;
-import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
+import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import jakarta.annotation.Generated;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import saas.identity.shared.dto.ErrorResponse;
+import saas.identity.shared.dto.SetSysRoleMenusRequest;
+import saas.identity.shared.dto.SysRoleMenu;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 @Validated
 @Tag(name = "tenant-role-menus", description = "the tenant-role-menus API")
 public interface TenantRoleMenusApi {
 
-    String PATH_TENANT_ROLE_MENUS_CLEAR_SYS_ROLE_MENUS = "/api/v1/tenants/{tenantId}/roles/{roleId}/menus";
-    /**
-     * DELETE /api/v1/tenants/{tenantId}/roles/{roleId}/menus
-     *
-     * @param tenantId  (required)
-     * @param roleId  (required)
-     * @param clientId  (required)
-     * @return There is no content to send for this request, but the headers may be useful.  (status code 204)
-     *         or An unexpected error response. (status code 200)
-     */
-    @Operation(
-        operationId = "tenantRoleMenusClearSysRoleMenus",
-        tags = { "tenant-role-menus" },
-        responses = {
-            @ApiResponse(responseCode = "204", description = "There is no content to send for this request, but the headers may be useful. "),
-            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+  String PATH_TENANT_ROLE_MENUS_CLEAR_SYS_ROLE_MENUS =
+      "/api/v1/tenants/{tenantId}/roles/{roleId}/menus";
+
+  /**
+   * DELETE /api/v1/tenants/{tenantId}/roles/{roleId}/menus
+   *
+   * @param tenantId (required)
+   * @param roleId (required)
+   * @param clientId (required)
+   * @return There is no content to send for this request, but the headers may be useful. (status
+   *     code 204) or An unexpected error response. (status code 200)
+   */
+  @Operation(
+      operationId = "tenantRoleMenusClearSysRoleMenus",
+      tags = {"tenant-role-menus"},
+      responses = {
+        @ApiResponse(
+            responseCode = "204",
+            description =
+                "There is no content to send for this request, but the headers may be useful. "),
+        @ApiResponse(
+            responseCode = "default",
+            description = "An unexpected error response.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
             })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.DELETE,
-        value = TenantRoleMenusApi.PATH_TENANT_ROLE_MENUS_CLEAR_SYS_ROLE_MENUS,
-        produces = { "application/json" }
-    )
-    ResponseEntity<Void> tenantRoleMenusClearSysRoleMenus(
-        @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("tenantId") String tenantId,
-        @Parameter(name = "roleId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("roleId") String roleId,
-        @NotNull @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "clientId", required = true) String clientId
-    );
+      })
+  @RequestMapping(
+      method = RequestMethod.DELETE,
+      value = TenantRoleMenusApi.PATH_TENANT_ROLE_MENUS_CLEAR_SYS_ROLE_MENUS,
+      produces = {"application/json"})
+  ResponseEntity<Void> tenantRoleMenusClearSysRoleMenus(
+      @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("tenantId")
+          String tenantId,
+      @Parameter(name = "roleId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("roleId")
+          String roleId,
+      @NotNull
+          @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "clientId", required = true)
+          String clientId);
 
+  String PATH_TENANT_ROLE_MENUS_LIST_SYS_ROLE_MENUS =
+      "/api/v1/tenants/{tenantId}/roles/{roleId}/menus";
 
-    String PATH_TENANT_ROLE_MENUS_LIST_SYS_ROLE_MENUS = "/api/v1/tenants/{tenantId}/roles/{roleId}/menus";
-    /**
-     * GET /api/v1/tenants/{tenantId}/roles/{roleId}/menus
-     *
-     * @param tenantId  (required)
-     * @param roleId  (required)
-     * @param clientId  (required)
-     * @return The request has succeeded. (status code 200)
-     *         or An unexpected error response. (status code 200)
-     */
-    @Operation(
-        operationId = "tenantRoleMenusListSysRoleMenus",
-        tags = { "tenant-role-menus" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SysRoleMenu.class)))
+  /**
+   * GET /api/v1/tenants/{tenantId}/roles/{roleId}/menus
+   *
+   * @param tenantId (required)
+   * @param roleId (required)
+   * @param clientId (required)
+   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
+   *     code 200)
+   */
+  @Operation(
+      operationId = "tenantRoleMenusListSysRoleMenus",
+      tags = {"tenant-role-menus"},
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "The request has succeeded.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  array = @ArraySchema(schema = @Schema(implementation = SysRoleMenu.class)))
             }),
-            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+        @ApiResponse(
+            responseCode = "default",
+            description = "An unexpected error response.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
             })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.GET,
-        value = TenantRoleMenusApi.PATH_TENANT_ROLE_MENUS_LIST_SYS_ROLE_MENUS,
-        produces = { "application/json" }
-    )
-    ResponseEntity<List<SysRoleMenu>> tenantRoleMenusListSysRoleMenus(
-        @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("tenantId") String tenantId,
-        @Parameter(name = "roleId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("roleId") String roleId,
-        @NotNull @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "clientId", required = true) String clientId
-    );
+      })
+  @RequestMapping(
+      method = RequestMethod.GET,
+      value = TenantRoleMenusApi.PATH_TENANT_ROLE_MENUS_LIST_SYS_ROLE_MENUS,
+      produces = {"application/json"})
+  ResponseEntity<List<SysRoleMenu>> tenantRoleMenusListSysRoleMenus(
+      @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("tenantId")
+          String tenantId,
+      @Parameter(name = "roleId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("roleId")
+          String roleId,
+      @NotNull
+          @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "clientId", required = true)
+          String clientId);
 
+  String PATH_TENANT_ROLE_MENUS_SET_SYS_ROLE_MENUS =
+      "/api/v1/tenants/{tenantId}/roles/{roleId}/menus";
 
-    String PATH_TENANT_ROLE_MENUS_SET_SYS_ROLE_MENUS = "/api/v1/tenants/{tenantId}/roles/{roleId}/menus";
-    /**
-     * PUT /api/v1/tenants/{tenantId}/roles/{roleId}/menus
-     *
-     * @param tenantId  (required)
-     * @param roleId  (required)
-     * @param clientId  (required)
-     * @param setSysRoleMenusRequest  (required)
-     * @return The request has succeeded. (status code 200)
-     *         or An unexpected error response. (status code 200)
-     */
-    @Operation(
-        operationId = "tenantRoleMenusSetSysRoleMenus",
-        tags = { "tenant-role-menus" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SysRoleMenu.class)))
+  /**
+   * PUT /api/v1/tenants/{tenantId}/roles/{roleId}/menus
+   *
+   * @param tenantId (required)
+   * @param roleId (required)
+   * @param clientId (required)
+   * @param setSysRoleMenusRequest (required)
+   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
+   *     code 200)
+   */
+  @Operation(
+      operationId = "tenantRoleMenusSetSysRoleMenus",
+      tags = {"tenant-role-menus"},
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "The request has succeeded.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  array = @ArraySchema(schema = @Schema(implementation = SysRoleMenu.class)))
             }),
-            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+        @ApiResponse(
+            responseCode = "default",
+            description = "An unexpected error response.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
             })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.PUT,
-        value = TenantRoleMenusApi.PATH_TENANT_ROLE_MENUS_SET_SYS_ROLE_MENUS,
-        produces = { "application/json" },
-        consumes = { "application/json" }
-    )
-    ResponseEntity<List<SysRoleMenu>> tenantRoleMenusSetSysRoleMenus(
-        @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("tenantId") String tenantId,
-        @Parameter(name = "roleId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("roleId") String roleId,
-        @NotNull @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "clientId", required = true) String clientId,
-        @Parameter(name = "SetSysRoleMenusRequest", description = "", required = true) @Valid @RequestBody SetSysRoleMenusRequest setSysRoleMenusRequest
-    );
-
+      })
+  @RequestMapping(
+      method = RequestMethod.PUT,
+      value = TenantRoleMenusApi.PATH_TENANT_ROLE_MENUS_SET_SYS_ROLE_MENUS,
+      produces = {"application/json"},
+      consumes = {"application/json"})
+  ResponseEntity<List<SysRoleMenu>> tenantRoleMenusSetSysRoleMenus(
+      @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("tenantId")
+          String tenantId,
+      @Parameter(name = "roleId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("roleId")
+          String roleId,
+      @NotNull
+          @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.QUERY)
+          @Valid
+          @RequestParam(value = "clientId", required = true)
+          String clientId,
+      @Parameter(name = "SetSysRoleMenusRequest", description = "", required = true)
+          @Valid
+          @RequestBody
+          SetSysRoleMenusRequest setSysRoleMenusRequest);
 }

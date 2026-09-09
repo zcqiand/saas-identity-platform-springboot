@@ -42,4 +42,25 @@
     <Match>
         <Class name="saas.identity.platform.FixSentinelTimestamps"/>
     </Match>
+    <!--
+      UC_USELESS_OBJECT: AuthController.sessionsLogin 在 423 Locked 分支构造
+      LockedAccountResponse 填字段供前端 toast 文案，但 codegen interface 把
+      返回签名固定为 ResponseEntity<LoginResponse>，body 只能 null。删构造
+      会丢提示文案，留构造+null body 是权衡。修复路径 = 改 shared OpenAPI
+      让 423 返 LockedAccountResponse，属于合约层变更，留 ADR 处理。
+    -->
+    <Match>
+        <Class name="saas.identity.platform.controller.AuthController"/>
+        <Method name="sessionsLogin"/>
+        <Bug pattern="UC_USELESS_OBJECT"/>
+    </Match>
+    <!--
+      SE_NO_SERIALVERSIONID: ADR-0025 DB-First scaffold 产出的 Generated 包
+      实体类缺 serialVersionUID；scaffold-entities.mjs 暂未自动注入。属于
+      scaffold 工具补全项，留脚本侧修复。
+    -->
+    <Match>
+        <Package name="saas.identity.platform.entity.Generated"/>
+        <Bug pattern="SE_NO_SERIALVERSIONID"/>
+    </Match>
 </FindBugsFilter>

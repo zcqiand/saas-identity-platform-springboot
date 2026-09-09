@@ -27,8 +27,8 @@ import saas.identity.shared.dto.TokenResponse;
 /**
  * M01.F04 SSO 登录 + 失败锁定 + OIDC + 登出（ADR-0020 路线 A）。
  *
- * 失败锁定策略（M01.F04.I02）：连续 5 次密码错误 → 锁定 15 分钟；
- * 阈值与窗口在 application.yml 由消费后端配置，可在 DevDataFixer 临时放低。
+ * <p>失败锁定策略（M01.F04.I02）：连续 5 次密码错误 → 锁定 15 分钟； 阈值与窗口在 application.yml 由消费后端配置，可在 DevDataFixer
+ * 临时放低。
  */
 @RestController
 public class AuthController implements AuthApi {
@@ -58,8 +58,10 @@ public class AuthController implements AuthApi {
 
   @Override
   public ResponseEntity<LoginResponse> sessionsLogin(LoginRequest body) {
-    SysUser user = users.findByUsername(body.getUsername())
-        .orElseThrow(() -> new NoSuchElementException("user not found"));
+    SysUser user =
+        users
+            .findByUsername(body.getUsername())
+            .orElseThrow(() -> new NoSuchElementException("user not found"));
 
     // M01.F04.I02 — 锁定窗口检查
     if (user.getLockedUntil() != null && user.getLockedUntil().isAfter(OffsetDateTime.now())) {
@@ -110,21 +112,21 @@ public class AuthController implements AuthApi {
     return ResponseEntity.noContent().build();
   }
 
-  /**
-   * OIDC authorization_code → token exchange（ADR-0020 路线 A）。
-   * 一次性消费：code 表行用完即删，防 replay。
-   */
+  /** OIDC authorization_code → token exchange（ADR-0020 路线 A）。 一次性消费：code 表行用完即删，防 replay。 */
   @Override
   public ResponseEntity<TokenResponse> sessionsOidcCallback(OidcCallbackRequest body) {
-    OauthCode code = codes.findByCode(body.getCode())
-        .orElseThrow(() -> new IllegalArgumentException("invalid_grant: unknown code"));
+    OauthCode code =
+        codes
+            .findByCode(body.getCode())
+            .orElseThrow(() -> new IllegalArgumentException("invalid_grant: unknown code"));
     if (code.getExpiresAt() != null && code.getExpiresAt().isBefore(OffsetDateTime.now())) {
       codes.delete(code);
       throw new IllegalArgumentException("invalid_grant: expired code");
     }
 
     String accessToken = jwt.issueAccessToken(code.getUserId(), code.getTenantId());
-    String refreshToken = persistRefreshToken(code.getUserId(), code.getTenantId(), body.getClientId());
+    String refreshToken =
+        persistRefreshToken(code.getUserId(), code.getTenantId(), body.getClientId());
 
     // 一次性消费：删 code 行
     codes.delete(code);
@@ -140,13 +142,14 @@ public class AuthController implements AuthApi {
     return ResponseEntity.ok(resp);
   }
 
-  /**
-   * refresh_token → new access_token。rotate：旧 rt 标记 revoked（默认 30 天）。
-   */
+  /** refresh_token → new access_token。rotate：旧 rt 标记 revoked（默认 30 天）。 */
   @Override
   public ResponseEntity<TokenResponse> sessionsRefreshToken(TokenRequest body) {
-    OauthRefreshToken rt = refreshTokens.findByRefreshToken(body.getRefreshToken())
-        .orElseThrow(() -> new IllegalArgumentException("invalid_grant: unknown refresh_token"));
+    OauthRefreshToken rt =
+        refreshTokens
+            .findByRefreshToken(body.getRefreshToken())
+            .orElseThrow(
+                () -> new IllegalArgumentException("invalid_grant: unknown refresh_token"));
     if (Boolean.TRUE.equals(rt.getRevoked())) {
       throw new IllegalArgumentException("invalid_grant: revoked refresh_token");
     }

@@ -5,170 +5,223 @@
  */
 package saas.identity.shared.api;
 
-import saas.identity.shared.dto.ErrorResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Generated;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import saas.identity.shared.dto.ErrorResponse;
 import saas.identity.shared.dto.SubscribeTenantApplicationRequest;
 import saas.identity.shared.dto.TenantApplication;
 import saas.identity.shared.dto.TenantApplicationsListTenantApplications200Response;
 import saas.identity.shared.dto.UpdateTenantApplicationRequest;
-import io.swagger.v3.oas.annotations.ExternalDocumentation;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import jakarta.annotation.Generated;
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 @Validated
 @Tag(name = "tenant-applications", description = "the tenant-applications API")
 public interface TenantApplicationsApi {
 
-    String PATH_TENANT_APPLICATIONS_LIST_TENANT_APPLICATIONS = "/api/v1/tenants/{tenantId}/applications";
-    /**
-     * GET /api/v1/tenants/{tenantId}/applications
-     *
-     * @param tenantId  (required)
-     * @param page  (optional)
-     * @param pageSize  (optional)
-     * @return The request has succeeded. (status code 200)
-     *         or An unexpected error response. (status code 200)
-     */
-    @Operation(
-        operationId = "tenantApplicationsListTenantApplications",
-        tags = { "tenant-applications" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = TenantApplicationsListTenantApplications200Response.class))
+  String PATH_TENANT_APPLICATIONS_LIST_TENANT_APPLICATIONS =
+      "/api/v1/tenants/{tenantId}/applications";
+
+  /**
+   * GET /api/v1/tenants/{tenantId}/applications
+   *
+   * @param tenantId (required)
+   * @param page (optional)
+   * @param pageSize (optional)
+   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
+   *     code 200)
+   */
+  @Operation(
+      operationId = "tenantApplicationsListTenantApplications",
+      tags = {"tenant-applications"},
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "The request has succeeded.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema =
+                      @Schema(
+                          implementation =
+                              TenantApplicationsListTenantApplications200Response.class))
             }),
-            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+        @ApiResponse(
+            responseCode = "default",
+            description = "An unexpected error response.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
             })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.GET,
-        value = TenantApplicationsApi.PATH_TENANT_APPLICATIONS_LIST_TENANT_APPLICATIONS,
-        produces = { "application/json" }
-    )
-    ResponseEntity<TenantApplicationsListTenantApplications200Response> tenantApplicationsListTenantApplications(
-        @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("tenantId") String tenantId,
-        @Parameter(name = "page", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "page", required = false) @Nullable Integer page,
-        @Parameter(name = "pageSize", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "pageSize", required = false) @Nullable Integer pageSize
-    );
+      })
+  @RequestMapping(
+      method = RequestMethod.GET,
+      value = TenantApplicationsApi.PATH_TENANT_APPLICATIONS_LIST_TENANT_APPLICATIONS,
+      produces = {"application/json"})
+  ResponseEntity<TenantApplicationsListTenantApplications200Response>
+      tenantApplicationsListTenantApplications(
+          @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
+              @PathVariable("tenantId")
+              String tenantId,
+          @Parameter(name = "page", description = "", in = ParameterIn.QUERY)
+              @Valid
+              @RequestParam(value = "page", required = false)
+              @Nullable
+              Integer page,
+          @Parameter(name = "pageSize", description = "", in = ParameterIn.QUERY)
+              @Valid
+              @RequestParam(value = "pageSize", required = false)
+              @Nullable
+              Integer pageSize);
 
+  String PATH_TENANT_APPLICATIONS_REMOVE_TENANT_APPLICATION =
+      "/api/v1/tenants/{tenantId}/applications/{clientId}";
 
-    String PATH_TENANT_APPLICATIONS_REMOVE_TENANT_APPLICATION = "/api/v1/tenants/{tenantId}/applications/{clientId}";
-    /**
-     * DELETE /api/v1/tenants/{tenantId}/applications/{clientId}
-     *
-     * @param tenantId  (required)
-     * @param clientId  (required)
-     * @return There is no content to send for this request, but the headers may be useful.  (status code 204)
-     *         or An unexpected error response. (status code 200)
-     */
-    @Operation(
-        operationId = "tenantApplicationsRemoveTenantApplication",
-        tags = { "tenant-applications" },
-        responses = {
-            @ApiResponse(responseCode = "204", description = "There is no content to send for this request, but the headers may be useful. "),
-            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+  /**
+   * DELETE /api/v1/tenants/{tenantId}/applications/{clientId}
+   *
+   * @param tenantId (required)
+   * @param clientId (required)
+   * @return There is no content to send for this request, but the headers may be useful. (status
+   *     code 204) or An unexpected error response. (status code 200)
+   */
+  @Operation(
+      operationId = "tenantApplicationsRemoveTenantApplication",
+      tags = {"tenant-applications"},
+      responses = {
+        @ApiResponse(
+            responseCode = "204",
+            description =
+                "There is no content to send for this request, but the headers may be useful. "),
+        @ApiResponse(
+            responseCode = "default",
+            description = "An unexpected error response.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
             })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.DELETE,
-        value = TenantApplicationsApi.PATH_TENANT_APPLICATIONS_REMOVE_TENANT_APPLICATION,
-        produces = { "application/json" }
-    )
-    ResponseEntity<Void> tenantApplicationsRemoveTenantApplication(
-        @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("tenantId") String tenantId,
-        @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("clientId") String clientId
-    );
+      })
+  @RequestMapping(
+      method = RequestMethod.DELETE,
+      value = TenantApplicationsApi.PATH_TENANT_APPLICATIONS_REMOVE_TENANT_APPLICATION,
+      produces = {"application/json"})
+  ResponseEntity<Void> tenantApplicationsRemoveTenantApplication(
+      @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("tenantId")
+          String tenantId,
+      @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("clientId")
+          String clientId);
 
+  String PATH_TENANT_APPLICATIONS_SUBSCRIBE_TENANT_APPLICATION =
+      "/api/v1/tenants/{tenantId}/applications";
 
-    String PATH_TENANT_APPLICATIONS_SUBSCRIBE_TENANT_APPLICATION = "/api/v1/tenants/{tenantId}/applications";
-    /**
-     * POST /api/v1/tenants/{tenantId}/applications
-     *
-     * @param tenantId  (required)
-     * @param subscribeTenantApplicationRequest  (required)
-     * @return The request has succeeded. (status code 200)
-     *         or An unexpected error response. (status code 200)
-     */
-    @Operation(
-        operationId = "tenantApplicationsSubscribeTenantApplication",
-        tags = { "tenant-applications" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = TenantApplication.class))
+  /**
+   * POST /api/v1/tenants/{tenantId}/applications
+   *
+   * @param tenantId (required)
+   * @param subscribeTenantApplicationRequest (required)
+   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
+   *     code 200)
+   */
+  @Operation(
+      operationId = "tenantApplicationsSubscribeTenantApplication",
+      tags = {"tenant-applications"},
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "The request has succeeded.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = TenantApplication.class))
             }),
-            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+        @ApiResponse(
+            responseCode = "default",
+            description = "An unexpected error response.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
             })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.POST,
-        value = TenantApplicationsApi.PATH_TENANT_APPLICATIONS_SUBSCRIBE_TENANT_APPLICATION,
-        produces = { "application/json" },
-        consumes = { "application/json" }
-    )
-    ResponseEntity<TenantApplication> tenantApplicationsSubscribeTenantApplication(
-        @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("tenantId") String tenantId,
-        @Parameter(name = "SubscribeTenantApplicationRequest", description = "", required = true) @Valid @RequestBody SubscribeTenantApplicationRequest subscribeTenantApplicationRequest
-    );
+      })
+  @RequestMapping(
+      method = RequestMethod.POST,
+      value = TenantApplicationsApi.PATH_TENANT_APPLICATIONS_SUBSCRIBE_TENANT_APPLICATION,
+      produces = {"application/json"},
+      consumes = {"application/json"})
+  ResponseEntity<TenantApplication> tenantApplicationsSubscribeTenantApplication(
+      @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("tenantId")
+          String tenantId,
+      @Parameter(name = "SubscribeTenantApplicationRequest", description = "", required = true)
+          @Valid
+          @RequestBody
+          SubscribeTenantApplicationRequest subscribeTenantApplicationRequest);
 
+  String PATH_TENANT_APPLICATIONS_UPDATE_TENANT_APPLICATION =
+      "/api/v1/tenants/{tenantId}/applications/{clientId}";
 
-    String PATH_TENANT_APPLICATIONS_UPDATE_TENANT_APPLICATION = "/api/v1/tenants/{tenantId}/applications/{clientId}";
-    /**
-     * PATCH /api/v1/tenants/{tenantId}/applications/{clientId}
-     *
-     * @param tenantId  (required)
-     * @param clientId  (required)
-     * @param updateTenantApplicationRequest  (required)
-     * @return The request has succeeded. (status code 200)
-     *         or An unexpected error response. (status code 200)
-     */
-    @Operation(
-        operationId = "tenantApplicationsUpdateTenantApplication",
-        tags = { "tenant-applications" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = TenantApplication.class))
+  /**
+   * PATCH /api/v1/tenants/{tenantId}/applications/{clientId}
+   *
+   * @param tenantId (required)
+   * @param clientId (required)
+   * @param updateTenantApplicationRequest (required)
+   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
+   *     code 200)
+   */
+  @Operation(
+      operationId = "tenantApplicationsUpdateTenantApplication",
+      tags = {"tenant-applications"},
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "The request has succeeded.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = TenantApplication.class))
             }),
-            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+        @ApiResponse(
+            responseCode = "default",
+            description = "An unexpected error response.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = ErrorResponse.class))
             })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.PATCH,
-        value = TenantApplicationsApi.PATH_TENANT_APPLICATIONS_UPDATE_TENANT_APPLICATION,
-        produces = { "application/json" },
-        consumes = { "application/json" }
-    )
-    ResponseEntity<TenantApplication> tenantApplicationsUpdateTenantApplication(
-        @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("tenantId") String tenantId,
-        @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("clientId") String clientId,
-        @Parameter(name = "UpdateTenantApplicationRequest", description = "", required = true) @Valid @RequestBody UpdateTenantApplicationRequest updateTenantApplicationRequest
-    );
-
+      })
+  @RequestMapping(
+      method = RequestMethod.PATCH,
+      value = TenantApplicationsApi.PATH_TENANT_APPLICATIONS_UPDATE_TENANT_APPLICATION,
+      produces = {"application/json"},
+      consumes = {"application/json"})
+  ResponseEntity<TenantApplication> tenantApplicationsUpdateTenantApplication(
+      @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("tenantId")
+          String tenantId,
+      @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.PATH)
+          @PathVariable("clientId")
+          String clientId,
+      @Parameter(name = "UpdateTenantApplicationRequest", description = "", required = true)
+          @Valid
+          @RequestBody
+          UpdateTenantApplicationRequest updateTenantApplicationRequest);
 }

@@ -25,13 +25,16 @@ public class ClientMenusController implements ClientMenusApi {
   }
 
   @Override
-  public ResponseEntity<List<saas.identity.shared.dto.SysMenu>> clientMenusListSysMenus(String clientId) {
-    List<saas.identity.shared.dto.SysMenu> dtos = menus.findByClientId(clientId).stream().map(this::toDto).toList();
+  public ResponseEntity<List<saas.identity.shared.dto.SysMenu>> clientMenusListSysMenus(
+      String clientId) {
+    List<saas.identity.shared.dto.SysMenu> dtos =
+        menus.findByClientId(clientId).stream().map(this::toDto).toList();
     return ResponseEntity.ok(dtos);
   }
 
   @Override
-  public ResponseEntity<saas.identity.shared.dto.SysMenu> clientMenusCreateSysMenu(String clientId, CreateSysMenuRequest body) {
+  public ResponseEntity<saas.identity.shared.dto.SysMenu> clientMenusCreateSysMenu(
+      String clientId, CreateSysMenuRequest body) {
     SysMenu e = new SysMenu();
     e.setId(UUID.randomUUID());
     e.setClientId(clientId);
@@ -48,16 +51,20 @@ public class ClientMenusController implements ClientMenusApi {
   }
 
   @Override
-  public ResponseEntity<saas.identity.shared.dto.SysMenu> clientMenusGetSysMenu(String clientId, String menuId) {
+  public ResponseEntity<saas.identity.shared.dto.SysMenu> clientMenusGetSysMenu(
+      String clientId, String menuId) {
     UUID menuUuid = UUID.fromString(menuId);
-    SysMenu e = menus.findById(menuUuid).orElseThrow(() -> new NoSuchElementException("menu " + menuId));
+    SysMenu e =
+        menus.findById(menuUuid).orElseThrow(() -> new NoSuchElementException("menu " + menuId));
     return ResponseEntity.ok(toDto(e));
   }
 
   @Override
-  public ResponseEntity<saas.identity.shared.dto.SysMenu> clientMenusUpdateSysMenu(String clientId, String menuId, UpdateSysMenuRequest body) {
+  public ResponseEntity<saas.identity.shared.dto.SysMenu> clientMenusUpdateSysMenu(
+      String clientId, String menuId, UpdateSysMenuRequest body) {
     UUID menuUuid = UUID.fromString(menuId);
-    SysMenu e = menus.findById(menuUuid).orElseThrow(() -> new NoSuchElementException("menu " + menuId));
+    SysMenu e =
+        menus.findById(menuUuid).orElseThrow(() -> new NoSuchElementException("menu " + menuId));
     if (body.getTitle() != null) e.setTitle(body.getTitle());
     if (body.getPath() != null) e.setPath(body.getPath());
     if (body.getComponent() != null) e.setComponent(body.getComponent());
@@ -75,9 +82,11 @@ public class ClientMenusController implements ClientMenusApi {
   }
 
   @Override
-  public ResponseEntity<List<saas.identity.shared.dto.SysMenu>> clientMenusReorderSysMenus(String clientId, String menuId, ReorderSysMenuRequest body) {
+  public ResponseEntity<List<saas.identity.shared.dto.SysMenu>> clientMenusReorderSysMenus(
+      String clientId, String menuId, ReorderSysMenuRequest body) {
     UUID menuUuid = UUID.fromString(menuId);
-    SysMenu e = menus.findById(menuUuid).orElseThrow(() -> new NoSuchElementException("menu " + menuId));
+    SysMenu e =
+        menus.findById(menuUuid).orElseThrow(() -> new NoSuchElementException("menu " + menuId));
     if (body.getOrderedMenuIds() != null) {
       int idx = body.getOrderedMenuIds().indexOf(menuId);
       if (idx >= 0) e.setSortOrder(idx);
@@ -87,9 +96,11 @@ public class ClientMenusController implements ClientMenusApi {
   }
 
   @Override
-  public ResponseEntity<saas.identity.shared.dto.SysMenu> clientMenusMoveSysMenu(String clientId, String menuId, ClientMenusMoveSysMenuRequest body) {
+  public ResponseEntity<saas.identity.shared.dto.SysMenu> clientMenusMoveSysMenu(
+      String clientId, String menuId, ClientMenusMoveSysMenuRequest body) {
     UUID menuUuid = UUID.fromString(menuId);
-    SysMenu e = menus.findById(menuUuid).orElseThrow(() -> new NoSuchElementException("menu " + menuId));
+    SysMenu e =
+        menus.findById(menuUuid).orElseThrow(() -> new NoSuchElementException("menu " + menuId));
     if (body.getParentId() != null) e.setParentId(UUID.fromString(body.getParentId()));
     return ResponseEntity.ok(toDto(menus.save(e)));
   }

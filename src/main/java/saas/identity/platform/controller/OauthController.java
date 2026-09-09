@@ -31,8 +31,10 @@ public class OauthController implements OauthApi {
 
   @Override
   public ResponseEntity<OAuthAuthorize200Response> oAuthAuthorize(AuthorizeCodeRequest body) {
-    OauthClient client = clients.findByClientId(body.getClientId())
-        .orElseThrow(() -> new IllegalArgumentException("unknown client_id"));
+    OauthClient client =
+        clients
+            .findByClientId(body.getClientId())
+            .orElseThrow(() -> new IllegalArgumentException("unknown client_id"));
     UUID userId = UUID.randomUUID();
     UUID tenantId = UUID.randomUUID();
     String code = "ac_" + UUID.randomUUID();
@@ -53,8 +55,10 @@ public class OauthController implements OauthApi {
 
   @Override
   public ResponseEntity<TokenResponse> oAuthToken(TokenRequest body) {
-    OauthClient client = clients.findByClientId(body.getClientId())
-        .orElseThrow(() -> new IllegalArgumentException("unknown client_id"));
+    OauthClient client =
+        clients
+            .findByClientId(body.getClientId())
+            .orElseThrow(() -> new IllegalArgumentException("unknown client_id"));
     UUID userId = UUID.randomUUID();
     UUID tenantId = UUID.randomUUID();
 

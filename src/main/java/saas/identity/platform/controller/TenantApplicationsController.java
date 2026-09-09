@@ -23,13 +23,14 @@ public class TenantApplicationsController implements TenantApplicationsApi {
   }
 
   @Override
-  public ResponseEntity<TenantApplicationsListTenantApplications200Response> tenantApplicationsListTenantApplications(
-      String tenantId, Integer page, Integer pageSize) {
+  public ResponseEntity<TenantApplicationsListTenantApplications200Response>
+      tenantApplicationsListTenantApplications(String tenantId, Integer page, Integer pageSize) {
     int p = page == null ? 0 : page;
     int ps = pageSize == null ? 20 : pageSize;
     UUID tenantUuid = UUID.fromString(tenantId);
     var pg = apps.findByTenantId(tenantUuid, PageRequest.of(p, ps));
-    TenantApplicationsListTenantApplications200Response resp = new TenantApplicationsListTenantApplications200Response();
+    TenantApplicationsListTenantApplications200Response resp =
+        new TenantApplicationsListTenantApplications200Response();
     resp.setItems(pg.getContent().stream().map(this::toDto).toList());
     resp.setTotal(pg.getTotalElements());
     resp.setPage(p);
@@ -40,7 +41,8 @@ public class TenantApplicationsController implements TenantApplicationsApi {
   @Override
   public ResponseEntity<TenantApplication> tenantApplicationsSubscribeTenantApplication(
       String tenantId, SubscribeTenantApplicationRequest body) {
-    saas.identity.platform.entity.Generated.TenantApplication e = new saas.identity.platform.entity.Generated.TenantApplication();
+    saas.identity.platform.entity.Generated.TenantApplication e =
+        new saas.identity.platform.entity.Generated.TenantApplication();
     e.setId(UUID.randomUUID());
     e.setTenantId(UUID.fromString(tenantId));
     e.setClientId(body.getClientId());
@@ -52,18 +54,22 @@ public class TenantApplicationsController implements TenantApplicationsApi {
   public ResponseEntity<TenantApplication> tenantApplicationsUpdateTenantApplication(
       String tenantId, String clientId, UpdateTenantApplicationRequest body) {
     UUID tenantUuid = UUID.fromString(tenantId);
-    saas.identity.platform.entity.Generated.TenantApplication e = apps.findByTenantIdAndClientId(tenantUuid, clientId)
-        .orElseThrow(() -> new NoSuchElementException("tenant_application tenant=" + tenantId + " client=" + clientId));
+    saas.identity.platform.entity.Generated.TenantApplication e =
+        apps.findByTenantIdAndClientId(tenantUuid, clientId)
+            .orElseThrow(
+                () ->
+                    new NoSuchElementException(
+                        "tenant_application tenant=" + tenantId + " client=" + clientId));
     if (body.getStatus() != null) e.setStatus(body.getStatus().shortValue());
     if (body.getExpireTime() != null) e.setExpireTime(body.getExpireTime());
     return ResponseEntity.ok(toDto(apps.save(e)));
   }
 
   @Override
-  public ResponseEntity<Void> tenantApplicationsRemoveTenantApplication(String tenantId, String clientId) {
+  public ResponseEntity<Void> tenantApplicationsRemoveTenantApplication(
+      String tenantId, String clientId) {
     UUID tenantUuid = UUID.fromString(tenantId);
-    apps.findByTenantIdAndClientId(tenantUuid, clientId)
-        .ifPresent(a -> apps.deleteById(a.getId()));
+    apps.findByTenantIdAndClientId(tenantUuid, clientId).ifPresent(a -> apps.deleteById(a.getId()));
     return ResponseEntity.noContent().build();
   }
 

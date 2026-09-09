@@ -1,29 +1,21 @@
 package saas.identity.shared.dto;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import java.util.UUID;
-import org.springframework.lang.Nullable;
-import saas.identity.shared.dto.SysMenuType;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
-
-
 import java.util.*;
-import jakarta.annotation.Generated;
+import java.util.Objects;
+import java.util.UUID;
+import org.springframework.lang.Nullable;
 
-/**
- * UpdateSysMenuRequest
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+/** UpdateSysMenuRequest */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 public class UpdateSysMenuRequest {
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -60,9 +52,10 @@ public class UpdateSysMenuRequest {
 
   /**
    * Get parentId
+   *
    * @return parentId
    */
-  @Valid 
+  @Valid
   @Schema(name = "parentId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("parentId")
   public @Nullable UUID getParentId() {
@@ -81,9 +74,9 @@ public class UpdateSysMenuRequest {
 
   /**
    * Get title
+   *
    * @return title
    */
-  
   @Schema(name = "title", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("title")
   public @Nullable String getTitle() {
@@ -102,9 +95,10 @@ public class UpdateSysMenuRequest {
 
   /**
    * Get type
+   *
    * @return type
    */
-  @Valid 
+  @Valid
   @Schema(name = "type", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("type")
   public @Nullable SysMenuType getType() {
@@ -123,9 +117,9 @@ public class UpdateSysMenuRequest {
 
   /**
    * Get path
+   *
    * @return path
    */
-  
   @Schema(name = "path", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("path")
   public @Nullable String getPath() {
@@ -144,9 +138,9 @@ public class UpdateSysMenuRequest {
 
   /**
    * Get component
+   *
    * @return component
    */
-  
   @Schema(name = "component", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("component")
   public @Nullable String getComponent() {
@@ -165,9 +159,9 @@ public class UpdateSysMenuRequest {
 
   /**
    * Get perms
+   *
    * @return perms
    */
-  
   @Schema(name = "perms", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("perms")
   public @Nullable String getPerms() {
@@ -186,9 +180,9 @@ public class UpdateSysMenuRequest {
 
   /**
    * Get icon
+   *
    * @return icon
    */
-  
   @Schema(name = "icon", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("icon")
   public @Nullable String getIcon() {
@@ -207,9 +201,9 @@ public class UpdateSysMenuRequest {
 
   /**
    * Get sortOrder
+   *
    * @return sortOrder
    */
-  
   @Schema(name = "sortOrder", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("sortOrder")
   public @Nullable Integer getSortOrder() {
@@ -228,9 +222,9 @@ public class UpdateSysMenuRequest {
 
   /**
    * Get status
+   *
    * @return status
    */
-  
   @Schema(name = "status", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("status")
   public @Nullable Integer getStatus() {
@@ -251,15 +245,15 @@ public class UpdateSysMenuRequest {
       return false;
     }
     UpdateSysMenuRequest updateSysMenuRequest = (UpdateSysMenuRequest) o;
-    return Objects.equals(this.parentId, updateSysMenuRequest.parentId) &&
-        Objects.equals(this.title, updateSysMenuRequest.title) &&
-        Objects.equals(this.type, updateSysMenuRequest.type) &&
-        Objects.equals(this.path, updateSysMenuRequest.path) &&
-        Objects.equals(this.component, updateSysMenuRequest.component) &&
-        Objects.equals(this.perms, updateSysMenuRequest.perms) &&
-        Objects.equals(this.icon, updateSysMenuRequest.icon) &&
-        Objects.equals(this.sortOrder, updateSysMenuRequest.sortOrder) &&
-        Objects.equals(this.status, updateSysMenuRequest.status);
+    return Objects.equals(this.parentId, updateSysMenuRequest.parentId)
+        && Objects.equals(this.title, updateSysMenuRequest.title)
+        && Objects.equals(this.type, updateSysMenuRequest.type)
+        && Objects.equals(this.path, updateSysMenuRequest.path)
+        && Objects.equals(this.component, updateSysMenuRequest.component)
+        && Objects.equals(this.perms, updateSysMenuRequest.perms)
+        && Objects.equals(this.icon, updateSysMenuRequest.icon)
+        && Objects.equals(this.sortOrder, updateSysMenuRequest.sortOrder)
+        && Objects.equals(this.status, updateSysMenuRequest.status);
   }
 
   @Override
@@ -285,11 +279,9 @@ public class UpdateSysMenuRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
-

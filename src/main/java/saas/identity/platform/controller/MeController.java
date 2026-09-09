@@ -28,14 +28,11 @@ import saas.identity.shared.dto.SysMenuType;
 /**
  * M01.F01/F03 当前用户视图 + M04.F04.I08 me/menus 装配。
  *
- * me/menus 装配链路（M04.F04 §角色菜单授权 + 当前用户渲染）：
- *   1. tenant_member WHERE user_id = me → member 列表
- *   2. tenant_member_role WHERE member_id IN (...) → role ids
- *   3. sys_role_menu WHERE role_id IN (...) → menu ids
- *   4. sys_menu WHERE id IN (...) → 全部菜单
- *   5. flat → tree（parentId 链），group by clientId
+ * <p>me/menus 装配链路（M04.F04 §角色菜单授权 + 当前用户渲染）： 1. tenant_member WHERE user_id = me → member 列表 2.
+ * tenant_member_role WHERE member_id IN (...) → role ids 3. sys_role_menu WHERE role_id IN (...) →
+ * menu ids 4. sys_menu WHERE id IN (...) → 全部菜单 5. flat → tree（parentId 链），group by clientId
  *
- * skeleton：userId 从 query param 拿；后续接入 JWT 后改 @AuthenticationPrincipal Jwt。
+ * <p>skeleton：userId 从 query param 拿；后续接入 JWT 后改 @AuthenticationPrincipal Jwt。
  */
 @RestController
 public class MeController implements MeApi {
@@ -67,7 +64,8 @@ public class MeController implements MeApi {
   }
 
   @Override
-  public ResponseEntity<List<saas.identity.shared.dto.TenantMember>> meListMyTenants(String clientId) {
+  public ResponseEntity<List<saas.identity.shared.dto.TenantMember>> meListMyTenants(
+      String clientId) {
     return ResponseEntity.ok(List.of());
   }
 
@@ -82,10 +80,11 @@ public class MeController implements MeApi {
    * M04.F04.I08 — 当前用户有效菜单装配。
    *
    * <p>userId 提取路径（M04.F04 §2.3 + ADR-0020 路线 A）：
+   *
    * <ul>
-   *   <li>生产：JwtAuthenticationToken.getToken().getSubject() === userId（UUID string）</li>
-   *   <li>测试：@WithMockUser 时 principal 是 User，getName() 返回 username（仍可作为 lookup key）</li>
-   *   <li>无认证：返回 Map.of()</li>
+   *   <li>生产：JwtAuthenticationToken.getToken().getSubject() === userId（UUID string）
+   *   <li>测试：@WithMockUser 时 principal 是 User，getName() 返回 username（仍可作为 lookup key）
+   *   <li>无认证：返回 Map.of()
    * </ul>
    */
   @Override
@@ -101,10 +100,11 @@ public class MeController implements MeApi {
    * 从 SecurityContextHolder 提取当前用户 ID。
    *
    * <p>支持三种 principal：
+   *
    * <ol>
-   *   <li>Jwt（生产 + smoke test）：subject = userId</li>
-   *   <li>User / UsernamePasswordAuthenticationToken（@WithMockUser 测试）：name = username</li>
-   *   <li>无认证（permitAll 路径意外走到）：null</li>
+   *   <li>Jwt（生产 + smoke test）：subject = userId
+   *   <li>User / UsernamePasswordAuthenticationToken（@WithMockUser 测试）：name = username
+   *   <li>无认证（permitAll 路径意外走到）：null
    * </ol>
    *
    * 返回 null 表示无认证上下文，由调用方决定回退策略。
@@ -137,8 +137,8 @@ public class MeController implements MeApi {
   }
 
   /**
-   * M04.F04.I08 — 内部用 me/menus 装配（未来接 JWT 后直接走这个）。
-   * 当前未挂 controller（skeleton 用 meGetMyMenus 返回 Map.of()）。
+   * M04.F04.I08 — 内部用 me/menus 装配（未来接 JWT 后直接走这个）。 当前未挂 controller（skeleton 用 meGetMyMenus 返回
+   * Map.of()）。
    */
   public Map<String, List<EffectiveMenuNode>> assembleMenus(UUID userId) {
     // 1. tenant_member
@@ -166,8 +166,8 @@ public class MeController implements MeApi {
     List<SysMenu> flat = menus.findAllById(menuIds);
 
     // 5. group by clientId, build tree per client
-    Map<String, List<SysMenu>> byClient = flat.stream()
-        .collect(Collectors.groupingBy(SysMenu::getClientId));
+    Map<String, List<SysMenu>> byClient =
+        flat.stream().collect(Collectors.groupingBy(SysMenu::getClientId));
 
     Map<String, List<EffectiveMenuNode>> result = new HashMap<>();
     for (var entry : byClient.entrySet()) {
@@ -187,7 +187,10 @@ public class MeController implements MeApi {
       n.setClientId(m.getClientId());
       n.setParentId(m.getParentId());
       n.setTitle(m.getTitle());
-      n.setType(m.getType() == null ? null : SysMenuType.fromValue(String.valueOf(m.getType().intValue())));
+      n.setType(
+          m.getType() == null
+              ? null
+              : SysMenuType.fromValue(String.valueOf(m.getType().intValue())));
       n.setPath(m.getPath());
       n.setComponent(m.getComponent());
       n.setPerms(m.getPerms());
@@ -214,9 +217,11 @@ public class MeController implements MeApi {
     }
 
     // 3. sort by sortOrder
-    roots.sort((a, b) -> Integer.compare(
-        a.getSortOrder() == null ? 0 : a.getSortOrder(),
-        b.getSortOrder() == null ? 0 : b.getSortOrder()));
+    roots.sort(
+        (a, b) ->
+            Integer.compare(
+                a.getSortOrder() == null ? 0 : a.getSortOrder(),
+                b.getSortOrder() == null ? 0 : b.getSortOrder()));
     return roots;
   }
 }

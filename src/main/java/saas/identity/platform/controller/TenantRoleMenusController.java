@@ -46,7 +46,8 @@ public class TenantRoleMenusController implements TenantRoleMenusApi {
   }
 
   @Override
-  public ResponseEntity<Void> tenantRoleMenusClearSysRoleMenus(String tenantId, String roleId, String clientId) {
+  public ResponseEntity<Void> tenantRoleMenusClearSysRoleMenus(
+      String tenantId, String roleId, String clientId) {
     UUID roleUuid = UUID.fromString(roleId);
     roleMenus.deleteByRoleId(roleUuid);
     return ResponseEntity.noContent().build();

@@ -38,7 +38,8 @@ public class TenantRolesController implements TenantRolesApi {
   @Override
   public ResponseEntity<saas.identity.shared.dto.SysRole> tenantRolesCreateSysRole(
       String tenantId, CreateSysRoleRequest body) {
-    saas.identity.platform.entity.Generated.SysRole e = new saas.identity.platform.entity.Generated.SysRole();
+    saas.identity.platform.entity.Generated.SysRole e =
+        new saas.identity.platform.entity.Generated.SysRole();
     e.setId(UUID.randomUUID());
     e.setTenantId(UUID.fromString(tenantId));
     e.setClientId("default");
@@ -50,10 +51,11 @@ public class TenantRolesController implements TenantRolesApi {
   }
 
   @Override
-  public ResponseEntity<saas.identity.shared.dto.SysRole> tenantRolesGetSysRole(String tenantId, String roleId) {
+  public ResponseEntity<saas.identity.shared.dto.SysRole> tenantRolesGetSysRole(
+      String tenantId, String roleId) {
     UUID roleUuid = UUID.fromString(roleId);
-    saas.identity.platform.entity.Generated.SysRole e = roles.findById(roleUuid)
-        .orElseThrow(() -> new NoSuchElementException("role " + roleId));
+    saas.identity.platform.entity.Generated.SysRole e =
+        roles.findById(roleUuid).orElseThrow(() -> new NoSuchElementException("role " + roleId));
     return ResponseEntity.ok(toDto(e));
   }
 
@@ -61,8 +63,8 @@ public class TenantRolesController implements TenantRolesApi {
   public ResponseEntity<saas.identity.shared.dto.SysRole> tenantRolesUpdateSysRole(
       String tenantId, String roleId, UpdateSysRoleRequest body) {
     UUID roleUuid = UUID.fromString(roleId);
-    saas.identity.platform.entity.Generated.SysRole e = roles.findById(roleUuid)
-        .orElseThrow(() -> new NoSuchElementException("role " + roleId));
+    saas.identity.platform.entity.Generated.SysRole e =
+        roles.findById(roleUuid).orElseThrow(() -> new NoSuchElementException("role " + roleId));
     if (body.getRoleName() != null) e.setRoleName(body.getRoleName());
     if (body.getDescription() != null) e.setDescription(body.getDescription());
     return ResponseEntity.ok(toDto(roles.save(e)));
@@ -75,7 +77,8 @@ public class TenantRolesController implements TenantRolesApi {
     return ResponseEntity.noContent().build();
   }
 
-  private saas.identity.shared.dto.SysRole toDto(saas.identity.platform.entity.Generated.SysRole e) {
+  private saas.identity.shared.dto.SysRole toDto(
+      saas.identity.platform.entity.Generated.SysRole e) {
     saas.identity.shared.dto.SysRole d = new saas.identity.shared.dto.SysRole();
     d.setId(e.getId());
     d.setTenantId(e.getTenantId());

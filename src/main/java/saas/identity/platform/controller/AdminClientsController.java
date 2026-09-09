@@ -1,6 +1,5 @@
 package saas.identity.platform.controller;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 import org.springframework.data.domain.PageRequest;
@@ -26,7 +25,8 @@ public class AdminClientsController implements AdminClientsApi {
   }
 
   @Override
-  public ResponseEntity<AdminClientsListClients200Response> adminClientsListClients(Integer page, Integer pageSize) {
+  public ResponseEntity<AdminClientsListClients200Response> adminClientsListClients(
+      Integer page, Integer pageSize) {
     int p = page == null ? 0 : page;
     int ps = pageSize == null ? 20 : pageSize;
     var pg = clients.findAll(PageRequest.of(p, ps));
@@ -56,15 +56,20 @@ public class AdminClientsController implements AdminClientsApi {
 
   @Override
   public ResponseEntity<OAuthClient> adminClientsGetClient(String clientId) {
-    OauthClient e = clients.findByClientId(clientId)
-        .orElseThrow(() -> new NoSuchElementException("client " + clientId));
+    OauthClient e =
+        clients
+            .findByClientId(clientId)
+            .orElseThrow(() -> new NoSuchElementException("client " + clientId));
     return ResponseEntity.ok(toDto(e));
   }
 
   @Override
-  public ResponseEntity<OAuthClient> adminClientsUpdateClient(String clientId, UpdateOAuthClientRequest body) {
-    OauthClient e = clients.findByClientId(clientId)
-        .orElseThrow(() -> new NoSuchElementException("client " + clientId));
+  public ResponseEntity<OAuthClient> adminClientsUpdateClient(
+      String clientId, UpdateOAuthClientRequest body) {
+    OauthClient e =
+        clients
+            .findByClientId(clientId)
+            .orElseThrow(() -> new NoSuchElementException("client " + clientId));
     if (body.getClientName() != null) e.setClientName(body.getClientName());
     if (body.getRedirectUris() != null) e.setRedirectUris(body.getRedirectUris());
     if (body.getScopes() != null) e.setScopes(body.getScopes());
@@ -73,16 +78,21 @@ public class AdminClientsController implements AdminClientsApi {
 
   @Override
   public ResponseEntity<Void> adminClientsDeleteClient(String clientId) {
-    OauthClient e = clients.findByClientId(clientId)
-        .orElseThrow(() -> new NoSuchElementException("client " + clientId));
+    OauthClient e =
+        clients
+            .findByClientId(clientId)
+            .orElseThrow(() -> new NoSuchElementException("client " + clientId));
     clients.deleteById(e.getId());
     return ResponseEntity.noContent().build();
   }
 
   @Override
-  public ResponseEntity<OAuthClient> adminClientsSetClientStatus(String clientId, AdminClientsSetClientStatusRequest body) {
-    OauthClient e = clients.findByClientId(clientId)
-        .orElseThrow(() -> new NoSuchElementException("client " + clientId));
+  public ResponseEntity<OAuthClient> adminClientsSetClientStatus(
+      String clientId, AdminClientsSetClientStatusRequest body) {
+    OauthClient e =
+        clients
+            .findByClientId(clientId)
+            .orElseThrow(() -> new NoSuchElementException("client " + clientId));
     if (body.getStatus() != null) e.setStatus(body.getStatus().shortValue());
     return ResponseEntity.ok(toDto(clients.save(e)));
   }

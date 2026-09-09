@@ -11,7 +11,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +25,7 @@ import saas.identity.platform.entity.Generated.SysRole;
 import saas.identity.platform.repository.SysRoleRepository;
 import saas.identity.shared.dto.CreateSysRoleRequest;
 
-/**
- * M00.F03 租户角色 CRUD 测试。
- */
+/** M00.F03 租户角色 CRUD 测试。 */
 @WebMvcTest(controllers = {TenantRolesController.class})
 class TenantRolesControllerTest {
 
@@ -55,11 +52,12 @@ class TenantRolesControllerTest {
     req.setRoleCode("viewer");
     req.setRoleName("查看者");
 
-    mvc.perform(post("/api/v1/tenants/" + tenantId + "/roles")
-            .param("clientId", "lab-management")
-            .with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json.writeValueAsString(req)))
+    mvc.perform(
+            post("/api/v1/tenants/" + tenantId + "/roles")
+                .param("clientId", "lab-management")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json.writeValueAsString(req)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.roleCode").value("viewer"))
         .andExpect(jsonPath("$.roleName").value("查看者"));
@@ -76,8 +74,9 @@ class TenantRolesControllerTest {
     when(roles.findAll(any(PageRequest.class)))
         .thenReturn(new PageImpl<>(List.of(r), PageRequest.of(0, 20), 1));
 
-    mvc.perform(get("/api/v1/tenants/" + UUID.randomUUID() + "/roles")
-            .param("clientId", "lab-management"))
+    mvc.perform(
+            get("/api/v1/tenants/" + UUID.randomUUID() + "/roles")
+                .param("clientId", "lab-management"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.items").isArray())
         .andExpect(jsonPath("$.items[0].roleCode").value("admin"));
@@ -89,8 +88,7 @@ class TenantRolesControllerTest {
     UUID tenantId = UUID.randomUUID();
     UUID roleId = UUID.randomUUID();
 
-    mvc.perform(delete("/api/v1/tenants/" + tenantId + "/roles/" + roleId)
-            .with(csrf()))
+    mvc.perform(delete("/api/v1/tenants/" + tenantId + "/roles/" + roleId).with(csrf()))
         .andExpect(status().isNoContent());
   }
 }

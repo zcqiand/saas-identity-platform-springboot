@@ -1,30 +1,22 @@
 package saas.identity.shared.dto;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import java.time.OffsetDateTime;
+import java.util.*;
+import java.util.Objects;
 import java.util.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
-import saas.identity.shared.dto.TenantStatus;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
 
-
-import java.util.*;
-import jakarta.annotation.Generated;
-
-/**
- * Tenant
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+/** Tenant */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 public class Tenant {
 
   private UUID id;
@@ -45,10 +37,14 @@ public class Tenant {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
-  public Tenant(UUID id, String tenantKey, String name, TenantStatus status, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
+  /** Constructor with only required parameters */
+  public Tenant(
+      UUID id,
+      String tenantKey,
+      String name,
+      TenantStatus status,
+      OffsetDateTime createdAt,
+      OffsetDateTime updatedAt) {
     this.id = id;
     this.tenantKey = tenantKey;
     this.name = name;
@@ -64,9 +60,11 @@ public class Tenant {
 
   /**
    * Get id
+   *
    * @return id
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("id")
   public UUID getId() {
@@ -85,9 +83,11 @@ public class Tenant {
 
   /**
    * Get tenantKey
+   *
    * @return tenantKey
    */
-  @NotNull @Size(min = 2, max = 64) 
+  @NotNull
+  @Size(min = 2, max = 64)
   @Schema(name = "tenantKey", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("tenantKey")
   public String getTenantKey() {
@@ -106,9 +106,11 @@ public class Tenant {
 
   /**
    * Get name
+   *
    * @return name
    */
-  @NotNull @Size(min = 2, max = 128) 
+  @NotNull
+  @Size(min = 2, max = 128)
   @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("name")
   public String getName() {
@@ -127,9 +129,11 @@ public class Tenant {
 
   /**
    * Get status
+   *
    * @return status
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("status")
   public TenantStatus getStatus() {
@@ -148,9 +152,11 @@ public class Tenant {
 
   /**
    * Get createdAt
+   *
    * @return createdAt
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "createdAt", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("createdAt")
   public OffsetDateTime getCreatedAt() {
@@ -169,9 +175,11 @@ public class Tenant {
 
   /**
    * Get updatedAt
+   *
    * @return updatedAt
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "updatedAt", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("updatedAt")
   public OffsetDateTime getUpdatedAt() {
@@ -192,12 +200,12 @@ public class Tenant {
       return false;
     }
     Tenant tenant = (Tenant) o;
-    return Objects.equals(this.id, tenant.id) &&
-        Objects.equals(this.tenantKey, tenant.tenantKey) &&
-        Objects.equals(this.name, tenant.name) &&
-        Objects.equals(this.status, tenant.status) &&
-        Objects.equals(this.createdAt, tenant.createdAt) &&
-        Objects.equals(this.updatedAt, tenant.updatedAt);
+    return Objects.equals(this.id, tenant.id)
+        && Objects.equals(this.tenantKey, tenant.tenantKey)
+        && Objects.equals(this.name, tenant.name)
+        && Objects.equals(this.status, tenant.status)
+        && Objects.equals(this.createdAt, tenant.createdAt)
+        && Objects.equals(this.updatedAt, tenant.updatedAt);
   }
 
   @Override
@@ -220,11 +228,9 @@ public class Tenant {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
-

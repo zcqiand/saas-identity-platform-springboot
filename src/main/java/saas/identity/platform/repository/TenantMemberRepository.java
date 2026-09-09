@@ -9,6 +9,8 @@ import saas.identity.platform.entity.Generated.TenantMember;
 
 public interface TenantMemberRepository extends JpaRepository<TenantMember, UUID> {
   List<TenantMember> findByTenantId(UUID tenantId);
+
   Page<TenantMember> findByTenantId(UUID tenantId, Pageable pageable);
+
   List<TenantMember> findByUserId(UUID userId);
 }

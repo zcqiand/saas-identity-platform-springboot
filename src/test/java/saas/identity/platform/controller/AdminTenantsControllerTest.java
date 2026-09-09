@@ -23,14 +23,11 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import saas.identity.platform.entity.Generated.Tenant;
 import saas.identity.platform.repository.TenantRepository;
-import saas.identity.shared.api.AdminTenantsApi;
 import saas.identity.shared.api.TenantRolesApi;
 import saas.identity.shared.dto.CreateTenantRequest;
 import saas.identity.shared.dto.UpdateTenantRequest;
 
-/**
- * M00.F01 平台 admin 租户 CRUD 测试。
- */
+/** M00.F01 平台 admin 租户 CRUD 测试。 */
 @WebMvcTest(controllers = {AdminTenantsController.class})
 class AdminTenantsControllerTest {
 
@@ -74,10 +71,11 @@ class AdminTenantsControllerTest {
     req.setTenantKey("acme");
     req.setName("ACME Inc");
 
-    mvc.perform(post("/api/v1/admin/tenants")
-            .with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json.writeValueAsString(req)))
+    mvc.perform(
+            post("/api/v1/admin/tenants")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json.writeValueAsString(req)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.tenantKey").value("acme"));
   }
@@ -88,8 +86,7 @@ class AdminTenantsControllerTest {
     UUID id = UUID.randomUUID();
     when(tenants.findById(id)).thenReturn(Optional.empty());
 
-    mvc.perform(get("/api/v1/admin/tenants/" + id))
-        .andExpect(status().is4xxClientError());
+    mvc.perform(get("/api/v1/admin/tenants/" + id)).andExpect(status().is4xxClientError());
   }
 
   @Test
@@ -106,11 +103,12 @@ class AdminTenantsControllerTest {
 
     UpdateTenantRequest req = new UpdateTenantRequest();
     req.setName("New Name");
-    mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-            .patch("/api/v1/admin/tenants/" + id)
-            .with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json.writeValueAsString(req)))
+    mvc.perform(
+            org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch(
+                    "/api/v1/admin/tenants/" + id)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json.writeValueAsString(req)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.name").value("New Name"));
   }

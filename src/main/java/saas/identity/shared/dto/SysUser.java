@@ -1,31 +1,23 @@
 package saas.identity.shared.dto;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import java.time.OffsetDateTime;
+import java.util.*;
+import java.util.Objects;
 import java.util.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
-import saas.identity.shared.dto.SysUserStatus;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
 
-
-import java.util.*;
-import jakarta.annotation.Generated;
-
-/**
- * SysUser
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+/** SysUser */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 public class SysUser {
 
   private UUID id;
@@ -57,10 +49,13 @@ public class SysUser {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
-  public SysUser(UUID id, String username, SysUserStatus status, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
+  /** Constructor with only required parameters */
+  public SysUser(
+      UUID id,
+      String username,
+      SysUserStatus status,
+      OffsetDateTime createdAt,
+      OffsetDateTime updatedAt) {
     this.id = id;
     this.username = username;
     this.status = status;
@@ -75,9 +70,11 @@ public class SysUser {
 
   /**
    * Get id
+   *
    * @return id
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("id")
   public UUID getId() {
@@ -96,9 +93,11 @@ public class SysUser {
 
   /**
    * Get username
+   *
    * @return username
    */
-  @NotNull @Size(min = 1, max = 64) 
+  @NotNull
+  @Size(min = 1, max = 64)
   @Schema(name = "username", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("username")
   public String getUsername() {
@@ -117,9 +116,10 @@ public class SysUser {
 
   /**
    * Get email
+   *
    * @return email
    */
-  @jakarta.validation.constraints.Email 
+  @jakarta.validation.constraints.Email
   @Schema(name = "email", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("email")
   public @Nullable String getEmail() {
@@ -138,9 +138,9 @@ public class SysUser {
 
   /**
    * Get mobile
+   *
    * @return mobile
    */
-  
   @Schema(name = "mobile", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("mobile")
   public @Nullable String getMobile() {
@@ -159,9 +159,11 @@ public class SysUser {
 
   /**
    * Get status
+   *
    * @return status
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("status")
   public SysUserStatus getStatus() {
@@ -180,9 +182,9 @@ public class SysUser {
 
   /**
    * Get failedAttempts
+   *
    * @return failedAttempts
    */
-  
   @Schema(name = "failedAttempts", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("failedAttempts")
   public @Nullable Integer getFailedAttempts() {
@@ -201,9 +203,10 @@ public class SysUser {
 
   /**
    * Get lockedUntil
+   *
    * @return lockedUntil
    */
-  @Valid 
+  @Valid
   @Schema(name = "lockedUntil", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("lockedUntil")
   public @Nullable OffsetDateTime getLockedUntil() {
@@ -222,9 +225,11 @@ public class SysUser {
 
   /**
    * Get createdAt
+   *
    * @return createdAt
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "createdAt", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("createdAt")
   public OffsetDateTime getCreatedAt() {
@@ -243,9 +248,11 @@ public class SysUser {
 
   /**
    * Get updatedAt
+   *
    * @return updatedAt
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "updatedAt", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("updatedAt")
   public OffsetDateTime getUpdatedAt() {
@@ -266,20 +273,21 @@ public class SysUser {
       return false;
     }
     SysUser sysUser = (SysUser) o;
-    return Objects.equals(this.id, sysUser.id) &&
-        Objects.equals(this.username, sysUser.username) &&
-        Objects.equals(this.email, sysUser.email) &&
-        Objects.equals(this.mobile, sysUser.mobile) &&
-        Objects.equals(this.status, sysUser.status) &&
-        Objects.equals(this.failedAttempts, sysUser.failedAttempts) &&
-        Objects.equals(this.lockedUntil, sysUser.lockedUntil) &&
-        Objects.equals(this.createdAt, sysUser.createdAt) &&
-        Objects.equals(this.updatedAt, sysUser.updatedAt);
+    return Objects.equals(this.id, sysUser.id)
+        && Objects.equals(this.username, sysUser.username)
+        && Objects.equals(this.email, sysUser.email)
+        && Objects.equals(this.mobile, sysUser.mobile)
+        && Objects.equals(this.status, sysUser.status)
+        && Objects.equals(this.failedAttempts, sysUser.failedAttempts)
+        && Objects.equals(this.lockedUntil, sysUser.lockedUntil)
+        && Objects.equals(this.createdAt, sysUser.createdAt)
+        && Objects.equals(this.updatedAt, sysUser.updatedAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, username, email, mobile, status, failedAttempts, lockedUntil, createdAt, updatedAt);
+    return Objects.hash(
+        id, username, email, mobile, status, failedAttempts, lockedUntil, createdAt, updatedAt);
   }
 
   @Override
@@ -300,11 +308,9 @@ public class SysUser {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
-

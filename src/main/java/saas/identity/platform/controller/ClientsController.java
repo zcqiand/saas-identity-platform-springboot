@@ -20,8 +20,10 @@ public class ClientsController implements ClientsApi {
 
   @Override
   public ResponseEntity<OAuthClientPublicInfo> clientsGetClient(String clientId) {
-    OauthClient c = clients.findByClientId(clientId)
-        .orElseThrow(() -> new NoSuchElementException("client " + clientId + " not found"));
+    OauthClient c =
+        clients
+            .findByClientId(clientId)
+            .orElseThrow(() -> new NoSuchElementException("client " + clientId + " not found"));
     OAuthClientPublicInfo info = new OAuthClientPublicInfo();
     info.setClientId(c.getClientId());
     info.setClientName(c.getClientName());

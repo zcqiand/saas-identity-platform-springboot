@@ -28,7 +28,8 @@ public class TenantMembersController implements TenantMembersApi {
   private final TenantMemberRepository members;
   private final TenantMemberRoleRepository memberRoles;
 
-  public TenantMembersController(TenantMemberRepository members, TenantMemberRoleRepository memberRoles) {
+  public TenantMembersController(
+      TenantMemberRepository members, TenantMemberRoleRepository memberRoles) {
     this.members = members;
     this.memberRoles = memberRoles;
   }
@@ -61,10 +62,13 @@ public class TenantMembersController implements TenantMembersApi {
   }
 
   @Override
-  public ResponseEntity<TenantMemberView> tenantMembersGetTenantUser(String tenantId, String userId) {
+  public ResponseEntity<TenantMemberView> tenantMembersGetTenantUser(
+      String tenantId, String userId) {
     UUID memberUuid = UUID.fromString(userId);
-    TenantMember e = members.findById(memberUuid)
-        .orElseThrow(() -> new NoSuchElementException("member " + userId));
+    TenantMember e =
+        members
+            .findById(memberUuid)
+            .orElseThrow(() -> new NoSuchElementException("member " + userId));
     return ResponseEntity.ok(toView(e, null));
   }
 
@@ -72,8 +76,10 @@ public class TenantMembersController implements TenantMembersApi {
   public ResponseEntity<TenantMemberView> tenantMembersUpdateTenantUser(
       String tenantId, String userId, UpdateSysUserRequest body) {
     UUID memberUuid = UUID.fromString(userId);
-    TenantMember e = members.findById(memberUuid)
-        .orElseThrow(() -> new NoSuchElementException("member " + userId));
+    TenantMember e =
+        members
+            .findById(memberUuid)
+            .orElseThrow(() -> new NoSuchElementException("member " + userId));
     return ResponseEntity.ok(toView(members.save(e), null));
   }
 
@@ -88,8 +94,10 @@ public class TenantMembersController implements TenantMembersApi {
   public ResponseEntity<TenantMemberView> tenantMembersChangeTenantUserStatus(
       String tenantId, String userId, TenantMembersChangeTenantUserStatusRequest body) {
     UUID memberUuid = UUID.fromString(userId);
-    TenantMember e = members.findById(memberUuid)
-        .orElseThrow(() -> new NoSuchElementException("member " + userId));
+    TenantMember e =
+        members
+            .findById(memberUuid)
+            .orElseThrow(() -> new NoSuchElementException("member " + userId));
     if (body.getStatus() != null) {
       e.setStatus((short) (body.getStatus() == TenantMemberStatus.ACTIVE ? 1 : 0));
     }
@@ -120,8 +128,10 @@ public class TenantMembersController implements TenantMembersApi {
         memberRoles.save(r);
       }
     }
-    TenantMember e = members.findById(memberUuid)
-        .orElseThrow(() -> new NoSuchElementException("member " + userId));
+    TenantMember e =
+        members
+            .findById(memberUuid)
+            .orElseThrow(() -> new NoSuchElementException("member " + userId));
     return ResponseEntity.ok(toView(e, null));
   }
 
@@ -135,8 +145,12 @@ public class TenantMembersController implements TenantMembersApi {
     tm.setId(e.getId());
     tm.setTenantId(e.getTenantId());
     tm.setUserId(e.getUserId());
-    tm.setStatus(e.getStatus() == null ? null
-        : (e.getStatus().intValue() == 1 ? TenantMemberStatus.ACTIVE : TenantMemberStatus.DISABLED));
+    tm.setStatus(
+        e.getStatus() == null
+            ? null
+            : (e.getStatus().intValue() == 1
+                ? TenantMemberStatus.ACTIVE
+                : TenantMemberStatus.DISABLED));
     v.setMember(tm);
     if (body != null && body.getUsername() != null) {
       SysUser u = new SysUser();

@@ -17,12 +17,21 @@
 
 set -euo pipefail
 
-cd "$(git rev-parse --show-toplevel)"
+# 不要用 `git rev-parse --show-toplevel` —— 本仓是 submodule，
+# 该命令返回外层 xr-code-suite 根而不是本仓根，让 Generated/ 路径算错。
+# 用脚本自身所在目录的父目录锚定到仓根。
+cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.."
 
-echo "[scaffold-entities] step 1/3 — node scripts/scaffold-entities.mjs"
+echo "[scaffold-entities] step 1/4 — node scripts/scaffold-entities.mjs"
 node scripts/scaffold-entities.mjs
 
-echo "[scaffold-entities] step 2/3 — git diff entity/Generated/"
+# step 2/4: scaffold 产出的 Generated/*.java 不带 google-java-format 格式（jdbc 反推是裸 Java）。
+# 直接跑 mvn spotless:apply 重排版，否则后续 gate L1 格式门会因 scaffold 触发的 spotless cache 失败。
+# clear spotless-index 防止上次缓存命中导致 apply 跳过。
+echo "[scaffold-entities] step 2/4 — mvn spotless:apply（消除 scaffold 触发的 L1 格式漂移）"
+rm -f target/spotless-index && mvn spotless:apply -q
+
+echo "[scaffold-entities] step 3/4 — git diff entity/Generated/"
 if ! git diff --exit-code --quiet src/main/java/saas/identity/platform/entity/Generated/ 2>/dev/null; then
   echo "[scaffold-entities] FATAL: scaffold 产物与 git HEAD 不一致" >&2
   echo "[scaffold-entities]        处理：确认 DB 是最新（shared 已 db:migrate），" >&2
@@ -30,12 +39,12 @@ if ! git diff --exit-code --quiet src/main/java/saas/identity/platform/entity/Ge
   exit 1
 fi
 
-echo "[scaffold-entities] step 3/3 — OK"
+echo "[scaffold-entities] step 4/4 — OK"
 echo "[scaffold-entities]    entity 类已与 DB 同步；DB-First sync 绿"
 
 # ADR-0026 §2: 写 last-gen-shared.json marker（DB 类别），失败不阻塞 scaffold。
-SHARED_DIR="$(cd "$(git rev-parse --show-toplevel)/../saas-identity-platform-shared" && pwd)"
-ROOT="$(git rev-parse --show-toplevel)"
+ROOT="$(pwd)"
+SHARED_DIR="$(cd "${ROOT}/../saas-identity-platform-shared" && pwd)"
 SHARED_SHA=$(cd "$SHARED_DIR" && git rev-parse HEAD)
 MARKER="$ROOT/.state/last-gen-shared.json"
 mkdir -p "$ROOT/.state"

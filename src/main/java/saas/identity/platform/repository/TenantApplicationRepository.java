@@ -10,6 +10,8 @@ import saas.identity.platform.entity.Generated.TenantApplication;
 
 public interface TenantApplicationRepository extends JpaRepository<TenantApplication, UUID> {
   List<TenantApplication> findByTenantId(UUID tenantId);
+
   Page<TenantApplication> findByTenantId(UUID tenantId, Pageable pageable);
+
   Optional<TenantApplication> findByTenantIdAndClientId(UUID tenantId, String clientId);
 }
