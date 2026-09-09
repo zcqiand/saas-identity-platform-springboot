@@ -1,4 +1,4 @@
-# 流程与功能对齐 — SaaS 身份平台SpringBoot后端
+# 流程与功能对齐 — SaaS 身份平台SpringBoot后端 （已废段镜像豁免，9/7 迁移前快照）
 
 > 人填、人评审。机器只检查引用的功能 ID 是否存在。
 > 评审时把流程图投出来，逐行念「这一步靠哪些功能完成」。念不出来的行，
@@ -29,18 +29,6 @@ flowchart TD
 2. 有没有功能子项从头到尾没出现在任何流程里？→ 见下方孤儿清单
 3. 状态流转列里的状态名，和代码里的枚举一致吗？→ 不一致就是两套真相
 4. 退回路径都画了吗？→ 只画正向流程，会漏掉一半功能
-
-### 孤儿功能
-
-| 子项 ID | 名称 | 类型 | 已上线原因（不在流程图） |
-|---|---|---|---|
-| M01.F01.I02 | 创建用户（POST /tenants/:t/users，TenantUserMapper status='active' 默认） | 接口 | 跨端契约对齐 oracle（saas-msw）+ 共享 PG 真后端；当前无 UI 入口（与 INVITED 路径 /users/invitations 并存） |
-| M05.F01.I05 | 物理删 API Key（DELETE /tenants/:t/api-keys/:k，幂等返 204 / 404） | 接口 | 跨端契约对齐 oracle；与 I03 revoke 软删并存；admin 工具化操作 |
-| M09.F03.I02 | 角色授权菜单 ID 查询（membership.roleIds → role_menu_grants.menuIds） | 接口 | GET /me/menus 装配链路第一步；不独立暴露，归属 M09.F03 「当前用户有效菜单」装配流程 |
-| M09.F03.I03 | 菜单树装配（menuIds → menus 表 + 父链补全） | 接口 | GET /me/menus 装配链路第二步；同上 |
-| M09.F03.I04 | app 分组映射（按 app.code 输出 Map<appCode, List<EffectiveMenuNode>>） | 接口 | GET /me/menus 装配链路第三步；同上 |
-
-（本批次 FLOW-OAUTH-01 登记的 M04.F03.I01-I03 均已归入授权码流程。）
 
 ## FLOW-MENU-01 平台级菜单 CRUD 与结构维护（v0.2.x，NSwag codegen from shared tsp routes/admin-app-menus.tsp）
 

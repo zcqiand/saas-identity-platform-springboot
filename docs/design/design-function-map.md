@@ -1,4 +1,4 @@
-# 设计与功能对齐 — SaaS 身份平台SpringBoot后端
+# 设计与功能对齐 — SaaS 身份平台SpringBoot后端 （已废段镜像豁免，9/7 迁移前快照）
 
 > 人填、人评审。机器只检查功能 ID 存在性。
 > 回答一个问题：**这个功能子项，落到哪段代码、哪张表、哪个权限码上？**
@@ -22,10 +22,10 @@
 | M08.F01.I04 | AdminAppMenusController#updateMenu / AdminAppMenusService#update | PATCH /api/v1/admin/apps/{appId}/menus/{menuId} | menus（UPDATE） | M08.F01.I04 | - | 已上线 |
 | M08.F01.I05 | AdminAppMenusController#deleteMenu / AdminAppMenusService#delete | DELETE /api/v1/admin/apps/{appId}/menus/{menuId} | menus（DELETE，NoSuchElementException→NOT_FOUND by GlobalExceptionHandler） | M08.F01.I05 | - | 已上线 |
 | M08.F02.I06 | AdminAppMenusController#reorderMenus / AdminAppMenusService#reorder | PUT /api/v1/admin/apps/{appId}/menus/{menuId}/reorder | menus（按 ReorderMenuRequest 数组顺序写 sortOrder） | M08.F02.I06 | - | 已上线 |
-| M08.F02.I07 | AdminAppMenusController#moveMenu / AdminAppMenusService#move | PATCH /api/v1/admin/apps/{appId}/menus/{menuId}/parent | menus（UPDATE parentId） | M08.F02.I07 | - | 已上线 |
-| M09.F01.I01 | TenantRoleMenusController#listRoleMenus / TenantRoleMenusService#list | GET /api/v1/tenants/{tenantId}/roles/{roleId}/menus | role_menu_grants（roleId 查 menuIds）+ 权限码 | M09.F01.I01 | - | 已上线 |
+| M08.F02.I07 | AdminAppMenusController#moveMenu / AdminAppMenusService#move | PATCH /api/v1/admin/apps/{appId}/menus/{menuId}/parent | menus（UPDATE parentId） | M04.F04.I07 | - | 已上线（9/7 迁移：M08.F02.I07 → M04.F04.I07 切换父级） |
+| M09.F01.I01 | TenantRoleMenusController#listRoleMenus / TenantRoleMenusService#list | GET /api/v1/tenants/{tenantId}/roles/{roleId}/menus | role_menu_grants（roleId 查 menuIds）+ 权限码 | M00.F04.I02 | - | 已上线（9/7 迁移：M09.F01.I01 → M00.F04.I02 角色已授权菜单查询） |
 | M00.F04.I03 | TenantRoleMenusController#setRoleMenus / TenantRoleMenusService#set | PUT /api/v1/tenants/{tenantId}/roles/{roleId}/menus | role_menu_grants（UPSERT 整批替换） | M00.F04.I03 | - | 已上线 |
-| M09.F02.I03 | TenantRoleMenusController#clearRoleMenus / TenantRoleMenusService#clear | DELETE /api/v1/tenants/{tenantId}/roles/{roleId}/menus | role_menu_grants（DELETE，整批移除） | M09.F02.I03 | - | 已上线 |
+| M09.F02.I03 | TenantRoleMenusController#clearRoleMenus / TenantRoleMenusService#clear | DELETE /api/v1/tenants/{tenantId}/roles/{roleId}/menus | role_menu_grants（DELETE，整批移除） | M00.F04.I04 | - | 已上线（9/7 迁移：M09.F02.I03 → M00.F04.I04 清空角色菜单） |
 
 > 签发统一走 JwtIssuer（HS256，JWT_SIGNING_KEY env，≥32B）。
 > 本仓其余已上线条目的设计映射待补（v0.2.x 前的 M00/M01 走通用 auth 链路），
