@@ -57,8 +57,8 @@ if [ ! -f "$BASE/springboot.env" ]; then
       printf 'PG_USER=postgres\n'
       printf 'PG_PASSWORD=changeme\n'
       printf 'PG_DATABASE=saas_prod\n'
-      # 默认 CORS 白名单：react SPA + saas-nextjs + 本仓域名。运维可在 setup-vps 之后手工追加 origin。
-      printf 'SAAS_CORS_ALLOWED_ORIGINS=https://%s,https://saas-react.xiangru.uk,https://saas-nextjs.xiangru.uk\n' "$NGINX_DOMAIN"
+      # 默认 CORS 白名单：vue/react SPA + saas-nextjs + 本仓域名。运维可在 setup-vps 之后手工追加 origin。
+      printf 'SAAS_CORS_ALLOWED_ORIGINS=https://%s,https://saas-vue.xiangru.uk,https://saas-react.xiangru.uk,https://saas-nextjs.xiangru.uk\n' "$NGINX_DOMAIN"
       # JWT 三件套显式写(JwtIssuer @Value 默认值兜底是反模式,禁;值=契约文件值)
       printf 'JWT_AUTHORITY=https://auth.example.com\n'
       printf 'JWT_ISSUER=saas-identity-platform\n'
@@ -150,7 +150,7 @@ fi
 if ! grep -q '^SAAS_CORS_ALLOWED_ORIGINS=' "$BASE/springboot.env"; then
   echo "→ append SAAS_CORS_ALLOWED_ORIGINS to existing $BASE/springboot.env"
   umask 077
-  printf 'SAAS_CORS_ALLOWED_ORIGINS=https://%s,https://saas-react.xiangru.uk,https://saas-nextjs.xiangru.uk\n' "$NGINX_DOMAIN" >> "$BASE/springboot.env"
+  printf 'SAAS_CORS_ALLOWED_ORIGINS=https://%s,https://saas-vue.xiangru.uk,https://saas-react.xiangru.uk,https://saas-nextjs.xiangru.uk\n' "$NGINX_DOMAIN" >> "$BASE/springboot.env"
 fi
 
 # v0.2.0+: JwtIssuer(HS256 签 access token) 构造 fail-fast 要求 JWT_SIGNING_KEY(≥32B)。
