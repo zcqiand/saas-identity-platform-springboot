@@ -197,6 +197,13 @@ if [ -f "$BASE/springboot.env" ]; then
     sed -i 's/^SERVER_PORT=8080$/SERVER_PORT=5105/' "$BASE/springboot.env"
     echo "→ reconcile SERVER_PORT: 8080 → 5105 (V018 port migration)"
   fi
+
+  # origin 级无损追加：存量白名单缺 saas-vue 时只补这一个 origin（不整值覆盖，运维手工 origin 保留）。
+  # 上方 append-if-missing 只管缺失路径; 存量 env-file 旧白名单（无 saas-vue）在此自愈。
+  if grep -q '^SAAS_CORS_ALLOWED_ORIGINS=' "$BASE/springboot.env" && ! grep '^SAAS_CORS_ALLOWED_ORIGINS=' "$BASE/springboot.env" | grep -q 'saas-vue\.xiangru\.uk'; then
+    sed -i 's#^\(SAAS_CORS_ALLOWED_ORIGINS=.*\)#\1,https://saas-vue.xiangru.uk#' "$BASE/springboot.env"
+    echo "→ reconcile SAAS_CORS_ALLOWED_ORIGINS: 追加缺失 origin saas-vue.xiangru.uk（origin 级，不整值覆盖）"
+  fi
 fi
 
 echo "→ image: $IMAGE"
