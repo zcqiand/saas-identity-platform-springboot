@@ -16,7 +16,7 @@ import org.springframework.lang.Nullable;
 @JsonTypeName("AdminTenants_listTenants_200_response")
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-08T17:42:04.049127+08:00[Asia/Shanghai]",
+    date = "2026-09-09T23:05:30.488412700+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
 public class AdminTenantsListTenants200Response {
 
