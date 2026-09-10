@@ -188,8 +188,13 @@ public class AuthController implements AuthApi {
     at.setUserId(userId);
     at.setTenantId(tenantId);
     at.setClientId(clientId);
+    // 2026-09-10 audit P0：oauth_access_token.{token_type,created_at} 是 NOT NULL，
+    // 未设 → 23502 → 401。共享仓 SSOT 起列就是 not null；Hibernate scaffold 实体只是声明列，
+    // 没自动从 schema 推 NotNull，业务代码必须显式赋值。
+    at.setTokenType("Bearer");
     at.setExpiresAt(OffsetDateTime.now().plusHours(1));
     at.setRevoked(false);
+    at.setCreatedAt(OffsetDateTime.now());
     accessTokens.save(at);
 
     OauthRefreshToken rt = new OauthRefreshToken();
@@ -200,6 +205,7 @@ public class AuthController implements AuthApi {
     rt.setClientId(clientId);
     rt.setExpiresAt(OffsetDateTime.now().plusDays(30));
     rt.setRevoked(false);
+    rt.setCreatedAt(OffsetDateTime.now());
     refreshTokens.save(rt);
     return token;
   }

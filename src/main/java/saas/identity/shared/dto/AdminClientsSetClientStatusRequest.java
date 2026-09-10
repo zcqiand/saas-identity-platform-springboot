@@ -21,7 +21,7 @@ import jakarta.annotation.Generated;
  */
 
 @JsonTypeName("AdminClients_setClientStatus_request")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-10T08:08:05.999133+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-10T10:23:40.344575800+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class AdminClientsSetClientStatusRequest {
 
   private Integer status;
