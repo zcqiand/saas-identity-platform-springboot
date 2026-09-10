@@ -13,6 +13,7 @@ import saas.identity.platform.entity.Generated.TenantMemberRole;
 import saas.identity.platform.repository.SysUserRepository;
 import saas.identity.platform.repository.TenantMemberRepository;
 import saas.identity.platform.repository.TenantMemberRoleRepository;
+import saas.identity.platform.security.TenantGuard;
 import saas.identity.shared.api.TenantMembersApi;
 import saas.identity.shared.dto.CreateSysUserRequest;
 import saas.identity.shared.dto.SetTenantMemberRolesRequest;
@@ -33,19 +34,23 @@ public class TenantMembersController implements TenantMembersApi {
   private final TenantMemberRepository members;
   private final TenantMemberRoleRepository memberRoles;
   private final SysUserRepository users;
+  private final TenantGuard tenantGuard;
 
   public TenantMembersController(
       TenantMemberRepository members,
       TenantMemberRoleRepository memberRoles,
-      SysUserRepository users) {
+      SysUserRepository users,
+      TenantGuard tenantGuard) {
     this.members = members;
     this.memberRoles = memberRoles;
     this.users = users;
+    this.tenantGuard = tenantGuard;
   }
 
   @Override
   public ResponseEntity<TenantMembersListTenantUsers200Response> tenantMembersListTenantUsers(
       String tenantId, Integer page, Integer pageSize, TenantMemberStatus status) {
+    tenantGuard.verifyPathTenant(tenantId);
     int p = page == null ? 0 : page;
     int ps = pageSize == null ? 20 : pageSize;
     UUID tenantUuid = UUID.fromString(tenantId);
@@ -61,6 +66,7 @@ public class TenantMembersController implements TenantMembersApi {
   @Override
   public ResponseEntity<TenantMemberView> tenantMembersCreateTenantUser(
       String tenantId, CreateSysUserRequest body) {
+    tenantGuard.verifyPathTenant(tenantId);
     // 9/7 SSOT pivot：POST member 建 sys_user + tenant_member，返嵌套 TenantMemberView
     // （对齐 nextjs 参照实现）。此前只插 member 行（user_id 随机 UUID 不落 sys_user，
     // 缺 is_owner/created_at → 23502 → 500，且响应 user 字段全空）。
@@ -95,6 +101,7 @@ public class TenantMembersController implements TenantMembersApi {
   @Override
   public ResponseEntity<TenantMemberView> tenantMembersGetTenantUser(
       String tenantId, String userId) {
+    tenantGuard.verifyPathTenant(tenantId);
     UUID memberUuid = UUID.fromString(userId);
     TenantMember e =
         members
@@ -106,6 +113,7 @@ public class TenantMembersController implements TenantMembersApi {
   @Override
   public ResponseEntity<TenantMemberView> tenantMembersUpdateTenantUser(
       String tenantId, String userId, UpdateSysUserRequest body) {
+    tenantGuard.verifyPathTenant(tenantId);
     UUID memberUuid = UUID.fromString(userId);
     TenantMember e =
         members
@@ -116,6 +124,7 @@ public class TenantMembersController implements TenantMembersApi {
 
   @Override
   public ResponseEntity<Void> tenantMembersDeleteTenantUser(String tenantId, String userId) {
+    tenantGuard.verifyPathTenant(tenantId);
     UUID memberUuid = UUID.fromString(userId);
     members.deleteById(memberUuid);
     return ResponseEntity.noContent().build();
@@ -124,6 +133,7 @@ public class TenantMembersController implements TenantMembersApi {
   @Override
   public ResponseEntity<TenantMemberView> tenantMembersChangeTenantUserStatus(
       String tenantId, String userId, TenantMembersChangeTenantUserStatusRequest body) {
+    tenantGuard.verifyPathTenant(tenantId);
     UUID memberUuid = UUID.fromString(userId);
     TenantMember e =
         members
@@ -138,6 +148,7 @@ public class TenantMembersController implements TenantMembersApi {
   @Override
   public ResponseEntity<TenantMemberView> tenantMembersInviteTenantUser(
       String tenantId, TenantMembersInviteTenantUserRequest body) {
+    tenantGuard.verifyPathTenant(tenantId);
     // I42 方案 C：邀请建真 sys_user（status=2 invited）+ member（status=1 active）。
     // email 缺失 fail-fast 400（ADR-0019：禁止兜底字面量）。
     String email = body == null || body.getEmail() == null ? "" : body.getEmail().trim();
@@ -172,6 +183,7 @@ public class TenantMembersController implements TenantMembersApi {
   @Override
   public ResponseEntity<TenantMemberView> tenantMembersAssignTenantMemberRoles(
       String tenantId, String userId, SetTenantMemberRolesRequest body) {
+    tenantGuard.verifyPathTenant(tenantId);
     UUID memberUuid = UUID.fromString(userId);
     memberRoles.deleteByMemberId(memberUuid);
     if (body != null && body.getRoleIds() != null) {

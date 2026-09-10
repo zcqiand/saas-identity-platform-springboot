@@ -23,6 +23,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import saas.identity.platform.entity.Generated.SysRole;
 import saas.identity.platform.repository.SysRoleRepository;
+import saas.identity.platform.security.TenantGuard;
 import saas.identity.shared.dto.CreateSysRoleRequest;
 
 /** M00.F03 租户角色 CRUD 测试。 */
@@ -33,6 +34,7 @@ class TenantRolesControllerTest {
   @Autowired ObjectMapper json;
 
   @MockBean SysRoleRepository roles;
+  @MockBean TenantGuard tenantGuard;
 
   @Test
   @WithMockUser(roles = "tenant_admin")

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import saas.identity.platform.repository.TenantApplicationRepository;
+import saas.identity.platform.security.TenantGuard;
 import saas.identity.shared.api.TenantApplicationsApi;
 import saas.identity.shared.dto.SubscribeTenantApplicationRequest;
 import saas.identity.shared.dto.TenantApplication;
@@ -19,14 +20,17 @@ import saas.identity.shared.dto.UpdateTenantApplicationRequest;
 public class TenantApplicationsController implements TenantApplicationsApi {
 
   private final TenantApplicationRepository apps;
+  private final TenantGuard tenantGuard;
 
-  public TenantApplicationsController(TenantApplicationRepository apps) {
+  public TenantApplicationsController(TenantApplicationRepository apps, TenantGuard tenantGuard) {
     this.apps = apps;
+    this.tenantGuard = tenantGuard;
   }
 
   @Override
   public ResponseEntity<TenantApplicationsListTenantApplications200Response>
       tenantApplicationsListTenantApplications(String tenantId, Integer page, Integer pageSize) {
+    tenantGuard.verifyPathTenant(tenantId);
     int p = page == null ? 0 : page;
     int ps = pageSize == null ? 20 : pageSize;
     UUID tenantUuid = UUID.fromString(tenantId);
@@ -43,6 +47,7 @@ public class TenantApplicationsController implements TenantApplicationsApi {
   @Override
   public ResponseEntity<TenantApplication> tenantApplicationsSubscribeTenantApplication(
       String tenantId, SubscribeTenantApplicationRequest body) {
+    tenantGuard.verifyPathTenant(tenantId);
     java.time.OffsetDateTime now = java.time.OffsetDateTime.now();
     saas.identity.platform.entity.Generated.TenantApplication e =
         new saas.identity.platform.entity.Generated.TenantApplication();
@@ -56,6 +61,7 @@ public class TenantApplicationsController implements TenantApplicationsApi {
   @Override
   public ResponseEntity<TenantApplication> tenantApplicationsUpdateTenantApplication(
       String tenantId, String clientId, UpdateTenantApplicationRequest body) {
+    tenantGuard.verifyPathTenant(tenantId);
     UUID tenantUuid = UUID.fromString(tenantId);
     saas.identity.platform.entity.Generated.TenantApplication e =
         apps.findByTenantIdAndClientId(tenantUuid, clientId)
@@ -71,6 +77,7 @@ public class TenantApplicationsController implements TenantApplicationsApi {
   @Override
   public ResponseEntity<Void> tenantApplicationsRemoveTenantApplication(
       String tenantId, String clientId) {
+    tenantGuard.verifyPathTenant(tenantId);
     UUID tenantUuid = UUID.fromString(tenantId);
     apps.findByTenantIdAndClientId(tenantUuid, clientId).ifPresent(a -> apps.deleteById(a.getId()));
     return ResponseEntity.noContent().build();

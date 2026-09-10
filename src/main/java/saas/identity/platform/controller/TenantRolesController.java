@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import saas.identity.platform.repository.SysRoleRepository;
+import saas.identity.platform.security.TenantGuard;
 import saas.identity.shared.api.TenantRolesApi;
 import saas.identity.shared.dto.CreateSysRoleRequest;
 import saas.identity.shared.dto.TenantRolesListSysRoles200Response;
@@ -18,14 +19,17 @@ import saas.identity.shared.dto.UpdateSysRoleRequest;
 public class TenantRolesController implements TenantRolesApi {
 
   private final SysRoleRepository roles;
+  private final TenantGuard tenantGuard;
 
-  public TenantRolesController(SysRoleRepository roles) {
+  public TenantRolesController(SysRoleRepository roles, TenantGuard tenantGuard) {
     this.roles = roles;
+    this.tenantGuard = tenantGuard;
   }
 
   @Override
   public ResponseEntity<TenantRolesListSysRoles200Response> tenantRolesListSysRoles(
       String tenantId, String clientId, Integer page, Integer pageSize) {
+    tenantGuard.verifyPathTenant(tenantId);
     int p = page == null ? 0 : page;
     int ps = pageSize == null ? 20 : pageSize;
     var pg = roles.findAll(PageRequest.of(p, ps));
@@ -40,6 +44,7 @@ public class TenantRolesController implements TenantRolesApi {
   @Override
   public ResponseEntity<saas.identity.shared.dto.SysRole> tenantRolesCreateSysRole(
       String tenantId, CreateSysRoleRequest body) {
+    tenantGuard.verifyPathTenant(tenantId);
     java.time.OffsetDateTime now = java.time.OffsetDateTime.now();
     saas.identity.platform.entity.Generated.SysRole e =
         new saas.identity.platform.entity.Generated.SysRole();
@@ -58,6 +63,7 @@ public class TenantRolesController implements TenantRolesApi {
   @Override
   public ResponseEntity<saas.identity.shared.dto.SysRole> tenantRolesGetSysRole(
       String tenantId, String roleId) {
+    tenantGuard.verifyPathTenant(tenantId);
     UUID roleUuid = UUID.fromString(roleId);
     saas.identity.platform.entity.Generated.SysRole e =
         roles.findById(roleUuid).orElseThrow(() -> new NoSuchElementException("role " + roleId));
@@ -67,6 +73,7 @@ public class TenantRolesController implements TenantRolesApi {
   @Override
   public ResponseEntity<saas.identity.shared.dto.SysRole> tenantRolesUpdateSysRole(
       String tenantId, String roleId, UpdateSysRoleRequest body) {
+    tenantGuard.verifyPathTenant(tenantId);
     UUID roleUuid = UUID.fromString(roleId);
     saas.identity.platform.entity.Generated.SysRole e =
         roles.findById(roleUuid).orElseThrow(() -> new NoSuchElementException("role " + roleId));
@@ -78,6 +85,7 @@ public class TenantRolesController implements TenantRolesApi {
 
   @Override
   public ResponseEntity<Void> tenantRolesDeleteSysRole(String tenantId, String roleId) {
+    tenantGuard.verifyPathTenant(tenantId);
     UUID roleUuid = UUID.fromString(roleId);
     roles.deleteById(roleUuid);
     return ResponseEntity.noContent().build();
