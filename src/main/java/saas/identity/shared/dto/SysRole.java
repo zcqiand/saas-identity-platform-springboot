@@ -1,23 +1,29 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.OffsetDateTime;
-import java.util.*;
-import java.util.Objects;
 import java.util.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** SysRole */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-10T02:05:25.361968600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * SysRole
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-10T08:08:05.999133+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class SysRole {
 
   private UUID id;
@@ -47,17 +53,10 @@ public class SysRole {
     super();
   }
 
-  /** Constructor with only required parameters */
-  public SysRole(
-      UUID id,
-      UUID tenantId,
-      String clientId,
-      String roleCode,
-      String roleName,
-      Boolean isPreset,
-      Integer status,
-      OffsetDateTime createdAt,
-      OffsetDateTime updatedAt) {
+  /**
+   * Constructor with only required parameters
+   */
+  public SysRole(UUID id, UUID tenantId, String clientId, String roleCode, String roleName, Boolean isPreset, Integer status, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
     this.id = id;
     this.tenantId = tenantId;
     this.clientId = clientId;
@@ -76,11 +75,9 @@ public class SysRole {
 
   /**
    * Get id
-   *
    * @return id
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("id")
   public UUID getId() {
@@ -99,11 +96,9 @@ public class SysRole {
 
   /**
    * Get tenantId
-   *
    * @return tenantId
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "tenantId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("tenantId")
   public UUID getTenantId() {
@@ -122,10 +117,9 @@ public class SysRole {
 
   /**
    * Get clientId
-   *
    * @return clientId
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "clientId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("clientId")
   public String getClientId() {
@@ -144,11 +138,9 @@ public class SysRole {
 
   /**
    * Get roleCode
-   *
    * @return roleCode
    */
-  @NotNull
-  @Size(min = 1, max = 64)
+  @NotNull @Size(min = 1, max = 64) 
   @Schema(name = "roleCode", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("roleCode")
   public String getRoleCode() {
@@ -167,11 +159,9 @@ public class SysRole {
 
   /**
    * Get roleName
-   *
    * @return roleName
    */
-  @NotNull
-  @Size(min = 1, max = 64)
+  @NotNull @Size(min = 1, max = 64) 
   @Schema(name = "roleName", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("roleName")
   public String getRoleName() {
@@ -190,9 +180,9 @@ public class SysRole {
 
   /**
    * Get description
-   *
    * @return description
    */
+  
   @Schema(name = "description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("description")
   public @Nullable String getDescription() {
@@ -211,10 +201,9 @@ public class SysRole {
 
   /**
    * Get isPreset
-   *
    * @return isPreset
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "isPreset", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("isPreset")
   public Boolean getIsPreset() {
@@ -233,10 +222,9 @@ public class SysRole {
 
   /**
    * Get status
-   *
    * @return status
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("status")
   public Integer getStatus() {
@@ -255,11 +243,9 @@ public class SysRole {
 
   /**
    * Get createdAt
-   *
    * @return createdAt
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "createdAt", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("createdAt")
   public OffsetDateTime getCreatedAt() {
@@ -278,11 +264,9 @@ public class SysRole {
 
   /**
    * Get updatedAt
-   *
    * @return updatedAt
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "updatedAt", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("updatedAt")
   public OffsetDateTime getUpdatedAt() {
@@ -303,31 +287,21 @@ public class SysRole {
       return false;
     }
     SysRole sysRole = (SysRole) o;
-    return Objects.equals(this.id, sysRole.id)
-        && Objects.equals(this.tenantId, sysRole.tenantId)
-        && Objects.equals(this.clientId, sysRole.clientId)
-        && Objects.equals(this.roleCode, sysRole.roleCode)
-        && Objects.equals(this.roleName, sysRole.roleName)
-        && Objects.equals(this.description, sysRole.description)
-        && Objects.equals(this.isPreset, sysRole.isPreset)
-        && Objects.equals(this.status, sysRole.status)
-        && Objects.equals(this.createdAt, sysRole.createdAt)
-        && Objects.equals(this.updatedAt, sysRole.updatedAt);
+    return Objects.equals(this.id, sysRole.id) &&
+        Objects.equals(this.tenantId, sysRole.tenantId) &&
+        Objects.equals(this.clientId, sysRole.clientId) &&
+        Objects.equals(this.roleCode, sysRole.roleCode) &&
+        Objects.equals(this.roleName, sysRole.roleName) &&
+        Objects.equals(this.description, sysRole.description) &&
+        Objects.equals(this.isPreset, sysRole.isPreset) &&
+        Objects.equals(this.status, sysRole.status) &&
+        Objects.equals(this.createdAt, sysRole.createdAt) &&
+        Objects.equals(this.updatedAt, sysRole.updatedAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(
-        id,
-        tenantId,
-        clientId,
-        roleCode,
-        roleName,
-        description,
-        isPreset,
-        status,
-        createdAt,
-        updatedAt);
+    return Objects.hash(id, tenantId, clientId, roleCode, roleName, description, isPreset, status, createdAt, updatedAt);
   }
 
   @Override
@@ -349,9 +323,11 @@ public class SysRole {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

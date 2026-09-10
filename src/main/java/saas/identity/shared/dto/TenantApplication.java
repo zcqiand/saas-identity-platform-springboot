@@ -1,23 +1,29 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.OffsetDateTime;
-import java.util.*;
-import java.util.Objects;
 import java.util.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** TenantApplication */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-10T02:05:25.361968600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * TenantApplication
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-10T08:08:05.999133+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class TenantApplication {
 
   private UUID id;
@@ -39,9 +45,10 @@ public class TenantApplication {
     super();
   }
 
-  /** Constructor with only required parameters */
-  public TenantApplication(
-      UUID id, UUID tenantId, String clientId, Integer status, OffsetDateTime createdAt) {
+  /**
+   * Constructor with only required parameters
+   */
+  public TenantApplication(UUID id, UUID tenantId, String clientId, Integer status, OffsetDateTime createdAt) {
     this.id = id;
     this.tenantId = tenantId;
     this.clientId = clientId;
@@ -56,11 +63,9 @@ public class TenantApplication {
 
   /**
    * Get id
-   *
    * @return id
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("id")
   public UUID getId() {
@@ -79,11 +84,9 @@ public class TenantApplication {
 
   /**
    * Get tenantId
-   *
    * @return tenantId
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "tenantId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("tenantId")
   public UUID getTenantId() {
@@ -102,10 +105,9 @@ public class TenantApplication {
 
   /**
    * Get clientId
-   *
    * @return clientId
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "clientId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("clientId")
   public String getClientId() {
@@ -124,10 +126,9 @@ public class TenantApplication {
 
   /**
    * Get status
-   *
    * @return status
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("status")
   public Integer getStatus() {
@@ -146,10 +147,9 @@ public class TenantApplication {
 
   /**
    * Get expireTime
-   *
    * @return expireTime
    */
-  @Valid
+  @Valid 
   @Schema(name = "expireTime", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("expireTime")
   public @Nullable OffsetDateTime getExpireTime() {
@@ -168,11 +168,9 @@ public class TenantApplication {
 
   /**
    * Get createdAt
-   *
    * @return createdAt
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "createdAt", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("createdAt")
   public OffsetDateTime getCreatedAt() {
@@ -193,12 +191,12 @@ public class TenantApplication {
       return false;
     }
     TenantApplication tenantApplication = (TenantApplication) o;
-    return Objects.equals(this.id, tenantApplication.id)
-        && Objects.equals(this.tenantId, tenantApplication.tenantId)
-        && Objects.equals(this.clientId, tenantApplication.clientId)
-        && Objects.equals(this.status, tenantApplication.status)
-        && Objects.equals(this.expireTime, tenantApplication.expireTime)
-        && Objects.equals(this.createdAt, tenantApplication.createdAt);
+    return Objects.equals(this.id, tenantApplication.id) &&
+        Objects.equals(this.tenantId, tenantApplication.tenantId) &&
+        Objects.equals(this.clientId, tenantApplication.clientId) &&
+        Objects.equals(this.status, tenantApplication.status) &&
+        Objects.equals(this.expireTime, tenantApplication.expireTime) &&
+        Objects.equals(this.createdAt, tenantApplication.createdAt);
   }
 
   @Override
@@ -221,9 +219,11 @@ public class TenantApplication {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

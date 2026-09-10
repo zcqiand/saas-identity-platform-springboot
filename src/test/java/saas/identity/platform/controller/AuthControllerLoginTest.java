@@ -111,6 +111,28 @@ class AuthControllerLoginTest {
 
   @Test
   @WithMockUser
+  void login_withPlainPrefixedSeedPassword_returns200() throws Exception {
+    // 家族 dev 种子约定（nextjs seed-db.mjs 灌 "plain:{password}"）：
+    // springboot 必须识别该前缀，否则同一份种子三后端登录行为分叉（live 401）。
+    existingUser.setPassword("plain:dev123456");
+    when(users.findByUsername("alice")).thenReturn(Optional.of(existingUser));
+
+    LoginRequest req = new LoginRequest();
+    req.setUsername("alice");
+    req.setPassword("dev123456");
+    req.setClientId("lab-management");
+
+    mvc.perform(
+            post("/api/v1/auth/login")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json.writeValueAsString(req)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.accessToken").value("jwt_access_token"));
+  }
+
+  @Test
+  @WithMockUser
   void login_duringLockoutWindow_returns423() throws Exception {
     existingUser.setLockedUntil(OffsetDateTime.now().plusMinutes(10));
     when(users.findByUsername("alice")).thenReturn(Optional.of(existingUser));

@@ -41,7 +41,6 @@ public class AdminClientsController implements AdminClientsApi {
   @Override
   public ResponseEntity<OAuthClient> adminClientsCreateClient(CreateOAuthClientRequest body) {
     OauthClient e = new OauthClient();
-    e.setId(UUID.randomUUID());
     e.setClientId(body.getClientId());
     e.setClientSecret(body.getClientSecret());
     e.setClientName(body.getClientName());

@@ -1,20 +1,26 @@
 package saas.identity.shared.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import java.util.*;
+import java.net.URI;
 import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.UUID;
 import org.springframework.lang.Nullable;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** SysRoleMenu */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-10T02:05:25.361968600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * SysRoleMenu
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-10T08:08:05.999133+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class SysRoleMenu {
 
   private UUID roleId;
@@ -25,7 +31,9 @@ public class SysRoleMenu {
     super();
   }
 
-  /** Constructor with only required parameters */
+  /**
+   * Constructor with only required parameters
+   */
   public SysRoleMenu(UUID roleId, UUID menuId) {
     this.roleId = roleId;
     this.menuId = menuId;
@@ -38,11 +46,9 @@ public class SysRoleMenu {
 
   /**
    * Get roleId
-   *
    * @return roleId
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "roleId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("roleId")
   public UUID getRoleId() {
@@ -61,11 +67,9 @@ public class SysRoleMenu {
 
   /**
    * Get menuId
-   *
    * @return menuId
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "menuId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("menuId")
   public UUID getMenuId() {
@@ -86,8 +90,8 @@ public class SysRoleMenu {
       return false;
     }
     SysRoleMenu sysRoleMenu = (SysRoleMenu) o;
-    return Objects.equals(this.roleId, sysRoleMenu.roleId)
-        && Objects.equals(this.menuId, sysRoleMenu.menuId);
+    return Objects.equals(this.roleId, sysRoleMenu.roleId) &&
+        Objects.equals(this.menuId, sysRoleMenu.menuId);
   }
 
   @Override
@@ -106,9 +110,11 @@ public class SysRoleMenu {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

@@ -5,346 +5,268 @@
  */
 package saas.identity.shared.api;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import java.util.List;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
 import saas.identity.shared.dto.ClientMenusMoveSysMenuRequest;
 import saas.identity.shared.dto.CreateSysMenuRequest;
 import saas.identity.shared.dto.ErrorResponse;
 import saas.identity.shared.dto.ReorderSysMenuRequest;
 import saas.identity.shared.dto.SysMenu;
 import saas.identity.shared.dto.UpdateSysMenuRequest;
+import io.swagger.v3.oas.annotations.ExternalDocumentation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-10T02:05:25.361968600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import jakarta.annotation.Generated;
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-10T08:08:05.999133+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 @Validated
 @Tag(name = "client-menus", description = "the client-menus API")
 public interface ClientMenusApi {
 
-  String PATH_CLIENT_MENUS_CREATE_SYS_MENU = "/api/v1/clients/{clientId}/menus";
-
-  /**
-   * POST /api/v1/clients/{clientId}/menus
-   *
-   * @param clientId (required)
-   * @param createSysMenuRequest (required)
-   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
-   *     code 200)
-   */
-  @Operation(
-      operationId = "clientMenusCreateSysMenu",
-      tags = {"client-menus"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "The request has succeeded.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = SysMenu.class))
+    String PATH_CLIENT_MENUS_CREATE_SYS_MENU = "/api/v1/clients/{clientId}/menus";
+    /**
+     * POST /api/v1/clients/{clientId}/menus
+     *
+     * @param clientId  (required)
+     * @param createSysMenuRequest  (required)
+     * @return The request has succeeded. (status code 200)
+     *         or An unexpected error response. (status code 200)
+     */
+    @Operation(
+        operationId = "clientMenusCreateSysMenu",
+        tags = { "client-menus" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = SysMenu.class))
             }),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
-      })
-  @RequestMapping(
-      method = RequestMethod.POST,
-      value = ClientMenusApi.PATH_CLIENT_MENUS_CREATE_SYS_MENU,
-      produces = {"application/json"},
-      consumes = {"application/json"})
-  ResponseEntity<SysMenu> clientMenusCreateSysMenu(
-      @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("clientId")
-          String clientId,
-      @Parameter(name = "CreateSysMenuRequest", description = "", required = true)
-          @Valid
-          @RequestBody
-          CreateSysMenuRequest createSysMenuRequest);
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.POST,
+        value = ClientMenusApi.PATH_CLIENT_MENUS_CREATE_SYS_MENU,
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    ResponseEntity<SysMenu> clientMenusCreateSysMenu(
+        @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("clientId") String clientId,
+        @Parameter(name = "CreateSysMenuRequest", description = "", required = true) @Valid @RequestBody CreateSysMenuRequest createSysMenuRequest
+    );
 
-  String PATH_CLIENT_MENUS_DELETE_SYS_MENU = "/api/v1/clients/{clientId}/menus/{menuId}";
 
-  /**
-   * DELETE /api/v1/clients/{clientId}/menus/{menuId}
-   *
-   * @param clientId (required)
-   * @param menuId (required)
-   * @return There is no content to send for this request, but the headers may be useful. (status
-   *     code 204) or An unexpected error response. (status code 200)
-   */
-  @Operation(
-      operationId = "clientMenusDeleteSysMenu",
-      tags = {"client-menus"},
-      responses = {
-        @ApiResponse(
-            responseCode = "204",
-            description =
-                "There is no content to send for this request, but the headers may be useful. "),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+    String PATH_CLIENT_MENUS_DELETE_SYS_MENU = "/api/v1/clients/{clientId}/menus/{menuId}";
+    /**
+     * DELETE /api/v1/clients/{clientId}/menus/{menuId}
+     *
+     * @param clientId  (required)
+     * @param menuId  (required)
+     * @return There is no content to send for this request, but the headers may be useful.  (status code 204)
+     *         or An unexpected error response. (status code 200)
+     */
+    @Operation(
+        operationId = "clientMenusDeleteSysMenu",
+        tags = { "client-menus" },
+        responses = {
+            @ApiResponse(responseCode = "204", description = "There is no content to send for this request, but the headers may be useful. "),
+            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
-      })
-  @RequestMapping(
-      method = RequestMethod.DELETE,
-      value = ClientMenusApi.PATH_CLIENT_MENUS_DELETE_SYS_MENU,
-      produces = {"application/json"})
-  ResponseEntity<Void> clientMenusDeleteSysMenu(
-      @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("clientId")
-          String clientId,
-      @Parameter(name = "menuId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("menuId")
-          String menuId);
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.DELETE,
+        value = ClientMenusApi.PATH_CLIENT_MENUS_DELETE_SYS_MENU,
+        produces = { "application/json" }
+    )
+    ResponseEntity<Void> clientMenusDeleteSysMenu(
+        @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("clientId") String clientId,
+        @Parameter(name = "menuId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("menuId") String menuId
+    );
 
-  String PATH_CLIENT_MENUS_GET_SYS_MENU = "/api/v1/clients/{clientId}/menus/{menuId}";
 
-  /**
-   * GET /api/v1/clients/{clientId}/menus/{menuId}
-   *
-   * @param clientId (required)
-   * @param menuId (required)
-   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
-   *     code 200)
-   */
-  @Operation(
-      operationId = "clientMenusGetSysMenu",
-      tags = {"client-menus"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "The request has succeeded.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = SysMenu.class))
+    String PATH_CLIENT_MENUS_GET_SYS_MENU = "/api/v1/clients/{clientId}/menus/{menuId}";
+    /**
+     * GET /api/v1/clients/{clientId}/menus/{menuId}
+     *
+     * @param clientId  (required)
+     * @param menuId  (required)
+     * @return The request has succeeded. (status code 200)
+     *         or An unexpected error response. (status code 200)
+     */
+    @Operation(
+        operationId = "clientMenusGetSysMenu",
+        tags = { "client-menus" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = SysMenu.class))
             }),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
-      })
-  @RequestMapping(
-      method = RequestMethod.GET,
-      value = ClientMenusApi.PATH_CLIENT_MENUS_GET_SYS_MENU,
-      produces = {"application/json"})
-  ResponseEntity<SysMenu> clientMenusGetSysMenu(
-      @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("clientId")
-          String clientId,
-      @Parameter(name = "menuId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("menuId")
-          String menuId);
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = ClientMenusApi.PATH_CLIENT_MENUS_GET_SYS_MENU,
+        produces = { "application/json" }
+    )
+    ResponseEntity<SysMenu> clientMenusGetSysMenu(
+        @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("clientId") String clientId,
+        @Parameter(name = "menuId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("menuId") String menuId
+    );
 
-  String PATH_CLIENT_MENUS_LIST_SYS_MENUS = "/api/v1/clients/{clientId}/menus";
 
-  /**
-   * GET /api/v1/clients/{clientId}/menus
-   *
-   * @param clientId (required)
-   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
-   *     code 200)
-   */
-  @Operation(
-      operationId = "clientMenusListSysMenus",
-      tags = {"client-menus"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "The request has succeeded.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = SysMenu.class)))
+    String PATH_CLIENT_MENUS_LIST_SYS_MENUS = "/api/v1/clients/{clientId}/menus";
+    /**
+     * GET /api/v1/clients/{clientId}/menus
+     *
+     * @param clientId  (required)
+     * @return The request has succeeded. (status code 200)
+     *         or An unexpected error response. (status code 200)
+     */
+    @Operation(
+        operationId = "clientMenusListSysMenus",
+        tags = { "client-menus" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SysMenu.class)))
             }),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
-      })
-  @RequestMapping(
-      method = RequestMethod.GET,
-      value = ClientMenusApi.PATH_CLIENT_MENUS_LIST_SYS_MENUS,
-      produces = {"application/json"})
-  ResponseEntity<List<SysMenu>> clientMenusListSysMenus(
-      @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("clientId")
-          String clientId);
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = ClientMenusApi.PATH_CLIENT_MENUS_LIST_SYS_MENUS,
+        produces = { "application/json" }
+    )
+    ResponseEntity<List<SysMenu>> clientMenusListSysMenus(
+        @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("clientId") String clientId
+    );
 
-  String PATH_CLIENT_MENUS_MOVE_SYS_MENU = "/api/v1/clients/{clientId}/menus/{menuId}/parent";
 
-  /**
-   * PATCH /api/v1/clients/{clientId}/menus/{menuId}/parent
-   *
-   * @param clientId (required)
-   * @param menuId (required)
-   * @param clientMenusMoveSysMenuRequest (required)
-   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
-   *     code 200)
-   */
-  @Operation(
-      operationId = "clientMenusMoveSysMenu",
-      tags = {"client-menus"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "The request has succeeded.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = SysMenu.class))
+    String PATH_CLIENT_MENUS_MOVE_SYS_MENU = "/api/v1/clients/{clientId}/menus/{menuId}/parent";
+    /**
+     * PATCH /api/v1/clients/{clientId}/menus/{menuId}/parent
+     *
+     * @param clientId  (required)
+     * @param menuId  (required)
+     * @param clientMenusMoveSysMenuRequest  (required)
+     * @return The request has succeeded. (status code 200)
+     *         or An unexpected error response. (status code 200)
+     */
+    @Operation(
+        operationId = "clientMenusMoveSysMenu",
+        tags = { "client-menus" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = SysMenu.class))
             }),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
-      })
-  @RequestMapping(
-      method = RequestMethod.PATCH,
-      value = ClientMenusApi.PATH_CLIENT_MENUS_MOVE_SYS_MENU,
-      produces = {"application/json"},
-      consumes = {"application/json"})
-  ResponseEntity<SysMenu> clientMenusMoveSysMenu(
-      @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("clientId")
-          String clientId,
-      @Parameter(name = "menuId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("menuId")
-          String menuId,
-      @Parameter(name = "ClientMenusMoveSysMenuRequest", description = "", required = true)
-          @Valid
-          @RequestBody
-          ClientMenusMoveSysMenuRequest clientMenusMoveSysMenuRequest);
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.PATCH,
+        value = ClientMenusApi.PATH_CLIENT_MENUS_MOVE_SYS_MENU,
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    ResponseEntity<SysMenu> clientMenusMoveSysMenu(
+        @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("clientId") String clientId,
+        @Parameter(name = "menuId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("menuId") String menuId,
+        @Parameter(name = "ClientMenusMoveSysMenuRequest", description = "", required = true) @Valid @RequestBody ClientMenusMoveSysMenuRequest clientMenusMoveSysMenuRequest
+    );
 
-  String PATH_CLIENT_MENUS_REORDER_SYS_MENUS = "/api/v1/clients/{clientId}/menus/{menuId}/reorder";
 
-  /**
-   * PUT /api/v1/clients/{clientId}/menus/{menuId}/reorder
-   *
-   * @param clientId (required)
-   * @param menuId (required)
-   * @param reorderSysMenuRequest (required)
-   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
-   *     code 200)
-   */
-  @Operation(
-      operationId = "clientMenusReorderSysMenus",
-      tags = {"client-menus"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "The request has succeeded.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = SysMenu.class)))
+    String PATH_CLIENT_MENUS_REORDER_SYS_MENUS = "/api/v1/clients/{clientId}/menus/{menuId}/reorder";
+    /**
+     * PUT /api/v1/clients/{clientId}/menus/{menuId}/reorder
+     *
+     * @param clientId  (required)
+     * @param menuId  (required)
+     * @param reorderSysMenuRequest  (required)
+     * @return The request has succeeded. (status code 200)
+     *         or An unexpected error response. (status code 200)
+     */
+    @Operation(
+        operationId = "clientMenusReorderSysMenus",
+        tags = { "client-menus" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SysMenu.class)))
             }),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
-      })
-  @RequestMapping(
-      method = RequestMethod.PUT,
-      value = ClientMenusApi.PATH_CLIENT_MENUS_REORDER_SYS_MENUS,
-      produces = {"application/json"},
-      consumes = {"application/json"})
-  ResponseEntity<List<SysMenu>> clientMenusReorderSysMenus(
-      @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("clientId")
-          String clientId,
-      @Parameter(name = "menuId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("menuId")
-          String menuId,
-      @Parameter(name = "ReorderSysMenuRequest", description = "", required = true)
-          @Valid
-          @RequestBody
-          ReorderSysMenuRequest reorderSysMenuRequest);
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.PUT,
+        value = ClientMenusApi.PATH_CLIENT_MENUS_REORDER_SYS_MENUS,
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    ResponseEntity<List<SysMenu>> clientMenusReorderSysMenus(
+        @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("clientId") String clientId,
+        @Parameter(name = "menuId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("menuId") String menuId,
+        @Parameter(name = "ReorderSysMenuRequest", description = "", required = true) @Valid @RequestBody ReorderSysMenuRequest reorderSysMenuRequest
+    );
 
-  String PATH_CLIENT_MENUS_UPDATE_SYS_MENU = "/api/v1/clients/{clientId}/menus/{menuId}";
 
-  /**
-   * PATCH /api/v1/clients/{clientId}/menus/{menuId}
-   *
-   * @param clientId (required)
-   * @param menuId (required)
-   * @param updateSysMenuRequest (required)
-   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
-   *     code 200)
-   */
-  @Operation(
-      operationId = "clientMenusUpdateSysMenu",
-      tags = {"client-menus"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "The request has succeeded.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = SysMenu.class))
+    String PATH_CLIENT_MENUS_UPDATE_SYS_MENU = "/api/v1/clients/{clientId}/menus/{menuId}";
+    /**
+     * PATCH /api/v1/clients/{clientId}/menus/{menuId}
+     *
+     * @param clientId  (required)
+     * @param menuId  (required)
+     * @param updateSysMenuRequest  (required)
+     * @return The request has succeeded. (status code 200)
+     *         or An unexpected error response. (status code 200)
+     */
+    @Operation(
+        operationId = "clientMenusUpdateSysMenu",
+        tags = { "client-menus" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = SysMenu.class))
             }),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
-      })
-  @RequestMapping(
-      method = RequestMethod.PATCH,
-      value = ClientMenusApi.PATH_CLIENT_MENUS_UPDATE_SYS_MENU,
-      produces = {"application/json"},
-      consumes = {"application/json"})
-  ResponseEntity<SysMenu> clientMenusUpdateSysMenu(
-      @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("clientId")
-          String clientId,
-      @Parameter(name = "menuId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("menuId")
-          String menuId,
-      @Parameter(name = "UpdateSysMenuRequest", description = "", required = true)
-          @Valid
-          @RequestBody
-          UpdateSysMenuRequest updateSysMenuRequest);
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.PATCH,
+        value = ClientMenusApi.PATH_CLIENT_MENUS_UPDATE_SYS_MENU,
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    ResponseEntity<SysMenu> clientMenusUpdateSysMenu(
+        @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("clientId") String clientId,
+        @Parameter(name = "menuId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("menuId") String menuId,
+        @Parameter(name = "UpdateSysMenuRequest", description = "", required = true) @Valid @RequestBody UpdateSysMenuRequest updateSysMenuRequest
+    );
+
 }

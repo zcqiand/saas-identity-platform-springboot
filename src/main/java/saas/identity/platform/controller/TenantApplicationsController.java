@@ -43,7 +43,6 @@ public class TenantApplicationsController implements TenantApplicationsApi {
       String tenantId, SubscribeTenantApplicationRequest body) {
     saas.identity.platform.entity.Generated.TenantApplication e =
         new saas.identity.platform.entity.Generated.TenantApplication();
-    e.setId(UUID.randomUUID());
     e.setTenantId(UUID.fromString(tenantId));
     e.setClientId(body.getClientId());
     e.setStatus((short) 1);

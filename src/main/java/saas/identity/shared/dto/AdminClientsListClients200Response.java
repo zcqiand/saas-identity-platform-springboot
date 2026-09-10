@@ -1,23 +1,31 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import org.springframework.lang.Nullable;
+import saas.identity.shared.dto.OAuthClient;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import java.util.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import org.springframework.lang.Nullable;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** AdminClientsListClients200Response */
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * AdminClientsListClients200Response
+ */
+
 @JsonTypeName("AdminClients_listClients_200_response")
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-10T02:05:25.361968600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-10T08:08:05.999133+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class AdminClientsListClients200Response {
 
   private List<@Valid OAuthClient> items = new ArrayList<>();
@@ -32,9 +40,10 @@ public class AdminClientsListClients200Response {
     super();
   }
 
-  /** Constructor with only required parameters */
-  public AdminClientsListClients200Response(
-      List<@Valid OAuthClient> items, Integer page, Integer pageSize, Long total) {
+  /**
+   * Constructor with only required parameters
+   */
+  public AdminClientsListClients200Response(List<@Valid OAuthClient> items, Integer page, Integer pageSize, Long total) {
     this.items = items;
     this.page = page;
     this.pageSize = pageSize;
@@ -56,11 +65,9 @@ public class AdminClientsListClients200Response {
 
   /**
    * Get items
-   *
    * @return items
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "items", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("items")
   public List<@Valid OAuthClient> getItems() {
@@ -79,10 +86,9 @@ public class AdminClientsListClients200Response {
 
   /**
    * Get page
-   *
    * @return page
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "page", example = "0", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("page")
   public Integer getPage() {
@@ -101,10 +107,9 @@ public class AdminClientsListClients200Response {
 
   /**
    * Get pageSize
-   *
    * @return pageSize
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "pageSize", example = "20", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("pageSize")
   public Integer getPageSize() {
@@ -123,10 +128,9 @@ public class AdminClientsListClients200Response {
 
   /**
    * Get total
-   *
    * @return total
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "total", example = "0", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("total")
   public Long getTotal() {
@@ -146,12 +150,11 @@ public class AdminClientsListClients200Response {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    AdminClientsListClients200Response adminClientsListClients200Response =
-        (AdminClientsListClients200Response) o;
-    return Objects.equals(this.items, adminClientsListClients200Response.items)
-        && Objects.equals(this.page, adminClientsListClients200Response.page)
-        && Objects.equals(this.pageSize, adminClientsListClients200Response.pageSize)
-        && Objects.equals(this.total, adminClientsListClients200Response.total);
+    AdminClientsListClients200Response adminClientsListClients200Response = (AdminClientsListClients200Response) o;
+    return Objects.equals(this.items, adminClientsListClients200Response.items) &&
+        Objects.equals(this.page, adminClientsListClients200Response.page) &&
+        Objects.equals(this.pageSize, adminClientsListClients200Response.pageSize) &&
+        Objects.equals(this.total, adminClientsListClients200Response.total);
   }
 
   @Override
@@ -172,9 +175,11 @@ public class AdminClientsListClients200Response {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

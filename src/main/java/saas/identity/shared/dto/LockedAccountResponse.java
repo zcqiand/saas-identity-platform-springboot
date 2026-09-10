@@ -1,22 +1,28 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.OffsetDateTime;
-import java.util.*;
-import java.util.Objects;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** LockedAccountResponse */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-10T02:05:25.361968600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * LockedAccountResponse
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-10T08:08:05.999133+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class LockedAccountResponse {
 
   private String code;
@@ -33,7 +39,9 @@ public class LockedAccountResponse {
     super();
   }
 
-  /** Constructor with only required parameters */
+  /**
+   * Constructor with only required parameters
+   */
   public LockedAccountResponse(String code, String message, OffsetDateTime lockedUntil) {
     this.code = code;
     this.message = message;
@@ -47,10 +55,9 @@ public class LockedAccountResponse {
 
   /**
    * Get code
-   *
    * @return code
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "code", example = "ACCOUNT_LOCKED", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("code")
   public String getCode() {
@@ -69,10 +76,9 @@ public class LockedAccountResponse {
 
   /**
    * Get message
-   *
    * @return message
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "message", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("message")
   public String getMessage() {
@@ -91,11 +97,9 @@ public class LockedAccountResponse {
 
   /**
    * Get lockedUntil
-   *
    * @return lockedUntil
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "lockedUntil", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("lockedUntil")
   public OffsetDateTime getLockedUntil() {
@@ -114,9 +118,9 @@ public class LockedAccountResponse {
 
   /**
    * Get remainingAttempts
-   *
    * @return remainingAttempts
    */
+  
   @Schema(name = "remainingAttempts", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("remainingAttempts")
   public @Nullable Integer getRemainingAttempts() {
@@ -137,10 +141,10 @@ public class LockedAccountResponse {
       return false;
     }
     LockedAccountResponse lockedAccountResponse = (LockedAccountResponse) o;
-    return Objects.equals(this.code, lockedAccountResponse.code)
-        && Objects.equals(this.message, lockedAccountResponse.message)
-        && Objects.equals(this.lockedUntil, lockedAccountResponse.lockedUntil)
-        && Objects.equals(this.remainingAttempts, lockedAccountResponse.remainingAttempts);
+    return Objects.equals(this.code, lockedAccountResponse.code) &&
+        Objects.equals(this.message, lockedAccountResponse.message) &&
+        Objects.equals(this.lockedUntil, lockedAccountResponse.lockedUntil) &&
+        Objects.equals(this.remainingAttempts, lockedAccountResponse.remainingAttempts);
   }
 
   @Override
@@ -161,9 +165,11 @@ public class LockedAccountResponse {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

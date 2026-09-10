@@ -36,7 +36,6 @@ public class ClientMenusController implements ClientMenusApi {
   public ResponseEntity<saas.identity.shared.dto.SysMenu> clientMenusCreateSysMenu(
       String clientId, CreateSysMenuRequest body) {
     SysMenu e = new SysMenu();
-    e.setId(UUID.randomUUID());
     e.setClientId(clientId);
     e.setParentId(body.getParentId() == null ? new UUID(0, 0) : body.getParentId());
     e.setTitle(body.getTitle());

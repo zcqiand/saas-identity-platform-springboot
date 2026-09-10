@@ -1,28 +1,36 @@
 package saas.identity.shared.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.constraints.*;
-import java.util.*;
-import java.util.Objects;
 import org.springframework.lang.Nullable;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** AuthorizeCodeRequest */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-10T02:05:25.361968600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * AuthorizeCodeRequest
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-10T08:08:05.999133+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class AuthorizeCodeRequest {
 
   private String clientId;
 
   private String redirectUri;
 
-  /** Gets or Sets responseType */
+  /**
+   * Gets or Sets responseType
+   */
   public enum ResponseTypeEnum {
     CODE("code");
 
@@ -64,9 +72,10 @@ public class AuthorizeCodeRequest {
     super();
   }
 
-  /** Constructor with only required parameters */
-  public AuthorizeCodeRequest(
-      String clientId, String redirectUri, ResponseTypeEnum responseType, String state) {
+  /**
+   * Constructor with only required parameters
+   */
+  public AuthorizeCodeRequest(String clientId, String redirectUri, ResponseTypeEnum responseType, String state) {
     this.clientId = clientId;
     this.redirectUri = redirectUri;
     this.responseType = responseType;
@@ -80,10 +89,9 @@ public class AuthorizeCodeRequest {
 
   /**
    * Get clientId
-   *
    * @return clientId
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "clientId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("clientId")
   public String getClientId() {
@@ -102,11 +110,9 @@ public class AuthorizeCodeRequest {
 
   /**
    * Get redirectUri
-   *
    * @return redirectUri
    */
-  @NotNull
-  @Size(min = 1, max = 500)
+  @NotNull @Size(min = 1, max = 500) 
   @Schema(name = "redirectUri", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("redirectUri")
   public String getRedirectUri() {
@@ -125,10 +131,9 @@ public class AuthorizeCodeRequest {
 
   /**
    * Get responseType
-   *
    * @return responseType
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "responseType", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("responseType")
   public ResponseTypeEnum getResponseType() {
@@ -147,9 +152,9 @@ public class AuthorizeCodeRequest {
 
   /**
    * Get scope
-   *
    * @return scope
    */
+  
   @Schema(name = "scope", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("scope")
   public @Nullable String getScope() {
@@ -168,10 +173,9 @@ public class AuthorizeCodeRequest {
 
   /**
    * Get state
-   *
    * @return state
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "state", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("state")
   public String getState() {
@@ -192,11 +196,11 @@ public class AuthorizeCodeRequest {
       return false;
     }
     AuthorizeCodeRequest authorizeCodeRequest = (AuthorizeCodeRequest) o;
-    return Objects.equals(this.clientId, authorizeCodeRequest.clientId)
-        && Objects.equals(this.redirectUri, authorizeCodeRequest.redirectUri)
-        && Objects.equals(this.responseType, authorizeCodeRequest.responseType)
-        && Objects.equals(this.scope, authorizeCodeRequest.scope)
-        && Objects.equals(this.state, authorizeCodeRequest.state);
+    return Objects.equals(this.clientId, authorizeCodeRequest.clientId) &&
+        Objects.equals(this.redirectUri, authorizeCodeRequest.redirectUri) &&
+        Objects.equals(this.responseType, authorizeCodeRequest.responseType) &&
+        Objects.equals(this.scope, authorizeCodeRequest.scope) &&
+        Objects.equals(this.state, authorizeCodeRequest.state);
   }
 
   @Override
@@ -218,9 +222,11 @@ public class AuthorizeCodeRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

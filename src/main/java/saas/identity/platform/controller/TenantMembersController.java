@@ -53,7 +53,6 @@ public class TenantMembersController implements TenantMembersApi {
   public ResponseEntity<TenantMemberView> tenantMembersCreateTenantUser(
       String tenantId, CreateSysUserRequest body) {
     TenantMember e = new TenantMember();
-    e.setId(UUID.randomUUID());
     e.setTenantId(UUID.fromString(tenantId));
     e.setUserId(UUID.randomUUID());
     e.setStatus((short) 1);
@@ -108,7 +107,6 @@ public class TenantMembersController implements TenantMembersApi {
   public ResponseEntity<TenantMemberView> tenantMembersInviteTenantUser(
       String tenantId, TenantMembersInviteTenantUserRequest body) {
     TenantMember e = new TenantMember();
-    e.setId(UUID.randomUUID());
     e.setTenantId(UUID.fromString(tenantId));
     e.setUserId(UUID.randomUUID());
     e.setStatus((short) 0);

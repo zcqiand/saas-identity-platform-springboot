@@ -72,7 +72,13 @@ public class AuthController implements AuthApi {
       return ResponseEntity.status(HttpStatus.LOCKED).body(null);
     }
 
-    if (!bcrypt.matches(body.getPassword(), user.getPassword())) {
+    // 家族 dev 种子约定（nextjs seed-db.mjs）：password 列可存 "plain:{password}"
+    // 占位（Phase 5；prod 换 argon2/bcrypt）。aspnetcore/nextjs 两侧已识别该前缀，
+    // springboot 对齐，否则同一份种子三后端登录行为分叉（contract-test live 401）。
+    boolean plainOk =
+        user.getPassword() != null
+            && user.getPassword().equals("plain:" + body.getPassword());
+    if (!plainOk && !bcrypt.matches(body.getPassword(), user.getPassword())) {
       int attempts = (user.getFailedAttempts() == null ? 0 : user.getFailedAttempts()) + 1;
       user.setFailedAttempts(attempts);
       if (attempts >= LOCKOUT_THRESHOLD) {
@@ -173,8 +179,10 @@ public class AuthController implements AuthApi {
 
   private String persistRefreshToken(UUID userId, UUID tenantId, String clientId) {
     String token = "rt_" + UUID.randomUUID();
+    // 注意：id 是 @GeneratedValue(UUID) —— 禁止手动 setId（手动设值会被 Hibernate
+    // 当 detached 实体走 merge → ObjectOptimisticLockingFailureException，见
+    // memory: springboot-write-path-double-bug）。子表 FK 用保存后的 getId() 回填。
     OauthAccessToken at = new OauthAccessToken();
-    at.setId(UUID.randomUUID());
     at.setTokenId("at_" + UUID.randomUUID());
     at.setAccessToken("n/a"); // 由 JwtIssuer 持有真签
     at.setUserId(userId);
@@ -185,7 +193,6 @@ public class AuthController implements AuthApi {
     accessTokens.save(at);
 
     OauthRefreshToken rt = new OauthRefreshToken();
-    rt.setId(UUID.randomUUID());
     rt.setRefreshToken(token);
     rt.setAccessTokenId(at.getId());
     rt.setUserId(userId);

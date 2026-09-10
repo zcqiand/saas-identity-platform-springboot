@@ -40,7 +40,6 @@ public class TenantRolesController implements TenantRolesApi {
       String tenantId, CreateSysRoleRequest body) {
     saas.identity.platform.entity.Generated.SysRole e =
         new saas.identity.platform.entity.Generated.SysRole();
-    e.setId(UUID.randomUUID());
     e.setTenantId(UUID.fromString(tenantId));
     e.setClientId("default");
     e.setRoleCode(body.getRoleCode());
