@@ -1,31 +1,22 @@
 package saas.identity.shared.dto;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import org.springframework.lang.Nullable;
-import saas.identity.shared.dto.SysUser;
-import saas.identity.shared.dto.TenantMember;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
-
-
 import java.util.*;
-import jakarta.annotation.Generated;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import org.springframework.lang.Nullable;
 
-/**
- * LoginResponse
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-10T10:23:40.344575800+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+/** LoginResponse */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-10T10:23:40.344575800+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 public class LoginResponse {
 
   private SysUser user;
@@ -50,9 +41,7 @@ public class LoginResponse {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
+  /** Constructor with only required parameters */
   public LoginResponse(SysUser user, List<@Valid TenantMember> availableTenants, String clientId) {
     this.user = user;
     this.availableTenants = availableTenants;
@@ -66,9 +55,11 @@ public class LoginResponse {
 
   /**
    * Get user
+   *
    * @return user
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "user", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("user")
   public SysUser getUser() {
@@ -95,9 +86,11 @@ public class LoginResponse {
 
   /**
    * Get availableTenants
+   *
    * @return availableTenants
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "availableTenants", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("availableTenants")
   public List<@Valid TenantMember> getAvailableTenants() {
@@ -116,9 +109,9 @@ public class LoginResponse {
 
   /**
    * Get accessToken
+   *
    * @return accessToken
    */
-  
   @Schema(name = "accessToken", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("accessToken")
   public @Nullable String getAccessToken() {
@@ -137,9 +130,9 @@ public class LoginResponse {
 
   /**
    * Get refreshToken
+   *
    * @return refreshToken
    */
-  
   @Schema(name = "refreshToken", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("refreshToken")
   public @Nullable String getRefreshToken() {
@@ -158,9 +151,9 @@ public class LoginResponse {
 
   /**
    * Get tokenType
+   *
    * @return tokenType
    */
-  
   @Schema(name = "tokenType", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("tokenType")
   public @Nullable String getTokenType() {
@@ -179,9 +172,9 @@ public class LoginResponse {
 
   /**
    * Get expiresIn
+   *
    * @return expiresIn
    */
-  
   @Schema(name = "expiresIn", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("expiresIn")
   public @Nullable Integer getExpiresIn() {
@@ -200,9 +193,10 @@ public class LoginResponse {
 
   /**
    * Get clientId
+   *
    * @return clientId
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "clientId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("clientId")
   public String getClientId() {
@@ -223,18 +217,19 @@ public class LoginResponse {
       return false;
     }
     LoginResponse loginResponse = (LoginResponse) o;
-    return Objects.equals(this.user, loginResponse.user) &&
-        Objects.equals(this.availableTenants, loginResponse.availableTenants) &&
-        Objects.equals(this.accessToken, loginResponse.accessToken) &&
-        Objects.equals(this.refreshToken, loginResponse.refreshToken) &&
-        Objects.equals(this.tokenType, loginResponse.tokenType) &&
-        Objects.equals(this.expiresIn, loginResponse.expiresIn) &&
-        Objects.equals(this.clientId, loginResponse.clientId);
+    return Objects.equals(this.user, loginResponse.user)
+        && Objects.equals(this.availableTenants, loginResponse.availableTenants)
+        && Objects.equals(this.accessToken, loginResponse.accessToken)
+        && Objects.equals(this.refreshToken, loginResponse.refreshToken)
+        && Objects.equals(this.tokenType, loginResponse.tokenType)
+        && Objects.equals(this.expiresIn, loginResponse.expiresIn)
+        && Objects.equals(this.clientId, loginResponse.clientId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(user, availableTenants, accessToken, refreshToken, tokenType, expiresIn, clientId);
+    return Objects.hash(
+        user, availableTenants, accessToken, refreshToken, tokenType, expiresIn, clientId);
   }
 
   @Override
@@ -253,11 +248,9 @@ public class LoginResponse {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
-

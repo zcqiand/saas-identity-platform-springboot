@@ -76,8 +76,7 @@ public class AuthController implements AuthApi {
     // 占位（Phase 5；prod 换 argon2/bcrypt）。aspnetcore/nextjs 两侧已识别该前缀，
     // springboot 对齐，否则同一份种子三后端登录行为分叉（contract-test live 401）。
     boolean plainOk =
-        user.getPassword() != null
-            && user.getPassword().equals("plain:" + body.getPassword());
+        user.getPassword() != null && user.getPassword().equals("plain:" + body.getPassword());
     if (!plainOk && !bcrypt.matches(body.getPassword(), user.getPassword())) {
       int attempts = (user.getFailedAttempts() == null ? 0 : user.getFailedAttempts()) + 1;
       user.setFailedAttempts(attempts);

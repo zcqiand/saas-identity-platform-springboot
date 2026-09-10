@@ -1,31 +1,23 @@
 package saas.identity.shared.dto;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import java.time.OffsetDateTime;
+import java.util.*;
+import java.util.Objects;
 import java.util.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
-import saas.identity.shared.dto.SysMenuType;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
 
-
-import java.util.*;
-import jakarta.annotation.Generated;
-
-/**
- * SysMenu
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-10T10:23:40.344575800+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+/** SysMenu */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-10T10:23:40.344575800+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 public class SysMenu {
 
   private UUID id;
@@ -61,10 +53,16 @@ public class SysMenu {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
-  public SysMenu(UUID id, String clientId, UUID parentId, String title, SysMenuType type, Integer sortOrder, Integer status, OffsetDateTime createdAt) {
+  /** Constructor with only required parameters */
+  public SysMenu(
+      UUID id,
+      String clientId,
+      UUID parentId,
+      String title,
+      SysMenuType type,
+      Integer sortOrder,
+      Integer status,
+      OffsetDateTime createdAt) {
     this.id = id;
     this.clientId = clientId;
     this.parentId = parentId;
@@ -82,9 +80,11 @@ public class SysMenu {
 
   /**
    * Get id
+   *
    * @return id
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("id")
   public UUID getId() {
@@ -103,9 +103,10 @@ public class SysMenu {
 
   /**
    * Get clientId
+   *
    * @return clientId
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "clientId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("clientId")
   public String getClientId() {
@@ -124,9 +125,11 @@ public class SysMenu {
 
   /**
    * Get parentId
+   *
    * @return parentId
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "parentId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("parentId")
   public UUID getParentId() {
@@ -145,9 +148,10 @@ public class SysMenu {
 
   /**
    * Get title
+   *
    * @return title
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "title", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("title")
   public String getTitle() {
@@ -166,9 +170,11 @@ public class SysMenu {
 
   /**
    * Get type
+   *
    * @return type
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "type", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("type")
   public SysMenuType getType() {
@@ -187,9 +193,9 @@ public class SysMenu {
 
   /**
    * Get path
+   *
    * @return path
    */
-  
   @Schema(name = "path", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("path")
   public @Nullable String getPath() {
@@ -208,9 +214,9 @@ public class SysMenu {
 
   /**
    * Get component
+   *
    * @return component
    */
-  
   @Schema(name = "component", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("component")
   public @Nullable String getComponent() {
@@ -229,9 +235,9 @@ public class SysMenu {
 
   /**
    * Get perms
+   *
    * @return perms
    */
-  
   @Schema(name = "perms", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("perms")
   public @Nullable String getPerms() {
@@ -250,9 +256,9 @@ public class SysMenu {
 
   /**
    * Get icon
+   *
    * @return icon
    */
-  
   @Schema(name = "icon", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("icon")
   public @Nullable String getIcon() {
@@ -271,9 +277,10 @@ public class SysMenu {
 
   /**
    * Get sortOrder
+   *
    * @return sortOrder
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "sortOrder", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("sortOrder")
   public Integer getSortOrder() {
@@ -292,9 +299,10 @@ public class SysMenu {
 
   /**
    * Get status
+   *
    * @return status
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("status")
   public Integer getStatus() {
@@ -313,9 +321,11 @@ public class SysMenu {
 
   /**
    * Get createdAt
+   *
    * @return createdAt
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "createdAt", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("createdAt")
   public OffsetDateTime getCreatedAt() {
@@ -336,23 +346,25 @@ public class SysMenu {
       return false;
     }
     SysMenu sysMenu = (SysMenu) o;
-    return Objects.equals(this.id, sysMenu.id) &&
-        Objects.equals(this.clientId, sysMenu.clientId) &&
-        Objects.equals(this.parentId, sysMenu.parentId) &&
-        Objects.equals(this.title, sysMenu.title) &&
-        Objects.equals(this.type, sysMenu.type) &&
-        Objects.equals(this.path, sysMenu.path) &&
-        Objects.equals(this.component, sysMenu.component) &&
-        Objects.equals(this.perms, sysMenu.perms) &&
-        Objects.equals(this.icon, sysMenu.icon) &&
-        Objects.equals(this.sortOrder, sysMenu.sortOrder) &&
-        Objects.equals(this.status, sysMenu.status) &&
-        Objects.equals(this.createdAt, sysMenu.createdAt);
+    return Objects.equals(this.id, sysMenu.id)
+        && Objects.equals(this.clientId, sysMenu.clientId)
+        && Objects.equals(this.parentId, sysMenu.parentId)
+        && Objects.equals(this.title, sysMenu.title)
+        && Objects.equals(this.type, sysMenu.type)
+        && Objects.equals(this.path, sysMenu.path)
+        && Objects.equals(this.component, sysMenu.component)
+        && Objects.equals(this.perms, sysMenu.perms)
+        && Objects.equals(this.icon, sysMenu.icon)
+        && Objects.equals(this.sortOrder, sysMenu.sortOrder)
+        && Objects.equals(this.status, sysMenu.status)
+        && Objects.equals(this.createdAt, sysMenu.createdAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, clientId, parentId, title, type, path, component, perms, icon, sortOrder, status, createdAt);
+    return Objects.hash(
+        id, clientId, parentId, title, type, path, component, perms, icon, sortOrder, status,
+        createdAt);
   }
 
   @Override
@@ -376,11 +388,9 @@ public class SysMenu {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
-

@@ -1,27 +1,20 @@
 package saas.identity.shared.dto;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import org.springframework.lang.Nullable;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
-
-
-import java.util.*;
 import jakarta.annotation.Generated;
+import jakarta.validation.constraints.*;
+import java.util.*;
+import java.util.Objects;
+import org.springframework.lang.Nullable;
 
-/**
- * AdminClientsSetClientStatusRequest
- */
-
+/** AdminClientsSetClientStatusRequest */
 @JsonTypeName("AdminClients_setClientStatus_request")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-10T10:23:40.344575800+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-10T10:23:40.344575800+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 public class AdminClientsSetClientStatusRequest {
 
   private Integer status;
@@ -30,9 +23,7 @@ public class AdminClientsSetClientStatusRequest {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
+  /** Constructor with only required parameters */
   public AdminClientsSetClientStatusRequest(Integer status) {
     this.status = status;
   }
@@ -44,9 +35,10 @@ public class AdminClientsSetClientStatusRequest {
 
   /**
    * Get status
+   *
    * @return status
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("status")
   public Integer getStatus() {
@@ -66,7 +58,8 @@ public class AdminClientsSetClientStatusRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    AdminClientsSetClientStatusRequest adminClientsSetClientStatusRequest = (AdminClientsSetClientStatusRequest) o;
+    AdminClientsSetClientStatusRequest adminClientsSetClientStatusRequest =
+        (AdminClientsSetClientStatusRequest) o;
     return Objects.equals(this.status, adminClientsSetClientStatusRequest.status);
   }
 
@@ -85,11 +78,9 @@ public class AdminClientsSetClientStatusRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
-
