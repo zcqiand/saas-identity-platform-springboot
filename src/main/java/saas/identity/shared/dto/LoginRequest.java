@@ -1,18 +1,25 @@
 package saas.identity.shared.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.constraints.*;
-import java.util.*;
+import java.net.URI;
 import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import org.springframework.lang.Nullable;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** LoginRequest */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-10T13:45:23.662557600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * LoginRequest
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-10T15:16:10.537909700+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class LoginRequest {
 
   private String username;
@@ -25,7 +32,9 @@ public class LoginRequest {
     super();
   }
 
-  /** Constructor with only required parameters */
+  /**
+   * Constructor with only required parameters
+   */
   public LoginRequest(String username, String password, String clientId) {
     this.username = username;
     this.password = password;
@@ -39,11 +48,9 @@ public class LoginRequest {
 
   /**
    * Get username
-   *
    * @return username
    */
-  @NotNull
-  @Size(min = 1, max = 64)
+  @NotNull @Size(min = 1, max = 64) 
   @Schema(name = "username", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("username")
   public String getUsername() {
@@ -62,11 +69,9 @@ public class LoginRequest {
 
   /**
    * Get password
-   *
    * @return password
    */
-  @NotNull
-  @Size(min = 1, max = 128)
+  @NotNull @Size(min = 1, max = 128) 
   @Schema(name = "password", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("password")
   public String getPassword() {
@@ -85,10 +90,9 @@ public class LoginRequest {
 
   /**
    * Get clientId
-   *
    * @return clientId
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "clientId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("clientId")
   public String getClientId() {
@@ -109,9 +113,9 @@ public class LoginRequest {
       return false;
     }
     LoginRequest loginRequest = (LoginRequest) o;
-    return Objects.equals(this.username, loginRequest.username)
-        && Objects.equals(this.password, loginRequest.password)
-        && Objects.equals(this.clientId, loginRequest.clientId);
+    return Objects.equals(this.username, loginRequest.username) &&
+        Objects.equals(this.password, loginRequest.password) &&
+        Objects.equals(this.clientId, loginRequest.clientId);
   }
 
   @Override
@@ -131,9 +135,11 @@ public class LoginRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

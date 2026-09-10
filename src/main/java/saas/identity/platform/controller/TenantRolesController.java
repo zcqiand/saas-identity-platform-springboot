@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import saas.identity.platform.repository.SysRoleRepository;
 import saas.identity.shared.api.TenantRolesApi;
@@ -13,6 +14,7 @@ import saas.identity.shared.dto.UpdateSysRoleRequest;
 
 /** M00.F03 租户角色 CRUD。skeleton。 */
 @RestController
+@Transactional
 public class TenantRolesController implements TenantRolesApi {
 
   private final SysRoleRepository roles;
@@ -38,14 +40,18 @@ public class TenantRolesController implements TenantRolesApi {
   @Override
   public ResponseEntity<saas.identity.shared.dto.SysRole> tenantRolesCreateSysRole(
       String tenantId, CreateSysRoleRequest body) {
+    java.time.OffsetDateTime now = java.time.OffsetDateTime.now();
     saas.identity.platform.entity.Generated.SysRole e =
         new saas.identity.platform.entity.Generated.SysRole();
     e.setTenantId(UUID.fromString(tenantId));
-    e.setClientId("default");
+    e.setClientId(body.getClientId());
     e.setRoleCode(body.getRoleCode());
     e.setRoleName(body.getRoleName());
     e.setDescription(body.getDescription());
+    e.setIsPreset(body.getIsPreset() != null && body.getIsPreset());
     e.setStatus((short) 1);
+    e.setCreatedAt(now);
+    e.setUpdatedAt(now);
     return ResponseEntity.ok(toDto(roles.save(e)));
   }
 
@@ -66,6 +72,7 @@ public class TenantRolesController implements TenantRolesApi {
         roles.findById(roleUuid).orElseThrow(() -> new NoSuchElementException("role " + roleId));
     if (body.getRoleName() != null) e.setRoleName(body.getRoleName());
     if (body.getDescription() != null) e.setDescription(body.getDescription());
+    e.setUpdatedAt(java.time.OffsetDateTime.now());
     return ResponseEntity.ok(toDto(roles.save(e)));
   }
 
@@ -85,7 +92,10 @@ public class TenantRolesController implements TenantRolesApi {
     d.setRoleCode(e.getRoleCode());
     d.setRoleName(e.getRoleName());
     d.setDescription(e.getDescription());
+    d.setIsPreset(e.getIsPreset());
     d.setStatus(e.getStatus() == null ? null : e.getStatus().intValue());
+    d.setCreatedAt(e.getCreatedAt());
+    d.setUpdatedAt(e.getUpdatedAt());
     return d;
   }
 }

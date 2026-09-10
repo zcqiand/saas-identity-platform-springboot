@@ -5,22 +5,9 @@
  */
 package saas.identity.shared.api;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
 import saas.identity.shared.dto.CreateSysUserRequest;
 import saas.identity.shared.dto.ErrorResponse;
+import org.springframework.lang.Nullable;
 import saas.identity.shared.dto.SetTenantMemberRolesRequest;
 import saas.identity.shared.dto.TenantMemberStatus;
 import saas.identity.shared.dto.TenantMemberView;
@@ -28,393 +15,301 @@ import saas.identity.shared.dto.TenantMembersChangeTenantUserStatusRequest;
 import saas.identity.shared.dto.TenantMembersInviteTenantUserRequest;
 import saas.identity.shared.dto.TenantMembersListTenantUsers200Response;
 import saas.identity.shared.dto.UpdateSysUserRequest;
+import io.swagger.v3.oas.annotations.ExternalDocumentation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-10T13:45:23.662557600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import jakarta.annotation.Generated;
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-10T15:16:10.537909700+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 @Validated
 @Tag(name = "tenant-members", description = "the tenant-members API")
 public interface TenantMembersApi {
 
-  String PATH_TENANT_MEMBERS_ASSIGN_TENANT_MEMBER_ROLES =
-      "/api/v1/tenants/{tenantId}/members/{userId}/roles";
-
-  /**
-   * PUT /api/v1/tenants/{tenantId}/members/{userId}/roles
-   *
-   * @param tenantId (required)
-   * @param userId (required)
-   * @param setTenantMemberRolesRequest (required)
-   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
-   *     code 200)
-   */
-  @Operation(
-      operationId = "tenantMembersAssignTenantMemberRoles",
-      tags = {"tenant-members"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "The request has succeeded.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = TenantMemberView.class))
+    String PATH_TENANT_MEMBERS_ASSIGN_TENANT_MEMBER_ROLES = "/api/v1/tenants/{tenantId}/members/{userId}/roles";
+    /**
+     * PUT /api/v1/tenants/{tenantId}/members/{userId}/roles
+     *
+     * @param tenantId  (required)
+     * @param userId  (required)
+     * @param setTenantMemberRolesRequest  (required)
+     * @return The request has succeeded. (status code 200)
+     *         or An unexpected error response. (status code 200)
+     */
+    @Operation(
+        operationId = "tenantMembersAssignTenantMemberRoles",
+        tags = { "tenant-members" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = TenantMemberView.class))
             }),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
-      })
-  @RequestMapping(
-      method = RequestMethod.PUT,
-      value = TenantMembersApi.PATH_TENANT_MEMBERS_ASSIGN_TENANT_MEMBER_ROLES,
-      produces = {"application/json"},
-      consumes = {"application/json"})
-  ResponseEntity<TenantMemberView> tenantMembersAssignTenantMemberRoles(
-      @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("tenantId")
-          String tenantId,
-      @Parameter(name = "userId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("userId")
-          String userId,
-      @Parameter(name = "SetTenantMemberRolesRequest", description = "", required = true)
-          @Valid
-          @RequestBody
-          SetTenantMemberRolesRequest setTenantMemberRolesRequest);
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.PUT,
+        value = TenantMembersApi.PATH_TENANT_MEMBERS_ASSIGN_TENANT_MEMBER_ROLES,
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    ResponseEntity<TenantMemberView> tenantMembersAssignTenantMemberRoles(
+        @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("tenantId") String tenantId,
+        @Parameter(name = "userId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("userId") String userId,
+        @Parameter(name = "SetTenantMemberRolesRequest", description = "", required = true) @Valid @RequestBody SetTenantMemberRolesRequest setTenantMemberRolesRequest
+    );
 
-  String PATH_TENANT_MEMBERS_CHANGE_TENANT_USER_STATUS =
-      "/api/v1/tenants/{tenantId}/members/{userId}/status";
 
-  /**
-   * PATCH /api/v1/tenants/{tenantId}/members/{userId}/status
-   *
-   * @param tenantId (required)
-   * @param userId (required)
-   * @param tenantMembersChangeTenantUserStatusRequest (required)
-   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
-   *     code 200)
-   */
-  @Operation(
-      operationId = "tenantMembersChangeTenantUserStatus",
-      tags = {"tenant-members"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "The request has succeeded.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = TenantMemberView.class))
+    String PATH_TENANT_MEMBERS_CHANGE_TENANT_USER_STATUS = "/api/v1/tenants/{tenantId}/members/{userId}/status";
+    /**
+     * PATCH /api/v1/tenants/{tenantId}/members/{userId}/status
+     *
+     * @param tenantId  (required)
+     * @param userId  (required)
+     * @param tenantMembersChangeTenantUserStatusRequest  (required)
+     * @return The request has succeeded. (status code 200)
+     *         or An unexpected error response. (status code 200)
+     */
+    @Operation(
+        operationId = "tenantMembersChangeTenantUserStatus",
+        tags = { "tenant-members" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = TenantMemberView.class))
             }),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
-      })
-  @RequestMapping(
-      method = RequestMethod.PATCH,
-      value = TenantMembersApi.PATH_TENANT_MEMBERS_CHANGE_TENANT_USER_STATUS,
-      produces = {"application/json"},
-      consumes = {"application/json"})
-  ResponseEntity<TenantMemberView> tenantMembersChangeTenantUserStatus(
-      @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("tenantId")
-          String tenantId,
-      @Parameter(name = "userId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("userId")
-          String userId,
-      @Parameter(
-              name = "TenantMembersChangeTenantUserStatusRequest",
-              description = "",
-              required = true)
-          @Valid
-          @RequestBody
-          TenantMembersChangeTenantUserStatusRequest tenantMembersChangeTenantUserStatusRequest);
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.PATCH,
+        value = TenantMembersApi.PATH_TENANT_MEMBERS_CHANGE_TENANT_USER_STATUS,
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    ResponseEntity<TenantMemberView> tenantMembersChangeTenantUserStatus(
+        @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("tenantId") String tenantId,
+        @Parameter(name = "userId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("userId") String userId,
+        @Parameter(name = "TenantMembersChangeTenantUserStatusRequest", description = "", required = true) @Valid @RequestBody TenantMembersChangeTenantUserStatusRequest tenantMembersChangeTenantUserStatusRequest
+    );
 
-  String PATH_TENANT_MEMBERS_CREATE_TENANT_USER = "/api/v1/tenants/{tenantId}/members";
 
-  /**
-   * POST /api/v1/tenants/{tenantId}/members
-   *
-   * @param tenantId (required)
-   * @param createSysUserRequest (required)
-   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
-   *     code 200)
-   */
-  @Operation(
-      operationId = "tenantMembersCreateTenantUser",
-      tags = {"tenant-members"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "The request has succeeded.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = TenantMemberView.class))
+    String PATH_TENANT_MEMBERS_CREATE_TENANT_USER = "/api/v1/tenants/{tenantId}/members";
+    /**
+     * POST /api/v1/tenants/{tenantId}/members
+     *
+     * @param tenantId  (required)
+     * @param createSysUserRequest  (required)
+     * @return The request has succeeded. (status code 200)
+     *         or An unexpected error response. (status code 200)
+     */
+    @Operation(
+        operationId = "tenantMembersCreateTenantUser",
+        tags = { "tenant-members" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = TenantMemberView.class))
             }),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
-      })
-  @RequestMapping(
-      method = RequestMethod.POST,
-      value = TenantMembersApi.PATH_TENANT_MEMBERS_CREATE_TENANT_USER,
-      produces = {"application/json"},
-      consumes = {"application/json"})
-  ResponseEntity<TenantMemberView> tenantMembersCreateTenantUser(
-      @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("tenantId")
-          String tenantId,
-      @Parameter(name = "CreateSysUserRequest", description = "", required = true)
-          @Valid
-          @RequestBody
-          CreateSysUserRequest createSysUserRequest);
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.POST,
+        value = TenantMembersApi.PATH_TENANT_MEMBERS_CREATE_TENANT_USER,
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    ResponseEntity<TenantMemberView> tenantMembersCreateTenantUser(
+        @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("tenantId") String tenantId,
+        @Parameter(name = "CreateSysUserRequest", description = "", required = true) @Valid @RequestBody CreateSysUserRequest createSysUserRequest
+    );
 
-  String PATH_TENANT_MEMBERS_DELETE_TENANT_USER = "/api/v1/tenants/{tenantId}/members/{userId}";
 
-  /**
-   * DELETE /api/v1/tenants/{tenantId}/members/{userId}
-   *
-   * @param tenantId (required)
-   * @param userId (required)
-   * @return There is no content to send for this request, but the headers may be useful. (status
-   *     code 204) or An unexpected error response. (status code 200)
-   */
-  @Operation(
-      operationId = "tenantMembersDeleteTenantUser",
-      tags = {"tenant-members"},
-      responses = {
-        @ApiResponse(
-            responseCode = "204",
-            description =
-                "There is no content to send for this request, but the headers may be useful. "),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+    String PATH_TENANT_MEMBERS_DELETE_TENANT_USER = "/api/v1/tenants/{tenantId}/members/{userId}";
+    /**
+     * DELETE /api/v1/tenants/{tenantId}/members/{userId}
+     *
+     * @param tenantId  (required)
+     * @param userId  (required)
+     * @return There is no content to send for this request, but the headers may be useful.  (status code 204)
+     *         or An unexpected error response. (status code 200)
+     */
+    @Operation(
+        operationId = "tenantMembersDeleteTenantUser",
+        tags = { "tenant-members" },
+        responses = {
+            @ApiResponse(responseCode = "204", description = "There is no content to send for this request, but the headers may be useful. "),
+            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
-      })
-  @RequestMapping(
-      method = RequestMethod.DELETE,
-      value = TenantMembersApi.PATH_TENANT_MEMBERS_DELETE_TENANT_USER,
-      produces = {"application/json"})
-  ResponseEntity<Void> tenantMembersDeleteTenantUser(
-      @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("tenantId")
-          String tenantId,
-      @Parameter(name = "userId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("userId")
-          String userId);
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.DELETE,
+        value = TenantMembersApi.PATH_TENANT_MEMBERS_DELETE_TENANT_USER,
+        produces = { "application/json" }
+    )
+    ResponseEntity<Void> tenantMembersDeleteTenantUser(
+        @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("tenantId") String tenantId,
+        @Parameter(name = "userId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("userId") String userId
+    );
 
-  String PATH_TENANT_MEMBERS_GET_TENANT_USER = "/api/v1/tenants/{tenantId}/members/{userId}";
 
-  /**
-   * GET /api/v1/tenants/{tenantId}/members/{userId}
-   *
-   * @param tenantId (required)
-   * @param userId (required)
-   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
-   *     code 200)
-   */
-  @Operation(
-      operationId = "tenantMembersGetTenantUser",
-      tags = {"tenant-members"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "The request has succeeded.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = TenantMemberView.class))
+    String PATH_TENANT_MEMBERS_GET_TENANT_USER = "/api/v1/tenants/{tenantId}/members/{userId}";
+    /**
+     * GET /api/v1/tenants/{tenantId}/members/{userId}
+     *
+     * @param tenantId  (required)
+     * @param userId  (required)
+     * @return The request has succeeded. (status code 200)
+     *         or An unexpected error response. (status code 200)
+     */
+    @Operation(
+        operationId = "tenantMembersGetTenantUser",
+        tags = { "tenant-members" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = TenantMemberView.class))
             }),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
-      })
-  @RequestMapping(
-      method = RequestMethod.GET,
-      value = TenantMembersApi.PATH_TENANT_MEMBERS_GET_TENANT_USER,
-      produces = {"application/json"})
-  ResponseEntity<TenantMemberView> tenantMembersGetTenantUser(
-      @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("tenantId")
-          String tenantId,
-      @Parameter(name = "userId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("userId")
-          String userId);
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = TenantMembersApi.PATH_TENANT_MEMBERS_GET_TENANT_USER,
+        produces = { "application/json" }
+    )
+    ResponseEntity<TenantMemberView> tenantMembersGetTenantUser(
+        @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("tenantId") String tenantId,
+        @Parameter(name = "userId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("userId") String userId
+    );
 
-  String PATH_TENANT_MEMBERS_INVITE_TENANT_USER = "/api/v1/tenants/{tenantId}/members/invitations";
 
-  /**
-   * POST /api/v1/tenants/{tenantId}/members/invitations
-   *
-   * @param tenantId (required)
-   * @param tenantMembersInviteTenantUserRequest (required)
-   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
-   *     code 200)
-   */
-  @Operation(
-      operationId = "tenantMembersInviteTenantUser",
-      tags = {"tenant-members"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "The request has succeeded.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = TenantMemberView.class))
+    String PATH_TENANT_MEMBERS_INVITE_TENANT_USER = "/api/v1/tenants/{tenantId}/members/invitations";
+    /**
+     * POST /api/v1/tenants/{tenantId}/members/invitations
+     *
+     * @param tenantId  (required)
+     * @param tenantMembersInviteTenantUserRequest  (required)
+     * @return The request has succeeded. (status code 200)
+     *         or An unexpected error response. (status code 200)
+     */
+    @Operation(
+        operationId = "tenantMembersInviteTenantUser",
+        tags = { "tenant-members" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = TenantMemberView.class))
             }),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
-      })
-  @RequestMapping(
-      method = RequestMethod.POST,
-      value = TenantMembersApi.PATH_TENANT_MEMBERS_INVITE_TENANT_USER,
-      produces = {"application/json"},
-      consumes = {"application/json"})
-  ResponseEntity<TenantMemberView> tenantMembersInviteTenantUser(
-      @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("tenantId")
-          String tenantId,
-      @Parameter(name = "TenantMembersInviteTenantUserRequest", description = "", required = true)
-          @Valid
-          @RequestBody
-          TenantMembersInviteTenantUserRequest tenantMembersInviteTenantUserRequest);
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.POST,
+        value = TenantMembersApi.PATH_TENANT_MEMBERS_INVITE_TENANT_USER,
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    ResponseEntity<TenantMemberView> tenantMembersInviteTenantUser(
+        @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("tenantId") String tenantId,
+        @Parameter(name = "TenantMembersInviteTenantUserRequest", description = "", required = true) @Valid @RequestBody TenantMembersInviteTenantUserRequest tenantMembersInviteTenantUserRequest
+    );
 
-  String PATH_TENANT_MEMBERS_LIST_TENANT_USERS = "/api/v1/tenants/{tenantId}/members";
 
-  /**
-   * GET /api/v1/tenants/{tenantId}/members
-   *
-   * @param tenantId (required)
-   * @param page (optional)
-   * @param pageSize (optional)
-   * @param status (optional)
-   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
-   *     code 200)
-   */
-  @Operation(
-      operationId = "tenantMembersListTenantUsers",
-      tags = {"tenant-members"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "The request has succeeded.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = TenantMembersListTenantUsers200Response.class))
+    String PATH_TENANT_MEMBERS_LIST_TENANT_USERS = "/api/v1/tenants/{tenantId}/members";
+    /**
+     * GET /api/v1/tenants/{tenantId}/members
+     *
+     * @param tenantId  (required)
+     * @param page  (optional)
+     * @param pageSize  (optional)
+     * @param status  (optional)
+     * @return The request has succeeded. (status code 200)
+     *         or An unexpected error response. (status code 200)
+     */
+    @Operation(
+        operationId = "tenantMembersListTenantUsers",
+        tags = { "tenant-members" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = TenantMembersListTenantUsers200Response.class))
             }),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
-      })
-  @RequestMapping(
-      method = RequestMethod.GET,
-      value = TenantMembersApi.PATH_TENANT_MEMBERS_LIST_TENANT_USERS,
-      produces = {"application/json"})
-  ResponseEntity<TenantMembersListTenantUsers200Response> tenantMembersListTenantUsers(
-      @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("tenantId")
-          String tenantId,
-      @Parameter(name = "page", description = "", in = ParameterIn.QUERY)
-          @Valid
-          @RequestParam(value = "page", required = false)
-          @Nullable
-          Integer page,
-      @Parameter(name = "pageSize", description = "", in = ParameterIn.QUERY)
-          @Valid
-          @RequestParam(value = "pageSize", required = false)
-          @Nullable
-          Integer pageSize,
-      @Parameter(name = "status", description = "", in = ParameterIn.QUERY)
-          @Valid
-          @RequestParam(value = "status", required = false)
-          @Nullable
-          TenantMemberStatus status);
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = TenantMembersApi.PATH_TENANT_MEMBERS_LIST_TENANT_USERS,
+        produces = { "application/json" }
+    )
+    ResponseEntity<TenantMembersListTenantUsers200Response> tenantMembersListTenantUsers(
+        @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("tenantId") String tenantId,
+        @Parameter(name = "page", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "page", required = false) @Nullable Integer page,
+        @Parameter(name = "pageSize", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "pageSize", required = false) @Nullable Integer pageSize,
+        @Parameter(name = "status", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "status", required = false) @Nullable TenantMemberStatus status
+    );
 
-  String PATH_TENANT_MEMBERS_UPDATE_TENANT_USER = "/api/v1/tenants/{tenantId}/members/{userId}";
 
-  /**
-   * PATCH /api/v1/tenants/{tenantId}/members/{userId}
-   *
-   * @param tenantId (required)
-   * @param userId (required)
-   * @param updateSysUserRequest (required)
-   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
-   *     code 200)
-   */
-  @Operation(
-      operationId = "tenantMembersUpdateTenantUser",
-      tags = {"tenant-members"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "The request has succeeded.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = TenantMemberView.class))
+    String PATH_TENANT_MEMBERS_UPDATE_TENANT_USER = "/api/v1/tenants/{tenantId}/members/{userId}";
+    /**
+     * PATCH /api/v1/tenants/{tenantId}/members/{userId}
+     *
+     * @param tenantId  (required)
+     * @param userId  (required)
+     * @param updateSysUserRequest  (required)
+     * @return The request has succeeded. (status code 200)
+     *         or An unexpected error response. (status code 200)
+     */
+    @Operation(
+        operationId = "tenantMembersUpdateTenantUser",
+        tags = { "tenant-members" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = TenantMemberView.class))
             }),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
-      })
-  @RequestMapping(
-      method = RequestMethod.PATCH,
-      value = TenantMembersApi.PATH_TENANT_MEMBERS_UPDATE_TENANT_USER,
-      produces = {"application/json"},
-      consumes = {"application/json"})
-  ResponseEntity<TenantMemberView> tenantMembersUpdateTenantUser(
-      @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("tenantId")
-          String tenantId,
-      @Parameter(name = "userId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("userId")
-          String userId,
-      @Parameter(name = "UpdateSysUserRequest", description = "", required = true)
-          @Valid
-          @RequestBody
-          UpdateSysUserRequest updateSysUserRequest);
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.PATCH,
+        value = TenantMembersApi.PATH_TENANT_MEMBERS_UPDATE_TENANT_USER,
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    ResponseEntity<TenantMemberView> tenantMembersUpdateTenantUser(
+        @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("tenantId") String tenantId,
+        @Parameter(name = "userId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("userId") String userId,
+        @Parameter(name = "UpdateSysUserRequest", description = "", required = true) @Valid @RequestBody UpdateSysUserRequest updateSysUserRequest
+    );
+
 }

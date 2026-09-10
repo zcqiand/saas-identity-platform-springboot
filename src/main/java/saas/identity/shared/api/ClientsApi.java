@@ -5,65 +5,64 @@
  */
 package saas.identity.shared.api;
 
+import saas.identity.shared.dto.ErrorResponse;
+import saas.identity.shared.dto.OAuthClientPublicInfo;
+import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.Generated;
-import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import saas.identity.shared.dto.ErrorResponse;
-import saas.identity.shared.dto.OAuthClientPublicInfo;
+import org.springframework.web.multipart.MultipartFile;
 
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-10T13:45:23.662557600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import jakarta.annotation.Generated;
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-10T15:16:10.537909700+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 @Validated
 @Tag(name = "clients", description = "the clients API")
 public interface ClientsApi {
 
-  String PATH_CLIENTS_GET_CLIENT = "/api/v1/clients/{clientId}";
-
-  /**
-   * GET /api/v1/clients/{clientId}
-   *
-   * @param clientId (required)
-   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
-   *     code 200)
-   */
-  @Operation(
-      operationId = "clientsGetClient",
-      tags = {"clients"},
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "The request has succeeded.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = OAuthClientPublicInfo.class))
+    String PATH_CLIENTS_GET_CLIENT = "/api/v1/clients/{clientId}";
+    /**
+     * GET /api/v1/clients/{clientId}
+     *
+     * @param clientId  (required)
+     * @return The request has succeeded. (status code 200)
+     *         or An unexpected error response. (status code 200)
+     */
+    @Operation(
+        operationId = "clientsGetClient",
+        tags = { "clients" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = OAuthClientPublicInfo.class))
             }),
-        @ApiResponse(
-            responseCode = "default",
-            description = "An unexpected error response.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = ErrorResponse.class))
+            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
-      })
-  @RequestMapping(
-      method = RequestMethod.GET,
-      value = ClientsApi.PATH_CLIENTS_GET_CLIENT,
-      produces = {"application/json"})
-  ResponseEntity<OAuthClientPublicInfo> clientsGetClient(
-      @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.PATH)
-          @PathVariable("clientId")
-          String clientId);
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = ClientsApi.PATH_CLIENTS_GET_CLIENT,
+        produces = { "application/json" }
+    )
+    ResponseEntity<OAuthClientPublicInfo> clientsGetClient(
+        @Parameter(name = "clientId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("clientId") String clientId
+    );
+
 }

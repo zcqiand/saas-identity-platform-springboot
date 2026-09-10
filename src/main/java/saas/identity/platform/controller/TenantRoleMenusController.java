@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import saas.identity.platform.entity.Generated.SysRole;
 import saas.identity.platform.repository.SysRoleMenuRepository;
@@ -21,6 +22,7 @@ import saas.identity.shared.dto.SetSysRoleMenusRequest;
  * 来源（家族约定）。SysRoleMenu DTO 已随 shared openapi 移除，junction 表读写保持 repo 直查。
  */
 @RestController
+@Transactional
 public class TenantRoleMenusController implements TenantRoleMenusApi {
 
   private final SysRoleRepository roles;
@@ -39,7 +41,7 @@ public class TenantRoleMenusController implements TenantRoleMenusApi {
 
   @Override
   public ResponseEntity<RoleMenuGrant> tenantRoleMenusSetSysRoleMenus(
-      String tenantId, String roleId, String clientId, SetSysRoleMenusRequest body) {
+      String tenantId, String roleId, SetSysRoleMenusRequest body, String clientId) {
     SysRole role = findRole(roleId);
     UUID roleUuid = role.getId();
     roleMenus.deleteByRoleId(roleUuid);

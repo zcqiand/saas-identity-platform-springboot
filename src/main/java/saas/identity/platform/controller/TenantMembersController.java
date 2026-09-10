@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import saas.identity.platform.entity.Generated.TenantMember;
 import saas.identity.platform.entity.Generated.TenantMemberRole;
@@ -26,6 +27,7 @@ import saas.identity.shared.dto.UpdateSysUserRequest;
 
 /** M00.F02 租户成员 CRUD + 邀请 + 状态切换 + M01.F02 角色绑定。skeleton。 */
 @RestController
+@Transactional
 public class TenantMembersController implements TenantMembersApi {
 
   private final TenantMemberRepository members;
@@ -59,12 +61,35 @@ public class TenantMembersController implements TenantMembersApi {
   @Override
   public ResponseEntity<TenantMemberView> tenantMembersCreateTenantUser(
       String tenantId, CreateSysUserRequest body) {
+    // 9/7 SSOT pivot：POST member 建 sys_user + tenant_member，返嵌套 TenantMemberView
+    // （对齐 nextjs 参照实现）。此前只插 member 行（user_id 随机 UUID 不落 sys_user，
+    // 缺 is_owner/created_at → 23502 → 500，且响应 user 字段全空）。
+    if (body == null || body.getUsername() == null || body.getEmail() == null) {
+      throw new IllegalArgumentException("username and email are required");
+    }
+    OffsetDateTime now = OffsetDateTime.now();
+    saas.identity.platform.entity.Generated.SysUser u =
+        new saas.identity.platform.entity.Generated.SysUser();
+    u.setUsername(body.getUsername());
+    u.setEmail(body.getEmail());
+    u.setMobile(body.getMobile());
+    // 家族 dev 种子约定（同 nextjs）：password 列存 "plain:{password}" 占位。
+    u.setPassword("plain:" + (body.getPassword() == null ? "" : body.getPassword()));
+    u.setStatus((short) 1); // active
+    u.setFailedAttempts(0);
+    u.setCreatedAt(now);
+    u.setUpdatedAt(now);
+    u = users.save(u);
+
     TenantMember e = new TenantMember();
     e.setTenantId(UUID.fromString(tenantId));
-    e.setUserId(UUID.randomUUID());
+    e.setUserId(u.getId());
+    e.setMemberName(body.getUsername());
+    e.setIsOwner(false);
     e.setStatus((short) 1);
-    TenantMember saved = members.save(e);
-    return ResponseEntity.ok(toView(saved, body));
+    e.setCreatedAt(now);
+    e.setUpdatedAt(now);
+    return ResponseEntity.ok(toView(members.save(e), u));
   }
 
   @Override
@@ -122,7 +147,8 @@ public class TenantMembersController implements TenantMembersApi {
     OffsetDateTime now = OffsetDateTime.now();
     saas.identity.platform.entity.Generated.SysUser u =
         new saas.identity.platform.entity.Generated.SysUser();
-    u.setId(UUID.randomUUID());
+    // 禁止手动 setId（@GeneratedValue UUID）—— merge 会当 detached 走乐观锁
+    // （ObjectOptimisticLockingFailureException，memory: springboot-write-path-double-bug）。
     u.setUsername(email); // 家族约定：invitation 的 username = email（memberName 同源）
     u.setPassword(""); // notNull 列；受邀用户尚无凭据
     u.setEmail(email);
@@ -130,7 +156,7 @@ public class TenantMembersController implements TenantMembersApi {
     u.setFailedAttempts(0);
     u.setCreatedAt(now);
     u.setUpdatedAt(now);
-    users.save(u);
+    u = users.save(u);
 
     TenantMember e = new TenantMember();
     e.setTenantId(UUID.fromString(tenantId));

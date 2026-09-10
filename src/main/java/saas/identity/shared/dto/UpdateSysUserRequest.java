@@ -1,20 +1,28 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import org.springframework.lang.Nullable;
+import saas.identity.shared.dto.SysUserStatus;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import java.util.*;
-import java.util.Objects;
-import org.springframework.lang.Nullable;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** UpdateSysUserRequest */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-10T13:45:23.662557600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * UpdateSysUserRequest
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-10T15:16:10.537909700+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class UpdateSysUserRequest {
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -33,10 +41,9 @@ public class UpdateSysUserRequest {
 
   /**
    * Get email
-   *
    * @return email
    */
-  @jakarta.validation.constraints.Email
+  @jakarta.validation.constraints.Email 
   @Schema(name = "email", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("email")
   public @Nullable String getEmail() {
@@ -55,9 +62,9 @@ public class UpdateSysUserRequest {
 
   /**
    * Get mobile
-   *
    * @return mobile
    */
+  
   @Schema(name = "mobile", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("mobile")
   public @Nullable String getMobile() {
@@ -76,10 +83,9 @@ public class UpdateSysUserRequest {
 
   /**
    * Get status
-   *
    * @return status
    */
-  @Valid
+  @Valid 
   @Schema(name = "status", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("status")
   public @Nullable SysUserStatus getStatus() {
@@ -100,9 +106,9 @@ public class UpdateSysUserRequest {
       return false;
     }
     UpdateSysUserRequest updateSysUserRequest = (UpdateSysUserRequest) o;
-    return Objects.equals(this.email, updateSysUserRequest.email)
-        && Objects.equals(this.mobile, updateSysUserRequest.mobile)
-        && Objects.equals(this.status, updateSysUserRequest.status);
+    return Objects.equals(this.email, updateSysUserRequest.email) &&
+        Objects.equals(this.mobile, updateSysUserRequest.mobile) &&
+        Objects.equals(this.status, updateSysUserRequest.status);
   }
 
   @Override
@@ -122,9 +128,11 @@ public class UpdateSysUserRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

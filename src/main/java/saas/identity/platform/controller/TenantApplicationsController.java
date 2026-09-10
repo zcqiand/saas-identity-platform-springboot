@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import saas.identity.platform.repository.TenantApplicationRepository;
 import saas.identity.shared.api.TenantApplicationsApi;
@@ -14,6 +15,7 @@ import saas.identity.shared.dto.UpdateTenantApplicationRequest;
 
 /** M00.F05 租户应用订阅。skeleton。 */
 @RestController
+@Transactional
 public class TenantApplicationsController implements TenantApplicationsApi {
 
   private final TenantApplicationRepository apps;
@@ -41,11 +43,13 @@ public class TenantApplicationsController implements TenantApplicationsApi {
   @Override
   public ResponseEntity<TenantApplication> tenantApplicationsSubscribeTenantApplication(
       String tenantId, SubscribeTenantApplicationRequest body) {
+    java.time.OffsetDateTime now = java.time.OffsetDateTime.now();
     saas.identity.platform.entity.Generated.TenantApplication e =
         new saas.identity.platform.entity.Generated.TenantApplication();
     e.setTenantId(UUID.fromString(tenantId));
     e.setClientId(body.getClientId());
     e.setStatus((short) 1);
+    e.setCreatedAt(now); // createdAt 列 NOT NULL（schema-first DB-First）
     return ResponseEntity.ok(toDto(apps.save(e)));
   }
 

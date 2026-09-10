@@ -1,19 +1,26 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.constraints.*;
-import java.util.*;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import org.springframework.lang.Nullable;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** CreateSysUserRequest */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-10T13:45:23.662557600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * CreateSysUserRequest
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-10T15:16:10.537909700+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class CreateSysUserRequest {
 
   private String username;
@@ -30,7 +37,9 @@ public class CreateSysUserRequest {
     super();
   }
 
-  /** Constructor with only required parameters */
+  /**
+   * Constructor with only required parameters
+   */
   public CreateSysUserRequest(String username, String password) {
     this.username = username;
     this.password = password;
@@ -43,11 +52,9 @@ public class CreateSysUserRequest {
 
   /**
    * Get username
-   *
    * @return username
    */
-  @NotNull
-  @Size(min = 1, max = 64)
+  @NotNull @Size(min = 1, max = 64) 
   @Schema(name = "username", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("username")
   public String getUsername() {
@@ -66,10 +73,9 @@ public class CreateSysUserRequest {
 
   /**
    * Get password
-   *
    * @return password
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "password", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("password")
   public String getPassword() {
@@ -88,10 +94,9 @@ public class CreateSysUserRequest {
 
   /**
    * Get email
-   *
    * @return email
    */
-  @jakarta.validation.constraints.Email
+  @jakarta.validation.constraints.Email 
   @Schema(name = "email", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("email")
   public @Nullable String getEmail() {
@@ -110,9 +115,9 @@ public class CreateSysUserRequest {
 
   /**
    * Get mobile
-   *
    * @return mobile
    */
+  
   @Schema(name = "mobile", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("mobile")
   public @Nullable String getMobile() {
@@ -133,10 +138,10 @@ public class CreateSysUserRequest {
       return false;
     }
     CreateSysUserRequest createSysUserRequest = (CreateSysUserRequest) o;
-    return Objects.equals(this.username, createSysUserRequest.username)
-        && Objects.equals(this.password, createSysUserRequest.password)
-        && Objects.equals(this.email, createSysUserRequest.email)
-        && Objects.equals(this.mobile, createSysUserRequest.mobile);
+    return Objects.equals(this.username, createSysUserRequest.username) &&
+        Objects.equals(this.password, createSysUserRequest.password) &&
+        Objects.equals(this.email, createSysUserRequest.email) &&
+        Objects.equals(this.mobile, createSysUserRequest.mobile);
   }
 
   @Override
@@ -157,9 +162,11 @@ public class CreateSysUserRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

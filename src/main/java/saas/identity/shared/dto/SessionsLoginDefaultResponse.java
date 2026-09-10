@@ -1,26 +1,34 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
 import java.time.OffsetDateTime;
-import java.util.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
+import saas.identity.shared.dto.ErrorResponse;
+import saas.identity.shared.dto.LockedAccountResponse;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** SessionsLoginDefaultResponse */
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * SessionsLoginDefaultResponse
+ */
+
 @JsonTypeName("Sessions_login_default_response")
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-10T13:45:23.662557600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-10T15:16:10.537909700+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class SessionsLoginDefaultResponse {
 
   private String code;
@@ -40,7 +48,9 @@ public class SessionsLoginDefaultResponse {
     super();
   }
 
-  /** Constructor with only required parameters */
+  /**
+   * Constructor with only required parameters
+   */
   public SessionsLoginDefaultResponse(String code, String message, OffsetDateTime lockedUntil) {
     this.code = code;
     this.message = message;
@@ -54,10 +64,9 @@ public class SessionsLoginDefaultResponse {
 
   /**
    * Get code
-   *
    * @return code
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "code", example = "BAD_REQUEST", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("code")
   public String getCode() {
@@ -76,10 +85,9 @@ public class SessionsLoginDefaultResponse {
 
   /**
    * Get message
-   *
    * @return message
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "message", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("message")
   public String getMessage() {
@@ -98,11 +106,9 @@ public class SessionsLoginDefaultResponse {
 
   /**
    * Get lockedUntil
-   *
    * @return lockedUntil
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "lockedUntil", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("lockedUntil")
   public OffsetDateTime getLockedUntil() {
@@ -121,9 +127,9 @@ public class SessionsLoginDefaultResponse {
 
   /**
    * Get remainingAttempts
-   *
    * @return remainingAttempts
    */
+  
   @Schema(name = "remainingAttempts", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("remainingAttempts")
   public @Nullable Integer getRemainingAttempts() {
@@ -150,9 +156,9 @@ public class SessionsLoginDefaultResponse {
 
   /**
    * Get details
-   *
    * @return details
    */
+  
   @Schema(name = "details", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("details")
   public Map<String, Object> getDetails() {
@@ -173,11 +179,11 @@ public class SessionsLoginDefaultResponse {
       return false;
     }
     SessionsLoginDefaultResponse sessionsLoginDefaultResponse = (SessionsLoginDefaultResponse) o;
-    return Objects.equals(this.code, sessionsLoginDefaultResponse.code)
-        && Objects.equals(this.message, sessionsLoginDefaultResponse.message)
-        && Objects.equals(this.lockedUntil, sessionsLoginDefaultResponse.lockedUntil)
-        && Objects.equals(this.remainingAttempts, sessionsLoginDefaultResponse.remainingAttempts)
-        && Objects.equals(this.details, sessionsLoginDefaultResponse.details);
+    return Objects.equals(this.code, sessionsLoginDefaultResponse.code) &&
+        Objects.equals(this.message, sessionsLoginDefaultResponse.message) &&
+        Objects.equals(this.lockedUntil, sessionsLoginDefaultResponse.lockedUntil) &&
+        Objects.equals(this.remainingAttempts, sessionsLoginDefaultResponse.remainingAttempts) &&
+        Objects.equals(this.details, sessionsLoginDefaultResponse.details);
   }
 
   @Override
@@ -199,9 +205,11 @@ public class SessionsLoginDefaultResponse {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

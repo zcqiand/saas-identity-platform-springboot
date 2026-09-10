@@ -11,10 +11,14 @@ import saas.identity.platform.entity.Generated.OauthAccessToken;
 import saas.identity.platform.entity.Generated.OauthCode;
 import saas.identity.platform.entity.Generated.OauthRefreshToken;
 import saas.identity.platform.entity.Generated.SysUser;
+import saas.identity.platform.entity.Generated.Tenant;
+import saas.identity.platform.entity.Generated.TenantMember;
 import saas.identity.platform.repository.OauthAccessTokenRepository;
 import saas.identity.platform.repository.OauthCodeRepository;
 import saas.identity.platform.repository.OauthRefreshTokenRepository;
 import saas.identity.platform.repository.SysUserRepository;
+import saas.identity.platform.repository.TenantMemberRepository;
+import saas.identity.platform.repository.TenantRepository;
 import saas.identity.platform.security.JwtIssuer;
 import saas.identity.shared.api.AuthApi;
 import saas.identity.shared.dto.LockedAccountResponse;
@@ -40,6 +44,8 @@ public class AuthController implements AuthApi {
   private final OauthCodeRepository codes;
   private final OauthAccessTokenRepository accessTokens;
   private final OauthRefreshTokenRepository refreshTokens;
+  private final TenantMemberRepository members;
+  private final TenantRepository tenants;
   private final JwtIssuer jwt;
   private final BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 
@@ -48,11 +54,15 @@ public class AuthController implements AuthApi {
       OauthCodeRepository codes,
       OauthAccessTokenRepository accessTokens,
       OauthRefreshTokenRepository refreshTokens,
+      TenantMemberRepository members,
+      TenantRepository tenants,
       JwtIssuer jwt) {
     this.users = users;
     this.codes = codes;
     this.accessTokens = accessTokens;
     this.refreshTokens = refreshTokens;
+    this.members = members;
+    this.tenants = tenants;
     this.jwt = jwt;
   }
 
@@ -92,7 +102,25 @@ public class AuthController implements AuthApi {
     user.setLockedUntil(null);
     users.save(user);
 
-    UUID tenantId = UUID.randomUUID();
+    // 家族语义（nextjs login route 为准）：tenantId = 用户首个 active membership 的
+    // tenant（status=1），且 tenant 本身 active。sys_user 无 tenantId 列（多租户走
+    // tenant_member）。此前这里是 UUID.randomUUID() —— 随机值写 oauth_access_token
+    // 违反 tenant_id FK（23503），login 500 级联全后端比对失活。
+    UUID tenantId =
+        members.findByUserId(user.getId()).stream()
+            .filter(m -> m.getStatus() != null && m.getStatus() == 1)
+            .map(TenantMember::getTenantId)
+            .findFirst()
+            .orElse(null);
+    if (tenantId == null) {
+      throw new org.springframework.security.access.AccessDeniedException(
+          "user has no active tenant membership");
+    }
+    Tenant tenant = tenants.findById(tenantId).orElse(null);
+    if (tenant == null || tenant.getStatus() == null || tenant.getStatus() != 1) {
+      throw new org.springframework.security.access.AccessDeniedException(
+          "tenant unavailable: " + tenantId);
+    }
     String accessToken = jwt.issueAccessToken(user.getId(), tenantId);
     String refreshToken = persistRefreshToken(user.getId(), tenantId, body.getClientId());
 

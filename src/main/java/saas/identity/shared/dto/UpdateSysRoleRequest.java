@@ -1,19 +1,26 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.constraints.*;
-import java.util.*;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import org.springframework.lang.Nullable;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** UpdateSysRoleRequest */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-10T13:45:23.662557600+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * UpdateSysRoleRequest
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-10T15:16:10.537909700+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class UpdateSysRoleRequest {
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -32,10 +39,9 @@ public class UpdateSysRoleRequest {
 
   /**
    * Get roleName
-   *
    * @return roleName
    */
-  @Size(min = 1, max = 64)
+  @Size(min = 1, max = 64) 
   @Schema(name = "roleName", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("roleName")
   public @Nullable String getRoleName() {
@@ -54,9 +60,9 @@ public class UpdateSysRoleRequest {
 
   /**
    * Get description
-   *
    * @return description
    */
+  
   @Schema(name = "description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("description")
   public @Nullable String getDescription() {
@@ -75,9 +81,9 @@ public class UpdateSysRoleRequest {
 
   /**
    * Get status
-   *
    * @return status
    */
+  
   @Schema(name = "status", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("status")
   public @Nullable Integer getStatus() {
@@ -98,9 +104,9 @@ public class UpdateSysRoleRequest {
       return false;
     }
     UpdateSysRoleRequest updateSysRoleRequest = (UpdateSysRoleRequest) o;
-    return Objects.equals(this.roleName, updateSysRoleRequest.roleName)
-        && Objects.equals(this.description, updateSysRoleRequest.description)
-        && Objects.equals(this.status, updateSysRoleRequest.status);
+    return Objects.equals(this.roleName, updateSysRoleRequest.roleName) &&
+        Objects.equals(this.description, updateSysRoleRequest.description) &&
+        Objects.equals(this.status, updateSysRoleRequest.status);
   }
 
   @Override
@@ -120,9 +126,11 @@ public class UpdateSysRoleRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

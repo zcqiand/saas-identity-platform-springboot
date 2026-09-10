@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import saas.identity.platform.entity.Generated.Tenant;
 import saas.identity.platform.repository.TenantRepository;
@@ -16,6 +17,7 @@ import saas.identity.shared.dto.UpdateTenantRequest;
 
 /** M00.F01 平台 admin 租户 CRUD。skeleton。 */
 @RestController
+@Transactional
 public class AdminTenantsController implements AdminTenantsApi {
 
   private final TenantRepository tenants;
@@ -58,6 +60,7 @@ public class AdminTenantsController implements AdminTenantsApi {
     UUID uuid = UUID.fromString(id);
     Tenant t = tenants.findById(uuid).orElseThrow(() -> new NoSuchElementException("tenant " + id));
     if (body.getName() != null) t.setName(body.getName());
+    if (body.getStatus() != null) t.setStatus(body.getStatus() == saas.identity.shared.dto.TenantStatus.ACTIVE ? (short) 1 : (short) 0);
     return ResponseEntity.ok(toDto(tenants.save(t)));
   }
 
@@ -69,10 +72,13 @@ public class AdminTenantsController implements AdminTenantsApi {
   }
 
   private Tenant toEntity(CreateTenantRequest b) {
+    java.time.OffsetDateTime now = java.time.OffsetDateTime.now();
     Tenant t = new Tenant();
     t.setTenantKey(b.getTenantKey());
     t.setName(b.getName());
     t.setStatus((short) 1);
+    t.setCreatedAt(now);
+    t.setUpdatedAt(now);
     return t;
   }
 
@@ -82,6 +88,8 @@ public class AdminTenantsController implements AdminTenantsApi {
     d.setTenantKey(e.getTenantKey());
     d.setName(e.getName());
     d.setStatus(e.getStatus() == null ? null : saas.identity.shared.dto.TenantStatus.ACTIVE);
+    d.setCreatedAt(e.getCreatedAt());
+    d.setUpdatedAt(e.getUpdatedAt());
     return d;
   }
 

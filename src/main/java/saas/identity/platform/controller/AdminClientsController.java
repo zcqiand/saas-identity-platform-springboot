@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import saas.identity.platform.entity.Generated.OauthClient;
+import java.time.OffsetDateTime;
 import saas.identity.platform.repository.OauthClientRepository;
 import saas.identity.shared.api.AdminClientsApi;
 import saas.identity.shared.dto.AdminClientsListClients200Response;
@@ -46,8 +47,16 @@ public class AdminClientsController implements AdminClientsApi {
     e.setGrantTypes(body.getGrantTypes());
     e.setRedirectUris(body.getRedirectUris());
     e.setScopes(body.getScopes());
-    e.setAutoApprove(body.getAutoApprove());
+    // NOT NULL 列必须显式赋值（Hibernate scaffold 不推 NotNull 默认值，同 23502 教训）。
+    // SSOT CreateOAuthClientRequest 里 validity 是可选 int32 —— 缺省给家族 dev 惯例 3600/86400。
+    e.setAccessTokenValidity(
+        body.getAccessTokenValidity() != null ? body.getAccessTokenValidity() : 3600);
+    e.setRefreshTokenValidity(
+        body.getRefreshTokenValidity() != null ? body.getRefreshTokenValidity() : 86400);
+    e.setAutoApprove(body.getAutoApprove() != null ? body.getAutoApprove() : false);
     e.setStatus((short) 1);
+    e.setCreatedAt(OffsetDateTime.now());
+    e.setUpdatedAt(OffsetDateTime.now());
     OauthClient saved = clients.save(e);
     return ResponseEntity.ok(toDto(saved));
   }
