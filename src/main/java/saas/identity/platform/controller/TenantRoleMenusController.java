@@ -1,48 +1,60 @@
 package saas.identity.platform.controller;
 
+import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import saas.identity.platform.entity.Generated.SysRoleMenu;
+import saas.identity.platform.entity.Generated.SysRole;
 import saas.identity.platform.repository.SysRoleMenuRepository;
+import saas.identity.platform.repository.SysRoleRepository;
 import saas.identity.shared.api.TenantRoleMenusApi;
+import saas.identity.shared.dto.RoleMenuGrant;
 import saas.identity.shared.dto.SetSysRoleMenusRequest;
 
-/** M00.F04 角色菜单授权（I02-I04）。skeleton。 */
+/**
+ * M00.F04 角色菜单授权（I02-I04）。
+ *
+ * <p>2026-09-10 I20 方案 C：GET/PUT 从 List&lt;SysRoleMenu&gt; 行集切 RoleMenuGrant 聚合返回 ({roleId,
+ * tenantId, menuIds[], updatedAt})；PUT 时 touch sys_role.updated_at 作为聚合 updatedAt
+ * 来源（家族约定）。SysRoleMenu DTO 已随 shared openapi 移除，junction 表读写保持 repo 直查。
+ */
 @RestController
 public class TenantRoleMenusController implements TenantRoleMenusApi {
 
+  private final SysRoleRepository roles;
   private final SysRoleMenuRepository roleMenus;
 
-  public TenantRoleMenusController(SysRoleMenuRepository roleMenus) {
+  public TenantRoleMenusController(SysRoleRepository roles, SysRoleMenuRepository roleMenus) {
+    this.roles = roles;
     this.roleMenus = roleMenus;
   }
 
   @Override
-  public ResponseEntity<List<saas.identity.shared.dto.SysRoleMenu>> tenantRoleMenusListSysRoleMenus(
+  public ResponseEntity<RoleMenuGrant> tenantRoleMenusListSysRoleMenus(
       String tenantId, String roleId, String clientId) {
-    UUID roleUuid = UUID.fromString(roleId);
-    List<SysRoleMenu> rows = roleMenus.findByRoleId(roleUuid);
-    return ResponseEntity.ok(rows.stream().map(this::toDto).toList());
+    return ResponseEntity.ok(toGrant(findRole(roleId)));
   }
 
   @Override
-  public ResponseEntity<List<saas.identity.shared.dto.SysRoleMenu>> tenantRoleMenusSetSysRoleMenus(
+  public ResponseEntity<RoleMenuGrant> tenantRoleMenusSetSysRoleMenus(
       String tenantId, String roleId, String clientId, SetSysRoleMenusRequest body) {
-    UUID roleUuid = UUID.fromString(roleId);
+    SysRole role = findRole(roleId);
+    UUID roleUuid = role.getId();
     roleMenus.deleteByRoleId(roleUuid);
-    List<saas.identity.shared.dto.SysRoleMenu> saved = List.of();
     if (body != null && body.getMenuIds() != null) {
       for (String menuId : body.getMenuIds()) {
-        SysRoleMenu r = new SysRoleMenu();
+        saas.identity.platform.entity.Generated.SysRoleMenu r =
+            new saas.identity.platform.entity.Generated.SysRoleMenu();
         r.setRoleId(roleUuid);
         r.setMenuId(UUID.fromString(menuId));
         roleMenus.save(r);
       }
-      saved = roleMenus.findByRoleId(roleUuid).stream().map(this::toDto).toList();
     }
-    return ResponseEntity.ok(saved);
+    role.setUpdatedAt(OffsetDateTime.now()); // touch — 聚合 updatedAt 来源（家族约定）
+    roles.save(role);
+    return ResponseEntity.ok(toGrant(roles.findById(roleUuid).orElse(role)));
   }
 
   @Override
@@ -53,10 +65,22 @@ public class TenantRoleMenusController implements TenantRoleMenusApi {
     return ResponseEntity.noContent().build();
   }
 
-  private saas.identity.shared.dto.SysRoleMenu toDto(SysRoleMenu e) {
-    saas.identity.shared.dto.SysRoleMenu d = new saas.identity.shared.dto.SysRoleMenu();
-    d.setRoleId(e.getRoleId());
-    d.setMenuId(e.getMenuId());
-    return d;
+  private SysRole findRole(String roleId) {
+    UUID roleUuid = UUID.fromString(roleId);
+    return roles.findById(roleUuid).orElseThrow(() -> new NoSuchElementException("role " + roleId));
+  }
+
+  private RoleMenuGrant toGrant(SysRole role) {
+    RoleMenuGrant g = new RoleMenuGrant();
+    g.setRoleId(role.getId());
+    g.setTenantId(role.getTenantId());
+    List<String> menuIds =
+        roleMenus.findByRoleId(role.getId()).stream()
+            .map(r -> r.getMenuId().toString())
+            .sorted()
+            .toList();
+    g.setMenuIds(menuIds);
+    g.setUpdatedAt(role.getUpdatedAt());
+    return g;
   }
 }

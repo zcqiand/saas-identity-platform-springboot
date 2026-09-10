@@ -8,7 +8,6 @@ package saas.identity.shared.api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -16,17 +15,16 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import saas.identity.shared.dto.ErrorResponse;
+import saas.identity.shared.dto.RoleMenuGrant;
 import saas.identity.shared.dto.SetSysRoleMenusRequest;
-import saas.identity.shared.dto.SysRoleMenu;
 
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-10T10:23:40.344575800+08:00[Asia/Shanghai]",
+    date = "2026-09-10T13:45:23.662557600+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
 @Validated
 @Tag(name = "tenant-role-menus", description = "the tenant-role-menus API")
@@ -100,7 +98,7 @@ public interface TenantRoleMenusApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = SysRoleMenu.class)))
+                  schema = @Schema(implementation = RoleMenuGrant.class))
             }),
         @ApiResponse(
             responseCode = "default",
@@ -115,7 +113,7 @@ public interface TenantRoleMenusApi {
       method = RequestMethod.GET,
       value = TenantRoleMenusApi.PATH_TENANT_ROLE_MENUS_LIST_SYS_ROLE_MENUS,
       produces = {"application/json"})
-  ResponseEntity<List<SysRoleMenu>> tenantRoleMenusListSysRoleMenus(
+  ResponseEntity<RoleMenuGrant> tenantRoleMenusListSysRoleMenus(
       @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
           @PathVariable("tenantId")
           String tenantId,
@@ -151,7 +149,7 @@ public interface TenantRoleMenusApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = SysRoleMenu.class)))
+                  schema = @Schema(implementation = RoleMenuGrant.class))
             }),
         @ApiResponse(
             responseCode = "default",
@@ -167,7 +165,7 @@ public interface TenantRoleMenusApi {
       value = TenantRoleMenusApi.PATH_TENANT_ROLE_MENUS_SET_SYS_ROLE_MENUS,
       produces = {"application/json"},
       consumes = {"application/json"})
-  ResponseEntity<List<SysRoleMenu>> tenantRoleMenusSetSysRoleMenus(
+  ResponseEntity<RoleMenuGrant> tenantRoleMenusSetSysRoleMenus(
       @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
           @PathVariable("tenantId")
           String tenantId,
