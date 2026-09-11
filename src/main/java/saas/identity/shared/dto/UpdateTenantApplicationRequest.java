@@ -1,28 +1,22 @@
 package saas.identity.shared.dto;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import java.time.OffsetDateTime;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.lang.Nullable;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
-
-
+import java.time.OffsetDateTime;
 import java.util.*;
-import jakarta.annotation.Generated;
+import java.util.Objects;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
 
-/**
- * UpdateTenantApplicationRequest
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-10T15:16:10.537909700+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+/** UpdateTenantApplicationRequest */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-10T19:41:09.458021200+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 public class UpdateTenantApplicationRequest {
 
   private Integer status;
@@ -35,9 +29,7 @@ public class UpdateTenantApplicationRequest {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
+  /** Constructor with only required parameters */
   public UpdateTenantApplicationRequest(Integer status) {
     this.status = status;
   }
@@ -49,9 +41,10 @@ public class UpdateTenantApplicationRequest {
 
   /**
    * Get status
+   *
    * @return status
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("status")
   public Integer getStatus() {
@@ -70,9 +63,10 @@ public class UpdateTenantApplicationRequest {
 
   /**
    * Get expireTime
+   *
    * @return expireTime
    */
-  @Valid 
+  @Valid
   @Schema(name = "expireTime", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("expireTime")
   public @Nullable OffsetDateTime getExpireTime() {
@@ -92,9 +86,10 @@ public class UpdateTenantApplicationRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    UpdateTenantApplicationRequest updateTenantApplicationRequest = (UpdateTenantApplicationRequest) o;
-    return Objects.equals(this.status, updateTenantApplicationRequest.status) &&
-        Objects.equals(this.expireTime, updateTenantApplicationRequest.expireTime);
+    UpdateTenantApplicationRequest updateTenantApplicationRequest =
+        (UpdateTenantApplicationRequest) o;
+    return Objects.equals(this.status, updateTenantApplicationRequest.status)
+        && Objects.equals(this.expireTime, updateTenantApplicationRequest.expireTime);
   }
 
   @Override
@@ -113,11 +108,9 @@ public class UpdateTenantApplicationRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
-

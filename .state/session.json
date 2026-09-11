@@ -1,9 +1,11 @@
 {
   "schema": 1,
   "project": "saas-identity-platform-springboot",
-  "current_task": "/handoff 收工 — 2026-09-10 修 springboot login 23502 → 401：persistRefreshToken 漏 setTokenType + setCreatedAt",
+  "current_task": "/handoff 收工 — 2026-09-10 晚收口批：AuthControllerLoginTest 补 @MockBean TenantMember/TenantRepository + membership/tenant stub（codegen 19:41 重新生成后 L4 挂的修复）；gate 全绿（含 L4.db.scaffold，PG 新密码）",
   "last_session_at": "2026-09-10",
   "done": [
+    "2026-09-10 晚收口：AuthControllerLoginTest 补 @MockBean TenantMemberRepository/TenantRepository（AuthController 构造器 7 参，I20/I42 改动加了 members/tenants 但 @WebMvcTest 切片没跟上 → ApplicationContext 挂）+ setup() stub active membership/tenant（login 成功路径家族语义 AuthController:105-123 要求，不 stub → 403）→ 14/14 全过",
+    "2026-09-10 晚收口：19:41 codegen 产物跑 spotless:apply（63 文件）；PG_PASSWORD 轮换后 L4.db.scaffold 用新密码 + DATABASE_URL(jdbc:) 全绿",
     "AuthController.java persistRefreshToken 创建 OauthAccessToken 行加 at.setTokenType(\"Bearer\") + at.setCreatedAt(OffsetDateTime.now())；OauthRefreshToken 行加 rt.setCreatedAt(OffsetDateTime.now())（oauth_access_token.{token_type,created_at} + oauth_refresh_token.created_at 在 shared schema 都是 NOT NULL，Hibernate scaffold 实体只声明列不推 NotNull，业务必须显式赋值）",
     "live 验证：springboot 之前 100% 401 → 修后 auth.test.ts / admin-clients / tenant-members-write I19 等 I34-I42 端点级联失活消失（springboot target 不再 throw Error: 登录失败）",
     "springboot 本仓 gate L0/L1/L2/L3/L4/L4.db.scaffold(skipped)/L5 全绿（CI_DB_SCAFFOLD_SKIP=1 — dev 无 PG 直连产物）",
@@ -25,9 +27,11 @@
     "不要再让 persistRefreshToken 创建 OauthAccessToken/OauthRefreshToken 漏 setTokenType / setCreatedAt —— shared schema 都是 NOT NULL，scaffold 实体不推 NotNull，业务必须显式赋（2026-09-10 教训：springboot login 23502 → 401 全家族级联失活）",
     "不要再 mvn spotless:check 失败后只 commit source 不 commit spotless —— L1 spotless 红（CLAUDE.md §2 铁律）",
     "不要再手写 OauthAccessToken id —— @GeneratedValue(UUID) 自动生成，手动 setId 会触发 ObjectOptimisticLockingFailureException（memory: springboot-write-path-double-bug）",
-    "不要再用 M04.F02.I06-I08 —— 已废弃，新代码必须 M04.F03.I07-I09（2026-09-06 教训）"
+    "不要再用 M04.F02.I06-I08 —— 已废弃，新代码必须 M04.F03.I07-I09（2026-09-06 教训）",
+    "不要改 AuthController 构造器后不查 @WebMvcTest 切片测试的 @MockBean 清单 —— 每加一个构造参数就要对应补一个 @MockBean，且 login 成功路径要 stub active membership + tenant（2026-09-10 教训）",
+    "L4.db.scaffold 跑法：需 DATABASE_URL（jdbc:postgresql://host:port/db）+ DATABASE_USER + DATABASE_PASSWORD 三件 env，共享 .env.test 的 PG_PASSWORD 已同步新值"
   ],
-  "last_gate_passed_at": "2026-09-10T10:30+08:00 (L0/L1/L2/L3/L4/L4.db.scaffold(SKIP)/L5 全绿, 71 项, 软告警 107)",
+  "last_gate_passed_at": "2026-09-10T23:00+08:00 (L0-L5 + L4.db.scaffold 全绿)",
   "active_branch": "master",
   "ahead_of_origin": "24"
 }

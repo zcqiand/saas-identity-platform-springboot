@@ -24,6 +24,8 @@ import saas.identity.platform.repository.OauthAccessTokenRepository;
 import saas.identity.platform.repository.OauthCodeRepository;
 import saas.identity.platform.repository.OauthRefreshTokenRepository;
 import saas.identity.platform.repository.SysUserRepository;
+import saas.identity.platform.repository.TenantMemberRepository;
+import saas.identity.platform.repository.TenantRepository;
 import saas.identity.platform.security.JwtIssuer;
 import saas.identity.shared.dto.LoginRequest;
 
@@ -41,6 +43,8 @@ class AuthControllerLoginTest {
   @MockBean OauthCodeRepository codes;
   @MockBean OauthAccessTokenRepository accessTokens;
   @MockBean OauthRefreshTokenRepository refreshTokens;
+  @MockBean TenantMemberRepository members;
+  @MockBean TenantRepository tenants;
   @MockBean JwtIssuer jwt;
 
   private SysUser existingUser;
@@ -57,6 +61,19 @@ class AuthControllerLoginTest {
     existingUser.setStatus((short) 1);
     existingUser.setFailedAttempts(0);
     existingUser.setLockedUntil(null);
+
+    // 登录成功路径要求 active membership + active tenant（家族语义，AuthController 105-123）
+    java.util.UUID tenantId = java.util.UUID.fromString("22222222-2222-2222-2222-222222222222");
+    saas.identity.platform.entity.Generated.TenantMember membership =
+        new saas.identity.platform.entity.Generated.TenantMember();
+    membership.setTenantId(tenantId);
+    membership.setStatus((short) 1);
+    when(members.findByUserId(existingUser.getId())).thenReturn(java.util.List.of(membership));
+    saas.identity.platform.entity.Generated.Tenant tenant =
+        new saas.identity.platform.entity.Generated.Tenant();
+    tenant.setId(tenantId);
+    tenant.setStatus((short) 1);
+    when(tenants.findById(tenantId)).thenReturn(Optional.of(tenant));
 
     when(jwt.issueAccessToken(any(), any())).thenReturn("jwt_access_token");
   }

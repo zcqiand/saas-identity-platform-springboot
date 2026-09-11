@@ -1,32 +1,23 @@
 package saas.identity.shared.dto;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-import org.springframework.lang.Nullable;
-import saas.identity.shared.dto.SysUser;
-import saas.identity.shared.dto.TenantMember;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
-
-
 import java.util.*;
-import jakarta.annotation.Generated;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+import org.springframework.lang.Nullable;
 
-/**
- * CurrentUser
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-10T15:16:10.537909700+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+/** CurrentUser */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-10T19:41:09.458021200+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 public class CurrentUser {
 
   private SysUser user;
@@ -43,9 +34,7 @@ public class CurrentUser {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
+  /** Constructor with only required parameters */
   public CurrentUser(SysUser user, List<@Valid TenantMember> memberships) {
     this.user = user;
     this.memberships = memberships;
@@ -58,9 +47,11 @@ public class CurrentUser {
 
   /**
    * Get user
+   *
    * @return user
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "user", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("user")
   public SysUser getUser() {
@@ -87,9 +78,11 @@ public class CurrentUser {
 
   /**
    * Get memberships
+   *
    * @return memberships
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "memberships", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("memberships")
   public List<@Valid TenantMember> getMemberships() {
@@ -108,9 +101,10 @@ public class CurrentUser {
 
   /**
    * Get currentTenantId
+   *
    * @return currentTenantId
    */
-  @Valid 
+  @Valid
   @Schema(name = "currentTenantId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("currentTenantId")
   public @Nullable UUID getCurrentTenantId() {
@@ -129,9 +123,9 @@ public class CurrentUser {
 
   /**
    * Get clientId
+   *
    * @return clientId
    */
-  
   @Schema(name = "clientId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("clientId")
   public @Nullable String getClientId() {
@@ -152,10 +146,10 @@ public class CurrentUser {
       return false;
     }
     CurrentUser currentUser = (CurrentUser) o;
-    return Objects.equals(this.user, currentUser.user) &&
-        Objects.equals(this.memberships, currentUser.memberships) &&
-        Objects.equals(this.currentTenantId, currentUser.currentTenantId) &&
-        Objects.equals(this.clientId, currentUser.clientId);
+    return Objects.equals(this.user, currentUser.user)
+        && Objects.equals(this.memberships, currentUser.memberships)
+        && Objects.equals(this.currentTenantId, currentUser.currentTenantId)
+        && Objects.equals(this.clientId, currentUser.clientId);
   }
 
   @Override
@@ -176,11 +170,9 @@ public class CurrentUser {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
-
