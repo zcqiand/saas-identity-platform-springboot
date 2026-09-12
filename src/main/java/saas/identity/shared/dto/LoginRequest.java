@@ -11,7 +11,7 @@ import org.springframework.lang.Nullable;
 /** LoginRequest */
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-10T19:41:09.458021200+08:00[Asia/Shanghai]",
+    date = "2026-09-12T08:51:22.603663900+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
 public class LoginRequest {
 
@@ -88,8 +88,10 @@ public class LoginRequest {
    *
    * @return clientId
    */
-  @NotNull
-  @Schema(name = "clientId", requiredMode = Schema.RequiredMode.REQUIRED)
+  // 2026-09-12 live 4-way 修复（R3）：去掉 @NotNull（对齐 msw oracle——I22 错误分支只发
+  // {username,password}，@NotNull 让校验 400 挡在凭证校验前，错密码应 401）。本文件是
+  // gen-shared 重生成产物，下次重生成后需重应用此改动（同 ErrorResponse details 先例）。
+  @Schema(name = "clientId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("clientId")
   public String getClientId() {
     return clientId;

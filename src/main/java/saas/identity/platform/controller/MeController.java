@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,6 @@ import saas.identity.shared.api.MeApi;
 import saas.identity.shared.dto.CurrentUser;
 import saas.identity.shared.dto.EffectiveMenuNode;
 import saas.identity.shared.dto.SwitchTenantResponse;
-import saas.identity.shared.dto.SysMenuType;
 
 /**
  * M01.F01/F03 当前用户视图 + M04.F04.I08 me/menus 装配。
@@ -41,39 +41,125 @@ public class MeController implements MeApi {
   private final TenantMemberRoleRepository memberRoles;
   private final SysRoleMenuRepository roleMenus;
   private final SysMenuRepository menus;
+  private final saas.identity.platform.repository.TenantRepository tenants;
+  private final saas.identity.platform.repository.SysUserRepository users;
+  private final MemberViewAssembler assembler;
+  private final saas.identity.platform.security.JwtIssuer jwt;
 
   public MeController(
       TenantMemberRepository members,
       TenantMemberRoleRepository memberRoles,
       SysRoleMenuRepository roleMenus,
-      SysMenuRepository menus) {
+      SysMenuRepository menus,
+      saas.identity.platform.repository.TenantRepository tenants,
+      saas.identity.platform.repository.SysUserRepository users,
+      MemberViewAssembler assembler,
+      saas.identity.platform.security.JwtIssuer jwt) {
     this.members = members;
     this.memberRoles = memberRoles;
     this.roleMenus = roleMenus;
     this.menus = menus;
+    this.tenants = tenants;
+    this.users = users;
+    this.assembler = assembler;
+    this.jwt = jwt;
   }
 
+  /**
+   * ADR-0032：/me 返回扁平 CurrentUser（id/email/memberships[]/currentTenantId?），对齐 msw
+   * oracle。memberships = tenant_member(user 匹配) → TenantMembership；currentTenantId 优先取 JWT
+   * tenant_id claim，缺省落首个 membership 的 tenant。
+   */
   @Override
   public ResponseEntity<CurrentUser> meWhoami() {
-    CurrentUser u = new CurrentUser();
     UUID userId = currentUserId();
-    if (userId != null) {
-      u.setCurrentTenantId(userId); // 占位：tenantId 后续接 meListMyTenants 拿真值
+    if (userId == null) {
+      return ResponseEntity.ok(new CurrentUser());
     }
+    CurrentUser u = new CurrentUser();
+    u.setId(userId);
+    users.findById(userId).ifPresent(usr -> u.setEmail(usr.getEmail()));
+    List<saas.identity.shared.dto.TenantMembership> memberships = membershipsOf(userId);
+    u.setMemberships(memberships);
+    u.setCurrentTenantId(currentTenantId(userId, memberships));
     return ResponseEntity.ok(u);
   }
 
+  /** ADR-0032：/me/tenants 返回 TenantMembership[]（不再是 List.of() / TenantMember）。 */
   @Override
-  public ResponseEntity<List<saas.identity.shared.dto.TenantMember>> meListMyTenants(
+  public ResponseEntity<List<saas.identity.shared.dto.TenantMembership>> meListMyTenants(
       String clientId) {
-    return ResponseEntity.ok(List.of());
+    UUID userId = currentUserId();
+    if (userId == null) {
+      return ResponseEntity.ok(List.of());
+    }
+    return ResponseEntity.ok(membershipsOf(userId));
   }
 
+  /**
+   * M01.F03 切换当前租户 —— 签真 HS256 token（对齐 aspnetcore MeController.Switch）。
+   *
+   * <p>链路：tenant 存在性（不存在 404）→ tenant_member 该 user 有 active 行（无 → 404）→
+   * issueAccessToken(sub=user_id, tenant_id) 填 SwitchTenantResponse。refreshToken 用 {@link
+   * saas.identity.platform.security.JwtIssuer#generateRefreshToken}（对齐 aspnetcore： switch 不持久化
+   * refresh 行，rotate 语义归 /auth/refresh）。
+   */
   @Override
   public ResponseEntity<SwitchTenantResponse> meSwitchTenant(String tenantId, String clientId) {
+    UUID userId = currentUserId();
+    if (userId == null) {
+      throw new saas.identity.platform.security.InvalidCredentialsException(
+          "Bearer sub required for tenant switch");
+    }
+    UUID tenantUuid = UUID.fromString(tenantId);
+    tenants
+        .findById(tenantUuid)
+        .orElseThrow(() -> new NoSuchElementException("tenant " + tenantId));
+    // S5 修复（2026-09-12 四方一致）：switch 门槛从「仅 active(1)」放宽为「非 disabled(0)」
+    // ——对齐 msw oracle（status !== "removed"）与 aspnetcore（Status != 0）多数派口径；
+    // invited/suspended 成员可切换，被移除（0）不可。
+    boolean activeMember =
+        members.findByUserId(userId).stream()
+            .anyMatch(
+                m ->
+                    tenantUuid.equals(m.getTenantId())
+                        && m.getStatus() != null
+                        && m.getStatus() != 0);
+    if (!activeMember) {
+      throw new NoSuchElementException(
+          "user " + userId + " is not an active member of tenant " + tenantId);
+    }
     SwitchTenantResponse r = new SwitchTenantResponse();
-    r.setTenantId(UUID.fromString(tenantId));
+    r.setAccessToken(jwt.issueAccessToken(userId, tenantUuid));
+    r.setRefreshToken(saas.identity.platform.security.JwtIssuer.generateRefreshToken(userId));
+    r.setExpiresAt(java.time.OffsetDateTime.now().plusSeconds(jwt.getTtlSeconds()));
+    r.setTenantId(tenantUuid);
+    // ADR-0032：SwitchTenantResponse 删 clientId 键（契约收敛，切租户后前端经 /me 拿上下文）。
     return ResponseEntity.ok(r);
+  }
+
+  /** 当前用户的全部 membership（ADR-0032 扁平形态，含 roleIds 真 join / joinedAt）。 */
+  private List<saas.identity.shared.dto.TenantMembership> membershipsOf(UUID userId) {
+    return members.findByUserId(userId).stream().map(assembler::toMembership).toList();
+  }
+
+  /** currentTenantId：JWT tenant_id claim 优先；无 claim（测试 principal）落首个 membership 的 tenant。 */
+  private UUID currentTenantId(
+      UUID userId, List<saas.identity.shared.dto.TenantMembership> memberships) {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (auth != null && auth.isAuthenticated() && auth.getPrincipal() instanceof Jwt token) {
+      Object claim = token.getClaims().get("tenant_id");
+      if (claim instanceof String s) {
+        try {
+          return UUID.fromString(s);
+        } catch (IllegalArgumentException e) {
+          // fall through to membership default
+        }
+      } else if (claim instanceof UUID uuid) {
+        return uuid;
+      }
+    }
+    return memberships.isEmpty() ? null : memberships.get(0).getTenantId();
   }
 
   /**
@@ -180,17 +266,15 @@ public class MeController implements MeApi {
     Map<UUID, EffectiveMenuNode> byId = new HashMap<>();
     List<EffectiveMenuNode> roots = new ArrayList<>();
 
-    // 1. flat → DTO
+    // 1. flat → DTO（根节点 parentId 零值 sentinel → null，对齐 msw/nextjs/aspnetcore 实测：
+    // EffectiveMenuNode.parentId 序列化为 null 而非 00000000-... 零值 UUID）
     for (SysMenu m : flat) {
       EffectiveMenuNode n = new EffectiveMenuNode();
       n.setId(m.getId());
       n.setClientId(m.getClientId());
-      n.setParentId(m.getParentId());
+      n.setParentId(isZeroUuid(m.getParentId()) ? null : m.getParentId());
       n.setTitle(m.getTitle());
-      n.setType(
-          m.getType() == null
-              ? null
-              : SysMenuType.fromValue(String.valueOf(m.getType().intValue())));
+      n.setType(TypeMapper.fromShort(m.getType()));
       n.setPath(m.getPath());
       n.setComponent(m.getComponent());
       n.setPerms(m.getPerms());
@@ -200,10 +284,9 @@ public class MeController implements MeApi {
       byId.put(m.getId(), n);
     }
 
-    // 2. tree 装配：parentId == ROOT_MENU_ID 或 null 的为 root
+    // 2. tree 装配：parentId 为 null（含已归零的根 sentinel）的为 root
     for (EffectiveMenuNode n : byId.values()) {
-      if (n.getParentId() == null
-          || "00000000-0000-0000-0000-000000000000".equals(n.getParentId().toString())) {
+      if (n.getParentId() == null) {
         roots.add(n);
       } else {
         EffectiveMenuNode parent = byId.get(n.getParentId());
@@ -223,5 +306,10 @@ public class MeController implements MeApi {
                 a.getSortOrder() == null ? 0 : a.getSortOrder(),
                 b.getSortOrder() == null ? 0 : b.getSortOrder()));
     return roots;
+  }
+
+  /** sys_menu 根节点的 parent_id sentinel（DB NOT NULL 列存的零值 UUID）。 */
+  private static boolean isZeroUuid(UUID id) {
+    return id != null && "00000000-0000-0000-0000-000000000000".equals(id.toString());
   }
 }

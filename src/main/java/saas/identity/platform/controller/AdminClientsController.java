@@ -48,11 +48,17 @@ public class AdminClientsController implements AdminClientsApi {
     e.setRedirectUris(body.getRedirectUris());
     e.setScopes(body.getScopes());
     // NOT NULL 列必须显式赋值（Hibernate scaffold 不推 NotNull 默认值，同 23502 教训）。
-    // SSOT CreateOAuthClientRequest 里 validity 是可选 int32 —— 缺省给家族 dev 惯例 3600/86400。
+    // SSOT CreateOAuthClientRequest 里 validity 是可选 int32 —— 缺省/非正落家族应用层默认
+    // 3600/86400（msw oracle 与 nextjs 同口径；不是 DB 列 DEFAULT 的 7200/2592000，
+    // 2026-09-12 four-way I45 分叉修复）。
     e.setAccessTokenValidity(
-        body.getAccessTokenValidity() != null ? body.getAccessTokenValidity() : 3600);
+        body.getAccessTokenValidity() != null && body.getAccessTokenValidity() > 0
+            ? body.getAccessTokenValidity()
+            : 3600);
     e.setRefreshTokenValidity(
-        body.getRefreshTokenValidity() != null ? body.getRefreshTokenValidity() : 86400);
+        body.getRefreshTokenValidity() != null && body.getRefreshTokenValidity() > 0
+            ? body.getRefreshTokenValidity()
+            : 86400);
     e.setAutoApprove(body.getAutoApprove() != null ? body.getAutoApprove() : false);
     e.setStatus((short) 1);
     e.setCreatedAt(OffsetDateTime.now());
@@ -114,6 +120,12 @@ public class AdminClientsController implements AdminClientsApi {
     d.setScopes(e.getScopes());
     d.setStatus(e.getStatus() == null ? null : e.getStatus().intValue());
     d.setAutoApprove(e.getAutoApprove());
+    // 2026-09-12 four-way I45 分叉修复：validity 与审计列是响应契约字段，此前漏映射
+    // → 序列化 null → normalize 剔 null 后与 msw oracle（3600/86400 + 时间戳非空）分叉。
+    d.setAccessTokenValidity(e.getAccessTokenValidity());
+    d.setRefreshTokenValidity(e.getRefreshTokenValidity());
+    d.setCreatedAt(e.getCreatedAt());
+    d.setUpdatedAt(e.getUpdatedAt());
     return d;
   }
 }

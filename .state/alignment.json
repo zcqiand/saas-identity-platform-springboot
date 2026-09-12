@@ -287,7 +287,7 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:1078 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:1307 (path)",
         "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-write.test.ts:1089 (path)"
       ],
       "entry": []
@@ -300,7 +300,7 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:1078 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:1307 (path)",
         "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-write.test.ts:1089 (path)"
       ],
       "entry": []
@@ -313,7 +313,7 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:2381 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:2514 (path)"
       ],
       "entry": []
     },
@@ -325,7 +325,7 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:2381 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:2514 (path)"
       ],
       "entry": []
     },
@@ -337,7 +337,7 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:2381 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:2514 (path)"
       ],
       "entry": []
     },
@@ -360,7 +360,7 @@
       "designs": [],
       "tests": [
         "output\\saas-identity-platform-contract-test\\tests\\tenant-role-menus-write.test.ts:1223 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:3698 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:3831 (path)",
         "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-write.test.ts:1193 (path)"
       ],
       "entry": []
@@ -374,7 +374,7 @@
       "designs": [],
       "tests": [
         "output\\saas-identity-platform-contract-test\\tests\\tenant-role-menus-write.test.ts:1223 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:3698 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:3831 (path)",
         "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-write.test.ts:1193 (path)"
       ],
       "entry": []
@@ -388,7 +388,7 @@
       "designs": [],
       "tests": [
         "output\\saas-identity-platform-contract-test\\tests\\tenant-role-menus-write.test.ts:1223 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:3698 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:3831 (path)",
         "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-write.test.ts:1193 (path)"
       ],
       "entry": []
@@ -483,7 +483,7 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\me-switch.test.ts:2204 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\me-switch.test.ts:2224 (path)",
         "output\\saas-identity-platform-contract-test\\tests\\me-switch.test.ts:729 (path)"
       ],
       "entry": []
@@ -496,9 +496,9 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:1221 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:1537 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:2331 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:1260 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:1576 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:2854 (path)"
       ],
       "entry": []
     },
@@ -510,9 +510,9 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:1221 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:1537 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:2331 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:1260 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:1576 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:2854 (path)"
       ],
       "entry": []
     },
@@ -534,7 +534,7 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:6226 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:6729 (path)"
       ],
       "entry": []
     },
@@ -546,8 +546,8 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:4255 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:5439 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:4778 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:5952 (path)"
       ],
       "entry": []
     },
@@ -559,7 +559,7 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:3307 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:3830 (path)"
       ],
       "entry": []
     },
@@ -581,7 +581,10 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\admin-clients-write.test.ts:891 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\admin-clients-write.test.ts:891 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:3311 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:5216 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:7961 (path)"
       ],
       "entry": []
     },
@@ -593,7 +596,10 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\admin-clients-write.test.ts:891 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\admin-clients-write.test.ts:891 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:3311 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:5216 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:7961 (path)"
       ],
       "entry": []
     },
@@ -655,8 +661,8 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:1738 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:2639 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:1791 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:2692 (path)"
       ],
       "entry": []
     },
@@ -668,10 +674,10 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:3423 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:4655 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:5703 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:6653 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:3442 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:4674 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:5722 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:6672 (path)"
       ],
       "entry": []
     },
@@ -683,10 +689,10 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:3423 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:4655 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:5703 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:6653 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:3442 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:4674 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:5722 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:6672 (path)"
       ],
       "entry": []
     },
@@ -772,8 +778,8 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\me.test.ts:1845 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\me.test.ts:2074 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\me.test.ts:2247 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\me.test.ts:2476 (path)"
       ],
       "entry": []
     }

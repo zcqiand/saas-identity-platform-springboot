@@ -23,6 +23,7 @@ import saas.identity.shared.dto.CreateSysUserRequest;
 import saas.identity.shared.dto.ErrorResponse;
 import saas.identity.shared.dto.SetTenantMemberRolesRequest;
 import saas.identity.shared.dto.TenantMemberStatus;
+import saas.identity.shared.dto.TenantMemberUserView;
 import saas.identity.shared.dto.TenantMemberView;
 import saas.identity.shared.dto.TenantMembersChangeTenantUserStatusRequest;
 import saas.identity.shared.dto.TenantMembersInviteTenantUserRequest;
@@ -31,7 +32,7 @@ import saas.identity.shared.dto.UpdateSysUserRequest;
 
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-10T19:41:09.458021200+08:00[Asia/Shanghai]",
+    date = "2026-09-12T08:51:22.603663900+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
 @Validated
 @Tag(name = "tenant-members", description = "the tenant-members API")
@@ -59,7 +60,7 @@ public interface TenantMembersApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = TenantMemberView.class))
+                  schema = @Schema(implementation = TenantMemberUserView.class))
             }),
         @ApiResponse(
             responseCode = "default",
@@ -75,7 +76,7 @@ public interface TenantMembersApi {
       value = TenantMembersApi.PATH_TENANT_MEMBERS_ASSIGN_TENANT_MEMBER_ROLES,
       produces = {"application/json"},
       consumes = {"application/json"})
-  ResponseEntity<TenantMemberView> tenantMembersAssignTenantMemberRoles(
+  ResponseEntity<TenantMemberUserView> tenantMembersAssignTenantMemberRoles(
       @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
           @PathVariable("tenantId")
           String tenantId,
@@ -109,7 +110,7 @@ public interface TenantMembersApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = TenantMemberView.class))
+                  schema = @Schema(implementation = TenantMemberUserView.class))
             }),
         @ApiResponse(
             responseCode = "default",
@@ -125,7 +126,7 @@ public interface TenantMembersApi {
       value = TenantMembersApi.PATH_TENANT_MEMBERS_CHANGE_TENANT_USER_STATUS,
       produces = {"application/json"},
       consumes = {"application/json"})
-  ResponseEntity<TenantMemberView> tenantMembersChangeTenantUserStatus(
+  ResponseEntity<TenantMemberUserView> tenantMembersChangeTenantUserStatus(
       @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
           @PathVariable("tenantId")
           String tenantId,
@@ -160,7 +161,7 @@ public interface TenantMembersApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = TenantMemberView.class))
+                  schema = @Schema(implementation = TenantMemberUserView.class))
             }),
         @ApiResponse(
             responseCode = "default",
@@ -176,7 +177,7 @@ public interface TenantMembersApi {
       value = TenantMembersApi.PATH_TENANT_MEMBERS_CREATE_TENANT_USER,
       produces = {"application/json"},
       consumes = {"application/json"})
-  ResponseEntity<TenantMemberView> tenantMembersCreateTenantUser(
+  ResponseEntity<TenantMemberUserView> tenantMembersCreateTenantUser(
       @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
           @PathVariable("tenantId")
           String tenantId,
@@ -244,7 +245,7 @@ public interface TenantMembersApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = TenantMemberView.class))
+                  schema = @Schema(implementation = TenantMemberUserView.class))
             }),
         @ApiResponse(
             responseCode = "default",
@@ -259,7 +260,7 @@ public interface TenantMembersApi {
       method = RequestMethod.GET,
       value = TenantMembersApi.PATH_TENANT_MEMBERS_GET_TENANT_USER,
       produces = {"application/json"})
-  ResponseEntity<TenantMemberView> tenantMembersGetTenantUser(
+  ResponseEntity<TenantMemberUserView> tenantMembersGetTenantUser(
       @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
           @PathVariable("tenantId")
           String tenantId,
@@ -390,7 +391,7 @@ public interface TenantMembersApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  schema = @Schema(implementation = TenantMemberView.class))
+                  schema = @Schema(implementation = TenantMemberUserView.class))
             }),
         @ApiResponse(
             responseCode = "default",
@@ -406,7 +407,7 @@ public interface TenantMembersApi {
       value = TenantMembersApi.PATH_TENANT_MEMBERS_UPDATE_TENANT_USER,
       produces = {"application/json"},
       consumes = {"application/json"})
-  ResponseEntity<TenantMemberView> tenantMembersUpdateTenantUser(
+  ResponseEntity<TenantMemberUserView> tenantMembersUpdateTenantUser(
       @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
           @PathVariable("tenantId")
           String tenantId,

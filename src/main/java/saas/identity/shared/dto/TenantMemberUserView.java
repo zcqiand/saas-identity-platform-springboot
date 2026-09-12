@@ -8,36 +8,32 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import java.time.OffsetDateTime;
 import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
 
-/** SysUser */
+/** TenantMemberUserView */
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
     date = "2026-09-12T08:51:22.603663900+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
-public class SysUser {
+public class TenantMemberUserView {
 
   private UUID id;
+
+  private UUID tenantId;
 
   private String username;
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private @Nullable String email;
 
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  private @Nullable String mobile;
+  private TenantMemberStatus status;
 
-  private SysUserStatus status;
-
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  private @Nullable Integer failedAttempts;
-
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-  private @Nullable OffsetDateTime lockedUntil;
+  private List<String> roleIds = new ArrayList<>();
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private OffsetDateTime createdAt;
@@ -45,25 +41,29 @@ public class SysUser {
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private OffsetDateTime updatedAt;
 
-  public SysUser() {
+  public TenantMemberUserView() {
     super();
   }
 
   /** Constructor with only required parameters */
-  public SysUser(
+  public TenantMemberUserView(
       UUID id,
+      UUID tenantId,
       String username,
-      SysUserStatus status,
+      TenantMemberStatus status,
+      List<String> roleIds,
       OffsetDateTime createdAt,
       OffsetDateTime updatedAt) {
     this.id = id;
+    this.tenantId = tenantId;
     this.username = username;
     this.status = status;
+    this.roleIds = roleIds;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }
 
-  public SysUser id(UUID id) {
+  public TenantMemberUserView id(UUID id) {
     this.id = id;
     return this;
   }
@@ -86,7 +86,30 @@ public class SysUser {
     this.id = id;
   }
 
-  public SysUser username(String username) {
+  public TenantMemberUserView tenantId(UUID tenantId) {
+    this.tenantId = tenantId;
+    return this;
+  }
+
+  /**
+   * Get tenantId
+   *
+   * @return tenantId
+   */
+  @NotNull
+  @Valid
+  @Schema(name = "tenantId", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("tenantId")
+  public UUID getTenantId() {
+    return tenantId;
+  }
+
+  @JsonProperty("tenantId")
+  public void setTenantId(UUID tenantId) {
+    this.tenantId = tenantId;
+  }
+
+  public TenantMemberUserView username(String username) {
     this.username = username;
     return this;
   }
@@ -109,7 +132,7 @@ public class SysUser {
     this.username = username;
   }
 
-  public SysUser email(@Nullable String email) {
+  public TenantMemberUserView email(@Nullable String email) {
     this.email = email;
     return this;
   }
@@ -131,28 +154,7 @@ public class SysUser {
     this.email = email;
   }
 
-  public SysUser mobile(@Nullable String mobile) {
-    this.mobile = mobile;
-    return this;
-  }
-
-  /**
-   * Get mobile
-   *
-   * @return mobile
-   */
-  @Schema(name = "mobile", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("mobile")
-  public @Nullable String getMobile() {
-    return mobile;
-  }
-
-  @JsonProperty("mobile")
-  public void setMobile(@Nullable String mobile) {
-    this.mobile = mobile;
-  }
-
-  public SysUser status(SysUserStatus status) {
+  public TenantMemberUserView status(TenantMemberStatus status) {
     this.status = status;
     return this;
   }
@@ -166,59 +168,46 @@ public class SysUser {
   @Valid
   @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("status")
-  public SysUserStatus getStatus() {
+  public TenantMemberStatus getStatus() {
     return status;
   }
 
   @JsonProperty("status")
-  public void setStatus(SysUserStatus status) {
+  public void setStatus(TenantMemberStatus status) {
     this.status = status;
   }
 
-  public SysUser failedAttempts(@Nullable Integer failedAttempts) {
-    this.failedAttempts = failedAttempts;
+  public TenantMemberUserView roleIds(List<String> roleIds) {
+    this.roleIds = roleIds;
+    return this;
+  }
+
+  public TenantMemberUserView addRoleIdsItem(String roleIdsItem) {
+    if (this.roleIds == null) {
+      this.roleIds = new ArrayList<>();
+    }
+    this.roleIds.add(roleIdsItem);
     return this;
   }
 
   /**
-   * Get failedAttempts
+   * Get roleIds
    *
-   * @return failedAttempts
+   * @return roleIds
    */
-  @Schema(name = "failedAttempts", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("failedAttempts")
-  public @Nullable Integer getFailedAttempts() {
-    return failedAttempts;
+  @NotNull
+  @Schema(name = "roleIds", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("roleIds")
+  public List<String> getRoleIds() {
+    return roleIds;
   }
 
-  @JsonProperty("failedAttempts")
-  public void setFailedAttempts(@Nullable Integer failedAttempts) {
-    this.failedAttempts = failedAttempts;
+  @JsonProperty("roleIds")
+  public void setRoleIds(List<String> roleIds) {
+    this.roleIds = roleIds;
   }
 
-  public SysUser lockedUntil(@Nullable OffsetDateTime lockedUntil) {
-    this.lockedUntil = lockedUntil;
-    return this;
-  }
-
-  /**
-   * Get lockedUntil
-   *
-   * @return lockedUntil
-   */
-  @Valid
-  @Schema(name = "lockedUntil", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("lockedUntil")
-  public @Nullable OffsetDateTime getLockedUntil() {
-    return lockedUntil;
-  }
-
-  @JsonProperty("lockedUntil")
-  public void setLockedUntil(@Nullable OffsetDateTime lockedUntil) {
-    this.lockedUntil = lockedUntil;
-  }
-
-  public SysUser createdAt(OffsetDateTime createdAt) {
+  public TenantMemberUserView createdAt(OffsetDateTime createdAt) {
     this.createdAt = createdAt;
     return this;
   }
@@ -241,7 +230,7 @@ public class SysUser {
     this.createdAt = createdAt;
   }
 
-  public SysUser updatedAt(OffsetDateTime updatedAt) {
+  public TenantMemberUserView updatedAt(OffsetDateTime updatedAt) {
     this.updatedAt = updatedAt;
     return this;
   }
@@ -272,35 +261,32 @@ public class SysUser {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    SysUser sysUser = (SysUser) o;
-    return Objects.equals(this.id, sysUser.id)
-        && Objects.equals(this.username, sysUser.username)
-        && Objects.equals(this.email, sysUser.email)
-        && Objects.equals(this.mobile, sysUser.mobile)
-        && Objects.equals(this.status, sysUser.status)
-        && Objects.equals(this.failedAttempts, sysUser.failedAttempts)
-        && Objects.equals(this.lockedUntil, sysUser.lockedUntil)
-        && Objects.equals(this.createdAt, sysUser.createdAt)
-        && Objects.equals(this.updatedAt, sysUser.updatedAt);
+    TenantMemberUserView tenantMemberUserView = (TenantMemberUserView) o;
+    return Objects.equals(this.id, tenantMemberUserView.id)
+        && Objects.equals(this.tenantId, tenantMemberUserView.tenantId)
+        && Objects.equals(this.username, tenantMemberUserView.username)
+        && Objects.equals(this.email, tenantMemberUserView.email)
+        && Objects.equals(this.status, tenantMemberUserView.status)
+        && Objects.equals(this.roleIds, tenantMemberUserView.roleIds)
+        && Objects.equals(this.createdAt, tenantMemberUserView.createdAt)
+        && Objects.equals(this.updatedAt, tenantMemberUserView.updatedAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(
-        id, username, email, mobile, status, failedAttempts, lockedUntil, createdAt, updatedAt);
+    return Objects.hash(id, tenantId, username, email, status, roleIds, createdAt, updatedAt);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class SysUser {\n");
+    sb.append("class TenantMemberUserView {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
     sb.append("    username: ").append(toIndentedString(username)).append("\n");
     sb.append("    email: ").append(toIndentedString(email)).append("\n");
-    sb.append("    mobile: ").append(toIndentedString(mobile)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
-    sb.append("    failedAttempts: ").append(toIndentedString(failedAttempts)).append("\n");
-    sb.append("    lockedUntil: ").append(toIndentedString(lockedUntil)).append("\n");
+    sb.append("    roleIds: ").append(toIndentedString(roleIds)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("}");

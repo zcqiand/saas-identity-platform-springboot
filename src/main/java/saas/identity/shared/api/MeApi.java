@@ -26,11 +26,11 @@ import saas.identity.shared.dto.CurrentUser;
 import saas.identity.shared.dto.EffectiveMenuNode;
 import saas.identity.shared.dto.ErrorResponse;
 import saas.identity.shared.dto.SwitchTenantResponse;
-import saas.identity.shared.dto.TenantMember;
+import saas.identity.shared.dto.TenantMembership;
 
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-10T19:41:09.458021200+08:00[Asia/Shanghai]",
+    date = "2026-09-12T08:51:22.603663900+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
 @Validated
 @Tag(name = "me", description = "the me API")
@@ -96,7 +96,7 @@ public interface MeApi {
             content = {
               @Content(
                   mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = TenantMember.class)))
+                  array = @ArraySchema(schema = @Schema(implementation = TenantMembership.class)))
             }),
         @ApiResponse(
             responseCode = "default",
@@ -111,7 +111,7 @@ public interface MeApi {
       method = RequestMethod.GET,
       value = MeApi.PATH_ME_LIST_MY_TENANTS,
       produces = {"application/json"})
-  ResponseEntity<List<TenantMember>> meListMyTenants(
+  ResponseEntity<List<TenantMembership>> meListMyTenants(
       @Parameter(name = "clientId", description = "", in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "clientId", required = false)

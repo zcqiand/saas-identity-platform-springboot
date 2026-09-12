@@ -34,6 +34,7 @@ import saas.identity.shared.dto.LoginRequest;
  * 全 4 路都覆盖。
  */
 @WebMvcTest(AuthController.class)
+@org.springframework.context.annotation.Import(MemberViewAssembler.class)
 class AuthControllerLoginTest {
 
   @Autowired MockMvc mvc;
@@ -45,6 +46,11 @@ class AuthControllerLoginTest {
   @MockBean OauthRefreshTokenRepository refreshTokens;
   @MockBean TenantMemberRepository members;
   @MockBean TenantRepository tenants;
+  @MockBean saas.identity.platform.repository.OauthClientRepository oauthClients;
+  @MockBean TokenIssuer tokenIssuer;
+  @MockBean saas.identity.platform.repository.TenantApplicationRepository tenantApplications;
+  @MockBean saas.identity.platform.repository.TenantMemberRoleRepository memberRoles;
+  @MockBean saas.identity.platform.repository.SysRoleRepository roles;
   @MockBean JwtIssuer jwt;
 
   private SysUser existingUser;
@@ -64,10 +70,14 @@ class AuthControllerLoginTest {
 
     // 登录成功路径要求 active membership + active tenant（家族语义，AuthController 105-123）
     java.util.UUID tenantId = java.util.UUID.fromString("22222222-2222-2222-2222-222222222222");
+    java.util.UUID memberId = java.util.UUID.fromString("33333333-3333-3333-3333-333333333333");
     saas.identity.platform.entity.Generated.TenantMember membership =
         new saas.identity.platform.entity.Generated.TenantMember();
+    membership.setId(memberId);
+    membership.setUserId(existingUser.getId());
     membership.setTenantId(tenantId);
     membership.setStatus((short) 1);
+    membership.setCreatedAt(OffsetDateTime.parse("2026-01-20T08:00:00Z"));
     when(members.findByUserId(existingUser.getId())).thenReturn(java.util.List.of(membership));
     saas.identity.platform.entity.Generated.Tenant tenant =
         new saas.identity.platform.entity.Generated.Tenant();
@@ -75,7 +85,36 @@ class AuthControllerLoginTest {
     tenant.setStatus((short) 1);
     when(tenants.findById(tenantId)).thenReturn(Optional.of(tenant));
 
+    // ADR-0032：availableTenants = tenant_application(client_id 匹配) ⨝ tenant_member(active)
+    saas.identity.platform.entity.Generated.TenantApplication app =
+        new saas.identity.platform.entity.Generated.TenantApplication();
+    app.setTenantId(tenantId);
+    app.setClientId("lab-management");
+    when(tenantApplications.findByClientId("lab-management")).thenReturn(java.util.List.of(app));
+    // roleIds 真 join：member 绑 1 个本租户角色
+    java.util.UUID roleId = java.util.UUID.fromString("44444444-4444-4444-4444-444444444444");
+    saas.identity.platform.entity.Generated.SysRole role =
+        new saas.identity.platform.entity.Generated.SysRole();
+    role.setId(roleId);
+    role.setTenantId(tenantId);
+    when(memberRoles.findByMemberId(memberId))
+        .thenReturn(
+            java.util.List.of(
+                new saas.identity.platform.entity.Generated.TenantMemberRole() {
+                  {
+                    setMemberId(memberId);
+                    setRoleId(roleId);
+                  }
+                }));
+    when(roles.findAllById(java.util.List.of(roleId))).thenReturn(java.util.List.of(role));
+
     when(jwt.issueAccessToken(any(), any())).thenReturn("jwt_access_token");
+
+    // persistRefreshToken 写库前校验 clientId FK（2026-09-12 修复：未知 clientId → 400）
+    saas.identity.platform.entity.Generated.OauthClient client =
+        new saas.identity.platform.entity.Generated.OauthClient();
+    client.setClientId("lab-management");
+    when(oauthClients.findByClientId("lab-management")).thenReturn(Optional.of(client));
   }
 
   @Test
@@ -96,7 +135,18 @@ class AuthControllerLoginTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.accessToken").value("jwt_access_token"))
         .andExpect(jsonPath("$.clientId").value("lab-management"))
-        .andExpect(jsonPath("$.user.username").value("alice"));
+        .andExpect(jsonPath("$.user.username").value("alice"))
+        // ADR-0032：顶层 userId/currentTenantId + availableTenants 真 join
+        .andExpect(jsonPath("$.userId").value(existingUser.getId().toString()))
+        .andExpect(jsonPath("$.currentTenantId").value("22222222-2222-2222-2222-222222222222"))
+        .andExpect(jsonPath("$.availableTenants.length()").value(1))
+        .andExpect(
+            jsonPath("$.availableTenants[0].tenantId")
+                .value("22222222-2222-2222-2222-222222222222"))
+        .andExpect(
+            jsonPath("$.availableTenants[0].roleIds[0]")
+                .value("44444444-4444-4444-4444-444444444444"))
+        .andExpect(jsonPath("$.availableTenants[0].joinedAt").isNotEmpty());
 
     assertEquals(0, existingUser.getFailedAttempts(), "失败计数应在成功后归零");
   }

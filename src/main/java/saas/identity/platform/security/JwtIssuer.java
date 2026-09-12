@@ -75,6 +75,11 @@ public class JwtIssuer {
     return issueAccessToken(userId, tenantId, this.ttlSeconds);
   }
 
+  /** 配置的 token TTL（秒）。switch-tenant 等调用方用它推 expiresAt（对齐 aspnetcore JwtIssuer.TtlSeconds）。 */
+  public long getTtlSeconds() {
+    return ttlSeconds;
+  }
+
   /**
    * 测试 helper：给 L4 单元测试签 HS256 token。 允许任意 sub/tenant_id（绕过 entity 校验），方便 fixture-driven 测试。 prod
    * 路径不走这里（AuthService.issueAccessToken 才走 entity）。

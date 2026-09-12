@@ -14,4 +14,7 @@ public interface TenantApplicationRepository extends JpaRepository<TenantApplica
   Page<TenantApplication> findByTenantId(UUID tenantId, Pageable pageable);
 
   Optional<TenantApplication> findByTenantIdAndClientId(UUID tenantId, String clientId);
+
+  /** ADR-0032 login.availableTenants：按 clientId 找出所有订阅该应用的租户（跨租户）。 */
+  List<TenantApplication> findByClientId(String clientId);
 }

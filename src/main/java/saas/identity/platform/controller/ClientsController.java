@@ -27,6 +27,9 @@ public class ClientsController implements ClientsApi {
     OAuthClientPublicInfo info = new OAuthClientPublicInfo();
     info.setClientId(c.getClientId());
     info.setClientName(c.getClientName());
+    // 2026-09-12 live 4-way 修复（R6）：status 是契约 required 字段（msw oracle 返 int，
+    // 1=active），此前漏 set → 序列化 null → normalize 后与 msw 分叉。
+    info.setStatus(c.getStatus() == null ? null : c.getStatus().intValue());
     return ResponseEntity.ok(info);
   }
 }

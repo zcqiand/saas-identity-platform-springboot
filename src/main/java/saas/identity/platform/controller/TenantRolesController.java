@@ -32,7 +32,9 @@ public class TenantRolesController implements TenantRolesApi {
     tenantGuard.verifyPathTenant(tenantId);
     int p = page == null ? 0 : page;
     int ps = pageSize == null ? 20 : pageSize;
-    var pg = roles.findAll(PageRequest.of(p, ps));
+    // 2026-09-12 修复：列表必须按 path tenantId 过滤——findAll() 把别的租户的角色也吐出来。
+    UUID tenantUuid = UUID.fromString(tenantId);
+    var pg = roles.findByTenantId(tenantUuid, PageRequest.of(p, ps));
     TenantRolesListSysRoles200Response resp = new TenantRolesListSysRoles200Response();
     resp.setItems(pg.getContent().stream().map(this::toDto).toList());
     resp.setTotal(pg.getTotalElements());
@@ -64,19 +66,32 @@ public class TenantRolesController implements TenantRolesApi {
   public ResponseEntity<saas.identity.shared.dto.SysRole> tenantRolesGetSysRole(
       String tenantId, String roleId) {
     tenantGuard.verifyPathTenant(tenantId);
+    UUID tenantUuid = UUID.fromString(tenantId);
+    saas.identity.platform.entity.Generated.SysRole e = findRoleInTenant(tenantUuid, roleId);
+    return ResponseEntity.ok(toDto(e));
+  }
+
+  /**
+   * 单条读取/更新先 findById 再校验 role.tenantId == path tenantId，不匹配 → 404（语义上「该租户不存在这个
+   * role」，不泄露跨租户资源存在性，对齐家族 404 行为）。
+   */
+  private saas.identity.platform.entity.Generated.SysRole findRoleInTenant(
+      UUID tenantUuid, String roleId) {
     UUID roleUuid = UUID.fromString(roleId);
     saas.identity.platform.entity.Generated.SysRole e =
         roles.findById(roleUuid).orElseThrow(() -> new NoSuchElementException("role " + roleId));
-    return ResponseEntity.ok(toDto(e));
+    if (!tenantUuid.equals(e.getTenantId())) {
+      throw new NoSuchElementException("role " + roleId + " not in tenant " + tenantUuid);
+    }
+    return e;
   }
 
   @Override
   public ResponseEntity<saas.identity.shared.dto.SysRole> tenantRolesUpdateSysRole(
       String tenantId, String roleId, UpdateSysRoleRequest body) {
     tenantGuard.verifyPathTenant(tenantId);
-    UUID roleUuid = UUID.fromString(roleId);
-    saas.identity.platform.entity.Generated.SysRole e =
-        roles.findById(roleUuid).orElseThrow(() -> new NoSuchElementException("role " + roleId));
+    UUID tenantUuid = UUID.fromString(tenantId);
+    saas.identity.platform.entity.Generated.SysRole e = findRoleInTenant(tenantUuid, roleId);
     if (body.getRoleName() != null) e.setRoleName(body.getRoleName());
     if (body.getDescription() != null) e.setDescription(body.getDescription());
     e.setUpdatedAt(java.time.OffsetDateTime.now());
@@ -86,8 +101,9 @@ public class TenantRolesController implements TenantRolesApi {
   @Override
   public ResponseEntity<Void> tenantRolesDeleteSysRole(String tenantId, String roleId) {
     tenantGuard.verifyPathTenant(tenantId);
-    UUID roleUuid = UUID.fromString(roleId);
-    roles.deleteById(roleUuid);
+    UUID tenantUuid = UUID.fromString(tenantId);
+    saas.identity.platform.entity.Generated.SysRole e = findRoleInTenant(tenantUuid, roleId);
+    roles.deleteById(e.getId());
     return ResponseEntity.noContent().build();
   }
 

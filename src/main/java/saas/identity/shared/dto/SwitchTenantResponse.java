@@ -15,7 +15,7 @@ import org.springframework.lang.Nullable;
 /** SwitchTenantResponse */
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-10T19:41:09.458021200+08:00[Asia/Shanghai]",
+    date = "2026-09-12T08:51:22.603663900+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
 public class SwitchTenantResponse {
 
@@ -28,24 +28,17 @@ public class SwitchTenantResponse {
 
   private UUID tenantId;
 
-  private String clientId;
-
   public SwitchTenantResponse() {
     super();
   }
 
   /** Constructor with only required parameters */
   public SwitchTenantResponse(
-      String accessToken,
-      String refreshToken,
-      OffsetDateTime expiresAt,
-      UUID tenantId,
-      String clientId) {
+      String accessToken, String refreshToken, OffsetDateTime expiresAt, UUID tenantId) {
     this.accessToken = accessToken;
     this.refreshToken = refreshToken;
     this.expiresAt = expiresAt;
     this.tenantId = tenantId;
-    this.clientId = clientId;
   }
 
   public SwitchTenantResponse accessToken(String accessToken) {
@@ -138,28 +131,6 @@ public class SwitchTenantResponse {
     this.tenantId = tenantId;
   }
 
-  public SwitchTenantResponse clientId(String clientId) {
-    this.clientId = clientId;
-    return this;
-  }
-
-  /**
-   * Get clientId
-   *
-   * @return clientId
-   */
-  @NotNull
-  @Schema(name = "clientId", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("clientId")
-  public String getClientId() {
-    return clientId;
-  }
-
-  @JsonProperty("clientId")
-  public void setClientId(String clientId) {
-    this.clientId = clientId;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -172,13 +143,12 @@ public class SwitchTenantResponse {
     return Objects.equals(this.accessToken, switchTenantResponse.accessToken)
         && Objects.equals(this.refreshToken, switchTenantResponse.refreshToken)
         && Objects.equals(this.expiresAt, switchTenantResponse.expiresAt)
-        && Objects.equals(this.tenantId, switchTenantResponse.tenantId)
-        && Objects.equals(this.clientId, switchTenantResponse.clientId);
+        && Objects.equals(this.tenantId, switchTenantResponse.tenantId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(accessToken, refreshToken, expiresAt, tenantId, clientId);
+    return Objects.hash(accessToken, refreshToken, expiresAt, tenantId);
   }
 
   @Override
@@ -189,7 +159,6 @@ public class SwitchTenantResponse {
     sb.append("    refreshToken: ").append(toIndentedString(refreshToken)).append("\n");
     sb.append("    expiresAt: ").append(toIndentedString(expiresAt)).append("\n");
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
-    sb.append("    clientId: ").append(toIndentedString(clientId)).append("\n");
     sb.append("}");
     return sb.toString();
   }

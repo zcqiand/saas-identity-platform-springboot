@@ -1,13 +1,14 @@
 package saas.identity.platform.controller;
 
 import java.time.OffsetDateTime;
-import java.util.NoSuchElementException;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RestController;
-import saas.identity.platform.entity.Generated.OauthAccessToken;
 import saas.identity.platform.entity.Generated.OauthCode;
 import saas.identity.platform.entity.Generated.OauthRefreshToken;
 import saas.identity.platform.entity.Generated.SysUser;
@@ -46,7 +47,10 @@ public class AuthController implements AuthApi {
   private final OauthRefreshTokenRepository refreshTokens;
   private final TenantMemberRepository members;
   private final TenantRepository tenants;
+  private final saas.identity.platform.repository.TenantApplicationRepository tenantApplications;
+  private final MemberViewAssembler assembler;
   private final JwtIssuer jwt;
+  private final TokenIssuer tokenIssuer;
   private final BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 
   public AuthController(
@@ -56,22 +60,30 @@ public class AuthController implements AuthApi {
       OauthRefreshTokenRepository refreshTokens,
       TenantMemberRepository members,
       TenantRepository tenants,
-      JwtIssuer jwt) {
+      saas.identity.platform.repository.TenantApplicationRepository tenantApplications,
+      MemberViewAssembler assembler,
+      JwtIssuer jwt,
+      TokenIssuer tokenIssuer) {
     this.users = users;
     this.codes = codes;
     this.accessTokens = accessTokens;
     this.refreshTokens = refreshTokens;
     this.members = members;
     this.tenants = tenants;
+    this.tenantApplications = tenantApplications;
+    this.assembler = assembler;
     this.jwt = jwt;
+    this.tokenIssuer = tokenIssuer;
   }
 
   @Override
   public ResponseEntity<LoginResponse> sessionsLogin(LoginRequest body) {
+    // 2026-09-12 live 4-way 修复（R3 附带）：未知用户与错密码同语义 401 INVALID_CREDENTIALS
+    // （msw oracle 口径，也不泄露用户存在性），此前 NSEE → 404 分叉。
     SysUser user =
         users
             .findByUsername(body.getUsername())
-            .orElseThrow(() -> new NoSuchElementException("user not found"));
+            .orElseThrow(saas.identity.platform.security.InvalidCredentialsException::new);
 
     // M01.F04.I02 — 锁定窗口检查
     if (user.getLockedUntil() != null && user.getLockedUntil().isAfter(OffsetDateTime.now())) {
@@ -94,7 +106,7 @@ public class AuthController implements AuthApi {
         user.setLockedUntil(OffsetDateTime.now().plusMinutes(LOCKOUT_MINUTES));
       }
       users.save(user);
-      throw new IllegalArgumentException("invalid credentials");
+      throw new saas.identity.platform.security.InvalidCredentialsException();
     }
 
     // 成功：重置失败计数
@@ -106,12 +118,12 @@ public class AuthController implements AuthApi {
     // tenant（status=1），且 tenant 本身 active。sys_user 无 tenantId 列（多租户走
     // tenant_member）。此前这里是 UUID.randomUUID() —— 随机值写 oauth_access_token
     // 违反 tenant_id FK（23503），login 500 级联全后端比对失活。
-    UUID tenantId =
+    List<TenantMember> activeMemberships =
         members.findByUserId(user.getId()).stream()
             .filter(m -> m.getStatus() != null && m.getStatus() == 1)
-            .map(TenantMember::getTenantId)
-            .findFirst()
-            .orElse(null);
+            .toList();
+    UUID tenantId =
+        activeMemberships.stream().map(TenantMember::getTenantId).findFirst().orElse(null);
     if (tenantId == null) {
       throw new org.springframework.security.access.AccessDeniedException(
           "user has no active tenant membership");
@@ -122,16 +134,32 @@ public class AuthController implements AuthApi {
           "tenant unavailable: " + tenantId);
     }
     String accessToken = jwt.issueAccessToken(user.getId(), tenantId);
-    String refreshToken = persistRefreshToken(user.getId(), tenantId, body.getClientId());
+    String refreshToken =
+        tokenIssuer.persistTokenPair(user.getId(), tenantId, body.getClientId(), null);
 
     saas.identity.shared.dto.SysUser dto = new saas.identity.shared.dto.SysUser();
     dto.setId(user.getId());
     dto.setUsername(user.getUsername());
     dto.setEmail(user.getEmail());
 
+    // ADR-0032（2026-09-12）：availableTenants 不再写死 List.of()。
+    // 口径：tenant_application(client_id 匹配请求体) ⨝ tenant_member(user 匹配, status=1)
+    // → TenantMembership（roleIds 真 join、joinedAt = tenant_member.created_at）。
+    // S3 修复（2026-09-12 四方一致）：clientId 无订阅 → 退化为不过滤（返全部 active
+    // membership），对齐 aspnetcore AuthApi / msw oracle——空集 filter 会吞掉全部 membership。
+    Set<UUID> subscribedTenants =
+        tenantApplications.findByClientId(body.getClientId()).stream()
+            .map(saas.identity.platform.entity.Generated.TenantApplication::getTenantId)
+            .collect(Collectors.toSet());
     LoginResponse resp = new LoginResponse();
     resp.setUser(dto);
-    resp.setAvailableTenants(java.util.List.of());
+    resp.setAvailableTenants(
+        activeMemberships.stream()
+            .filter(m -> subscribedTenants.isEmpty() || subscribedTenants.contains(m.getTenantId()))
+            .map(assembler::toMembership)
+            .toList());
+    resp.setUserId(user.getId());
+    resp.setCurrentTenantId(tenantId);
     resp.setAccessToken(accessToken);
     resp.setRefreshToken(refreshToken);
     resp.setTokenType("Bearer");
@@ -159,7 +187,8 @@ public class AuthController implements AuthApi {
 
     String accessToken = jwt.issueAccessToken(code.getUserId(), code.getTenantId());
     String refreshToken =
-        persistRefreshToken(code.getUserId(), code.getTenantId(), body.getClientId());
+        tokenIssuer.persistTokenPair(
+            code.getUserId(), code.getTenantId(), body.getClientId(), code.getScope());
 
     // 一次性消费：删 code 行
     codes.delete(code);
@@ -178,6 +207,8 @@ public class AuthController implements AuthApi {
   /** refresh_token → new access_token。rotate：旧 rt 标记 revoked（默认 30 天）。 */
   @Override
   public ResponseEntity<TokenResponse> sessionsRefreshToken(TokenRequest body) {
+    // I24「未知 refreshToken → 400」：findByRefreshToken 查不到必须走 400 分支，
+    // 对齐 msw oracle（INVALID_GRANT），不许静默重发。
     OauthRefreshToken rt =
         refreshTokens
             .findByRefreshToken(body.getRefreshToken())
@@ -191,49 +222,25 @@ public class AuthController implements AuthApi {
     // rotate：旧 rt 标 revoked
     rt.setRevoked(true);
     refreshTokens.save(rt);
-    String newRefresh = persistRefreshToken(rt.getUserId(), rt.getTenantId(), body.getClientId());
+    // 2026-09-12 修复：新 refresh 行的 client_id 以旧 rt 行上绑定的值为准（登录时已过
+    // FK 校验的合法 FK 值），不信任请求体——请求体给 UUID 形 clientId 时 FK 23503 → 500。
+    String clientId = rt.getClientId() != null ? rt.getClientId() : body.getClientId();
+    String scope =
+        accessTokens
+            .findById(rt.getAccessTokenId())
+            .map(saas.identity.platform.entity.Generated.OauthAccessToken::getScope)
+            .orElse(null);
+    String newRefresh =
+        tokenIssuer.persistTokenPair(rt.getUserId(), rt.getTenantId(), clientId, scope);
 
+    // 2026-09-12 live 4-way 修复：响应 shape 对齐 msw oracle（token 四件套 + scope）。
+    // userId/tenantId/clientId 不回显（normalize 剔 ID 后 clientId 仍会与 oracle 分叉）。
     TokenResponse resp = new TokenResponse();
     resp.setAccessToken(accessToken);
     resp.setRefreshToken(newRefresh);
     resp.setTokenType("Bearer");
-    resp.setExpiresIn(3600);
-    resp.setUserId(rt.getUserId().toString());
-    resp.setClientId(body.getClientId());
-    resp.setTenantId(rt.getTenantId());
+    resp.setExpiresIn((int) Math.min(Integer.MAX_VALUE, jwt.getTtlSeconds()));
+    resp.setScope(scope);
     return ResponseEntity.ok(resp);
-  }
-
-  private String persistRefreshToken(UUID userId, UUID tenantId, String clientId) {
-    String token = "rt_" + UUID.randomUUID();
-    // 注意：id 是 @GeneratedValue(UUID) —— 禁止手动 setId（手动设值会被 Hibernate
-    // 当 detached 实体走 merge → ObjectOptimisticLockingFailureException，见
-    // memory: springboot-write-path-double-bug）。子表 FK 用保存后的 getId() 回填。
-    OauthAccessToken at = new OauthAccessToken();
-    at.setTokenId("at_" + UUID.randomUUID());
-    at.setAccessToken("n/a"); // 由 JwtIssuer 持有真签
-    at.setUserId(userId);
-    at.setTenantId(tenantId);
-    at.setClientId(clientId);
-    // 2026-09-10 audit P0：oauth_access_token.{token_type,created_at} 是 NOT NULL，
-    // 未设 → 23502 → 401。共享仓 SSOT 起列就是 not null；Hibernate scaffold 实体只是声明列，
-    // 没自动从 schema 推 NotNull，业务代码必须显式赋值。
-    at.setTokenType("Bearer");
-    at.setExpiresAt(OffsetDateTime.now().plusHours(1));
-    at.setRevoked(false);
-    at.setCreatedAt(OffsetDateTime.now());
-    accessTokens.save(at);
-
-    OauthRefreshToken rt = new OauthRefreshToken();
-    rt.setRefreshToken(token);
-    rt.setAccessTokenId(at.getId());
-    rt.setUserId(userId);
-    rt.setTenantId(tenantId);
-    rt.setClientId(clientId);
-    rt.setExpiresAt(OffsetDateTime.now().plusDays(30));
-    rt.setRevoked(false);
-    rt.setCreatedAt(OffsetDateTime.now());
-    refreshTokens.save(rt);
-    return token;
   }
 }

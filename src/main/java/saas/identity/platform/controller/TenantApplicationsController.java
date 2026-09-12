@@ -20,10 +20,15 @@ import saas.identity.shared.dto.UpdateTenantApplicationRequest;
 public class TenantApplicationsController implements TenantApplicationsApi {
 
   private final TenantApplicationRepository apps;
+  private final saas.identity.platform.repository.OauthClientRepository oauthClients;
   private final TenantGuard tenantGuard;
 
-  public TenantApplicationsController(TenantApplicationRepository apps, TenantGuard tenantGuard) {
+  public TenantApplicationsController(
+      TenantApplicationRepository apps,
+      saas.identity.platform.repository.OauthClientRepository oauthClients,
+      TenantGuard tenantGuard) {
     this.apps = apps;
+    this.oauthClients = oauthClients;
     this.tenantGuard = tenantGuard;
   }
 
@@ -48,6 +53,11 @@ public class TenantApplicationsController implements TenantApplicationsApi {
   public ResponseEntity<TenantApplication> tenantApplicationsSubscribeTenantApplication(
       String tenantId, SubscribeTenantApplicationRequest body) {
     tenantGuard.verifyPathTenant(tenantId);
+    // 2026-09-12 修复：tenant_application.client_id FK → oauth_client.client_id。
+    // 盲插未知 clientId 时 FK 23503 → 500；对齐 nextjs/aspnetcore 语义，未知 → 404。
+    oauthClients
+        .findByClientId(body.getClientId())
+        .orElseThrow(() -> new NoSuchElementException("oauth_client " + body.getClientId()));
     java.time.OffsetDateTime now = java.time.OffsetDateTime.now();
     saas.identity.platform.entity.Generated.TenantApplication e =
         new saas.identity.platform.entity.Generated.TenantApplication();

@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
+import saas.identity.platform.entity.Generated.SysUser;
 import saas.identity.platform.entity.Generated.TenantMember;
 import saas.identity.platform.entity.Generated.TenantMemberRole;
 import saas.identity.platform.repository.SysUserRepository;
@@ -17,16 +18,22 @@ import saas.identity.platform.security.TenantGuard;
 import saas.identity.shared.api.TenantMembersApi;
 import saas.identity.shared.dto.CreateSysUserRequest;
 import saas.identity.shared.dto.SetTenantMemberRolesRequest;
-import saas.identity.shared.dto.SysUser;
 import saas.identity.shared.dto.SysUserStatus;
 import saas.identity.shared.dto.TenantMemberStatus;
+import saas.identity.shared.dto.TenantMemberUserView;
 import saas.identity.shared.dto.TenantMemberView;
 import saas.identity.shared.dto.TenantMembersChangeTenantUserStatusRequest;
 import saas.identity.shared.dto.TenantMembersInviteTenantUserRequest;
 import saas.identity.shared.dto.TenantMembersListTenantUsers200Response;
 import saas.identity.shared.dto.UpdateSysUserRequest;
 
-/** M00.F02 租户成员 CRUD + 邀请 + 状态切换 + M01.F02 角色绑定。skeleton。 */
+/**
+ * M00.F02 租户成员 CRUD + 邀请 + 状态切换 + M01.F02 角色绑定。
+ *
+ * <p>ADR-0032（2026-09-12）：成员 list/create/get/patch/put-roles/patch-status 六端点改扁平 {@link
+ * TenantMemberUserView}，路径参数 {userId} 语义 = sys_user.id（经 tenant_member.tenant_id + user_id 寻址，不再是
+ * tenant_member.id）。invitations 端点保持嵌套 TenantMemberView 不动（同家族裁决）。
+ */
 @RestController
 @Transactional
 public class TenantMembersController implements TenantMembersApi {
@@ -34,17 +41,23 @@ public class TenantMembersController implements TenantMembersApi {
   private final TenantMemberRepository members;
   private final TenantMemberRoleRepository memberRoles;
   private final SysUserRepository users;
+  private final saas.identity.platform.repository.SysRoleRepository sysRoles;
   private final TenantGuard tenantGuard;
+  private final MemberViewAssembler assembler;
 
   public TenantMembersController(
       TenantMemberRepository members,
       TenantMemberRoleRepository memberRoles,
       SysUserRepository users,
-      TenantGuard tenantGuard) {
+      saas.identity.platform.repository.SysRoleRepository sysRoles,
+      TenantGuard tenantGuard,
+      MemberViewAssembler assembler) {
     this.members = members;
     this.memberRoles = memberRoles;
     this.users = users;
+    this.sysRoles = sysRoles;
     this.tenantGuard = tenantGuard;
+    this.assembler = assembler;
   }
 
   @Override
@@ -54,9 +67,24 @@ public class TenantMembersController implements TenantMembersApi {
     int p = page == null ? 0 : page;
     int ps = pageSize == null ? 20 : pageSize;
     UUID tenantUuid = UUID.fromString(tenantId);
-    var pg = members.findByTenantId(tenantUuid, PageRequest.of(p, ps));
+    // status query 参数过滤（ADR-0032）：分页前 DB 级执行（S2 修复，对齐 aspnetcore），
+    // total = 过滤后计数；视图 status 现读 member 行（S1），与过滤键天然一致。
+    var pg =
+        (status == null)
+            ? members.findByTenantId(tenantUuid, PageRequest.of(p, ps))
+            : members.findByTenantIdAndStatus(
+                tenantUuid, MemberStatusMapper.toDb(status), PageRequest.of(p, ps));
+    // 扁平视图顶层是 user 行：一页 member 对应一批 user，批量取避免 N+1。
+    var userMap =
+        users.findAllById(pg.getContent().stream().map(TenantMember::getUserId).toList()).stream()
+            .collect(java.util.stream.Collectors.toMap(SysUser::getId, u -> u));
+    List<TenantMemberUserView> items =
+        pg.getContent().stream()
+            .filter(m -> userMap.containsKey(m.getUserId()))
+            .map(m -> toView(m, userMap.get(m.getUserId())))
+            .toList();
     TenantMembersListTenantUsers200Response resp = new TenantMembersListTenantUsers200Response();
-    resp.setItems(pg.getContent().stream().map(this::toView).toList());
+    resp.setItems(items);
     resp.setTotal(pg.getTotalElements());
     resp.setPage(p);
     resp.setPageSize(ps);
@@ -64,24 +92,22 @@ public class TenantMembersController implements TenantMembersApi {
   }
 
   @Override
-  public ResponseEntity<TenantMemberView> tenantMembersCreateTenantUser(
+  public ResponseEntity<TenantMemberUserView> tenantMembersCreateTenantUser(
       String tenantId, CreateSysUserRequest body) {
     tenantGuard.verifyPathTenant(tenantId);
-    // 9/7 SSOT pivot：POST member 建 sys_user + tenant_member，返嵌套 TenantMemberView
-    // （对齐 nextjs 参照实现）。此前只插 member 行（user_id 随机 UUID 不落 sys_user，
-    // 缺 is_owner/created_at → 23502 → 500，且响应 user 字段全空）。
+    // 9/7 SSOT pivot：POST member 建 sys_user + tenant_member（对齐 nextjs 参照实现）。
+    // ADR-0032：响应换扁平 TenantMemberUserView（顶层 id = user.id）。
     if (body == null || body.getUsername() == null || body.getEmail() == null) {
       throw new IllegalArgumentException("username and email are required");
     }
     OffsetDateTime now = OffsetDateTime.now();
-    saas.identity.platform.entity.Generated.SysUser u =
-        new saas.identity.platform.entity.Generated.SysUser();
+    SysUser u = new SysUser();
     u.setUsername(body.getUsername());
     u.setEmail(body.getEmail());
     u.setMobile(body.getMobile());
     // 家族 dev 种子约定（同 nextjs）：password 列存 "plain:{password}" 占位。
     u.setPassword("plain:" + (body.getPassword() == null ? "" : body.getPassword()));
-    u.setStatus((short) 1); // active
+    u.setStatus(MemberStatusMapper.DB_ACTIVE);
     u.setFailedAttempts(0);
     u.setCreatedAt(now);
     u.setUpdatedAt(now);
@@ -92,57 +118,69 @@ public class TenantMembersController implements TenantMembersApi {
     e.setUserId(u.getId());
     e.setMemberName(body.getUsername());
     e.setIsOwner(false);
-    e.setStatus((short) 1);
+    e.setStatus(MemberStatusMapper.DB_ACTIVE);
     e.setCreatedAt(now);
     e.setUpdatedAt(now);
     return ResponseEntity.ok(toView(members.save(e), u));
   }
 
   @Override
-  public ResponseEntity<TenantMemberView> tenantMembersGetTenantUser(
+  public ResponseEntity<TenantMemberUserView> tenantMembersGetTenantUser(
       String tenantId, String userId) {
     tenantGuard.verifyPathTenant(tenantId);
-    UUID memberUuid = UUID.fromString(userId);
-    TenantMember e =
-        members
-            .findById(memberUuid)
-            .orElseThrow(() -> new NoSuchElementException("member " + userId));
-    return ResponseEntity.ok(toView(e, (CreateSysUserRequest) null));
+    TenantMember e = resolveMember(tenantId, userId);
+    return ResponseEntity.ok(toView(e, loadUser(e)));
   }
 
   @Override
-  public ResponseEntity<TenantMemberView> tenantMembersUpdateTenantUser(
+  public ResponseEntity<TenantMemberUserView> tenantMembersUpdateTenantUser(
       String tenantId, String userId, UpdateSysUserRequest body) {
     tenantGuard.verifyPathTenant(tenantId);
-    UUID memberUuid = UUID.fromString(userId);
-    TenantMember e =
-        members
-            .findById(memberUuid)
-            .orElseThrow(() -> new NoSuchElementException("member " + userId));
-    return ResponseEntity.ok(toView(members.save(e), (CreateSysUserRequest) null));
+    TenantMember e = resolveMember(tenantId, userId);
+    SysUser u = loadUser(e);
+    if (body != null) {
+      if (body.getEmail() != null) {
+        u.setEmail(body.getEmail());
+      }
+      if (body.getMobile() != null) {
+        u.setMobile(body.getMobile());
+      }
+      if (body.getStatus() != null) {
+        u.setStatus(mapSysUserStatus(body.getStatus()));
+      }
+      u.setUpdatedAt(OffsetDateTime.now());
+      u = users.save(u);
+    }
+    return ResponseEntity.ok(toView(e, u));
   }
 
   @Override
   public ResponseEntity<Void> tenantMembersDeleteTenantUser(String tenantId, String userId) {
     tenantGuard.verifyPathTenant(tenantId);
-    UUID memberUuid = UUID.fromString(userId);
-    members.deleteById(memberUuid);
+    TenantMember e = resolveMember(tenantId, userId);
+    memberRoles.deleteByMemberId(e.getId());
+    members.delete(e);
     return ResponseEntity.noContent().build();
   }
 
   @Override
-  public ResponseEntity<TenantMemberView> tenantMembersChangeTenantUserStatus(
+  public ResponseEntity<TenantMemberUserView> tenantMembersChangeTenantUserStatus(
       String tenantId, String userId, TenantMembersChangeTenantUserStatusRequest body) {
     tenantGuard.verifyPathTenant(tenantId);
-    UUID memberUuid = UUID.fromString(userId);
-    TenantMember e =
-        members
-            .findById(memberUuid)
-            .orElseThrow(() -> new NoSuchElementException("member " + userId));
+    TenantMember e = resolveMember(tenantId, userId);
     if (body.getStatus() != null) {
-      e.setStatus((short) (body.getStatus() == TenantMemberStatus.ACTIVE ? 1 : 0));
+      Short db = MemberStatusMapper.toDb(body.getStatus());
+      // member 行与 user 行同写字典（MemberStatusMapper 四值）：switch 门槛读 member.status
+      // != 0（S5），扁平视图 status 也读 member 行（S1），此端点双写保证两处一致。
+      e.setStatus(db);
+      e.setUpdatedAt(OffsetDateTime.now());
+      e = members.save(e);
+      SysUser u = loadUser(e);
+      u.setStatus(db);
+      u.setUpdatedAt(OffsetDateTime.now());
+      users.save(u);
     }
-    return ResponseEntity.ok(toView(members.save(e), (CreateSysUserRequest) null));
+    return ResponseEntity.ok(toView(e, loadUser(e)));
   }
 
   @Override
@@ -151,19 +189,19 @@ public class TenantMembersController implements TenantMembersApi {
     tenantGuard.verifyPathTenant(tenantId);
     // I42 方案 C：邀请建真 sys_user（status=2 invited）+ member（status=1 active）。
     // email 缺失 fail-fast 400（ADR-0019：禁止兜底字面量）。
+    // ADR-0032：invitations 保持嵌套 TenantMemberView 不动。
     String email = body == null || body.getEmail() == null ? "" : body.getEmail().trim();
     if (email.isEmpty()) {
       throw new IllegalArgumentException("email is required");
     }
     OffsetDateTime now = OffsetDateTime.now();
-    saas.identity.platform.entity.Generated.SysUser u =
-        new saas.identity.platform.entity.Generated.SysUser();
+    SysUser u = new SysUser();
     // 禁止手动 setId（@GeneratedValue UUID）—— merge 会当 detached 走乐观锁
     // （ObjectOptimisticLockingFailureException，memory: springboot-write-path-double-bug）。
     u.setUsername(email); // 家族约定：invitation 的 username = email（memberName 同源）
     u.setPassword(""); // notNull 列；受邀用户尚无凭据
     u.setEmail(email);
-    u.setStatus((short) 2); // invited（家族约定 2026-09-10：1=active, 2=invited, 0=disabled）
+    u.setStatus(MemberStatusMapper.DB_INVITED);
     u.setFailedAttempts(0);
     u.setCreatedAt(now);
     u.setUpdatedAt(now);
@@ -174,50 +212,116 @@ public class TenantMembersController implements TenantMembersApi {
     e.setUserId(u.getId());
     e.setMemberName(email); // 家族约定：invitation 响应 memberName = username（= email）
     e.setIsOwner(false);
-    e.setStatus((short) 1); // member 立即 active（I42 oracle：user=invited, member=active）
+    e.setStatus(
+        MemberStatusMapper.DB_ACTIVE); // member 立即 active（I42 oracle：user=invited, member=active）
     e.setCreatedAt(now);
     e.setUpdatedAt(now);
-    return ResponseEntity.ok(toView(members.save(e), u));
+    return ResponseEntity.ok(toNestedView(members.save(e), u));
   }
 
   @Override
-  public ResponseEntity<TenantMemberView> tenantMembersAssignTenantMemberRoles(
+  public ResponseEntity<TenantMemberUserView> tenantMembersAssignTenantMemberRoles(
       String tenantId, String userId, SetTenantMemberRolesRequest body) {
     tenantGuard.verifyPathTenant(tenantId);
-    UUID memberUuid = UUID.fromString(userId);
-    memberRoles.deleteByMemberId(memberUuid);
+    TenantMember e = resolveMember(tenantId, userId);
+    memberRoles.deleteByMemberId(e.getId());
     if (body != null && body.getRoleIds() != null) {
+      // S4 修复（2026-09-12 四方一致）：只接受本租户的 sys_role，外来/未知 roleId 静默忽略
+      // （对齐 aspnetcore Roles() 按 r.TenantId == tid 过滤；此前跨租户 role 照单全收）。
+      java.util.Set<UUID> tenantRoleIds =
+          sysRoles.findByTenantId(UUID.fromString(tenantId)).stream()
+              .map(saas.identity.platform.entity.Generated.SysRole::getId)
+              .collect(java.util.stream.Collectors.toSet());
       for (String roleId : body.getRoleIds()) {
+        UUID rid = UUID.fromString(roleId);
+        if (!tenantRoleIds.contains(rid)) {
+          continue;
+        }
         TenantMemberRole r = new TenantMemberRole();
-        r.setMemberId(memberUuid);
-        r.setRoleId(UUID.fromString(roleId));
+        r.setMemberId(e.getId());
+        r.setRoleId(rid);
         memberRoles.save(r);
       }
     }
-    TenantMember e =
-        members
-            .findById(memberUuid)
-            .orElseThrow(() -> new NoSuchElementException("member " + userId));
-    return ResponseEntity.ok(toView(e, (CreateSysUserRequest) null));
+    return ResponseEntity.ok(toView(e, loadUser(e)));
   }
 
-  private TenantMemberView toView(TenantMember e) {
-    return toView(e, (CreateSysUserRequest) null);
+  /** ADR-0032 寻址：{userId} = sys_user.id，经 (tenant_id, user_id) 找 member 行；寻不到 → 404。 */
+  private TenantMember resolveMember(String tenantId, String userId) {
+    return members
+        .findByTenantIdAndUserId(UUID.fromString(tenantId), UUID.fromString(userId))
+        .orElseThrow(
+            () -> new NoSuchElementException("member user " + userId + " in tenant " + tenantId));
   }
 
-  private TenantMemberView toView(TenantMember e, CreateSysUserRequest body) {
-    saas.identity.platform.entity.Generated.SysUser u = null;
-    if (body != null) {
-      u = new saas.identity.platform.entity.Generated.SysUser();
-      u.setId(e.getUserId());
-      u.setUsername(body.getUsername());
-      u.setEmail(body.getEmail());
-    }
-    return toView(e, u);
+  private SysUser loadUser(TenantMember member) {
+    return users
+        .findById(member.getUserId())
+        .orElseThrow(
+            () ->
+                new NoSuchElementException(
+                    "sys_user " + member.getUserId() + " (member " + member.getId() + ")"));
   }
 
-  // I42：user 侧 status 三档映射（DB smallint 家族约定：1=active, 2=invited, else=disabled）
-  private static SysUserStatus mapUserStatus(Short db) {
+  /**
+   * 扁平视图（ADR-0032）：顶层 id = user.id，roleIds = 真 join。
+   *
+   * <p>S1 修复（2026-09-12 四方一致）：status 读 <b>tenant_member.status</b>（成员域语义 SSOT，对齐 aspnetcore
+   * MembershipViews / msw membership 行）。此前读 sys_user.status， invitation 场景（user=invited/2,
+   * member=active/1）同一资源两仓返回不同值。
+   */
+  private TenantMemberUserView toView(TenantMember m, SysUser u) {
+    TenantMemberUserView v = new TenantMemberUserView();
+    v.setId(u.getId());
+    v.setTenantId(m.getTenantId());
+    v.setUsername(u.getUsername());
+    v.setEmail(u.getEmail());
+    v.setStatus(MemberStatusMapper.fromDb(m.getStatus()));
+    v.setRoleIds(assembler.roleIdsOf(m));
+    v.setCreatedAt(u.getCreatedAt() != null ? u.getCreatedAt() : m.getCreatedAt());
+    v.setUpdatedAt(u.getUpdatedAt() != null ? u.getUpdatedAt() : m.getUpdatedAt());
+    return v;
+  }
+
+  /** sys_user.status 三值字典（SysUserStatus 无 suspended；家族约定 1=active 2=invited 0=disabled）。 */
+  private static short mapSysUserStatus(SysUserStatus s) {
+    return switch (s) {
+      case ACTIVE -> MemberStatusMapper.DB_ACTIVE;
+      case INVITED -> MemberStatusMapper.DB_INVITED;
+      case DISABLED -> MemberStatusMapper.DB_DISABLED;
+    };
+  }
+
+  // ==== invitations 专用：嵌套 TenantMemberView（ADR-0032 保持不动） ====
+
+  private TenantMemberView toNestedView(TenantMember e, SysUser u) {
+    TenantMemberView v = new TenantMemberView();
+    saas.identity.shared.dto.TenantMember tm = new saas.identity.shared.dto.TenantMember();
+    tm.setId(e.getId());
+    tm.setTenantId(e.getTenantId());
+    tm.setUserId(e.getUserId());
+    tm.setMemberName(e.getMemberName());
+    tm.setIsOwner(e.getIsOwner());
+    tm.setStatus(MemberStatusMapper.fromDb(e.getStatus()));
+    tm.setCreatedAt(e.getCreatedAt());
+    tm.setUpdatedAt(e.getUpdatedAt());
+    v.setMember(tm);
+    saas.identity.shared.dto.SysUser du = new saas.identity.shared.dto.SysUser();
+    du.setId(u.getId());
+    du.setUsername(u.getUsername());
+    du.setEmail(u.getEmail());
+    du.setMobile(u.getMobile());
+    du.setStatus(mapSysUserStatusEnum(u.getStatus()));
+    du.setFailedAttempts(u.getFailedAttempts());
+    du.setLockedUntil(u.getLockedUntil());
+    du.setCreatedAt(u.getCreatedAt());
+    du.setUpdatedAt(u.getUpdatedAt());
+    v.setUser(du);
+    v.setRoles(List.of());
+    return v;
+  }
+
+  private static SysUserStatus mapSysUserStatusEnum(Short db) {
     if (db == null) {
       return SysUserStatus.DISABLED;
     }
@@ -226,40 +330,5 @@ public class TenantMembersController implements TenantMembersApi {
       case 2 -> SysUserStatus.INVITED;
       default -> SysUserStatus.DISABLED;
     };
-  }
-
-  private TenantMemberView toView(
-      TenantMember e, saas.identity.platform.entity.Generated.SysUser u) {
-    TenantMemberView v = new TenantMemberView();
-    saas.identity.shared.dto.TenantMember tm = new saas.identity.shared.dto.TenantMember();
-    tm.setId(e.getId());
-    tm.setTenantId(e.getTenantId());
-    tm.setUserId(e.getUserId());
-    tm.setMemberName(e.getMemberName());
-    tm.setIsOwner(e.getIsOwner());
-    tm.setStatus(
-        e.getStatus() == null
-            ? null
-            : (e.getStatus().intValue() == 1
-                ? TenantMemberStatus.ACTIVE
-                : TenantMemberStatus.DISABLED));
-    tm.setCreatedAt(e.getCreatedAt());
-    tm.setUpdatedAt(e.getUpdatedAt());
-    v.setMember(tm);
-    if (u != null) {
-      SysUser du = new SysUser();
-      du.setId(u.getId());
-      du.setUsername(u.getUsername());
-      du.setEmail(u.getEmail());
-      du.setMobile(u.getMobile());
-      du.setStatus(mapUserStatus(u.getStatus()));
-      du.setFailedAttempts(u.getFailedAttempts());
-      du.setLockedUntil(u.getLockedUntil());
-      du.setCreatedAt(u.getCreatedAt());
-      du.setUpdatedAt(u.getUpdatedAt());
-      v.setUser(du);
-    }
-    v.setRoles(List.of());
-    return v;
   }
 }

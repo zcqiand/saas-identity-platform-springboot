@@ -73,7 +73,8 @@ class TenantRolesControllerTest {
     r.setRoleCode("admin");
     r.setRoleName("管理员");
     r.setStatus((short) 1);
-    when(roles.findAll(any(PageRequest.class)))
+    // 2026-09-12 契约修复：列表按 path tenantId 过滤（findByTenantId），不再 findAll() 漏别的租户。
+    when(roles.findByTenantId(any(UUID.class), any(PageRequest.class)))
         .thenReturn(new PageImpl<>(List.of(r), PageRequest.of(0, 20), 1));
 
     mvc.perform(
@@ -89,6 +90,11 @@ class TenantRolesControllerTest {
   void deleteRole_returns204() throws Exception {
     UUID tenantId = UUID.randomUUID();
     UUID roleId = UUID.randomUUID();
+    // 2026-09-12 契约修复：DELETE 前校验 role.tenantId == path tenantId（不匹配 → 404）
+    SysRole existing = new SysRole();
+    existing.setId(roleId);
+    existing.setTenantId(tenantId);
+    when(roles.findById(roleId)).thenReturn(java.util.Optional.of(existing));
 
     mvc.perform(delete("/api/v1/tenants/" + tenantId + "/roles/" + roleId).with(csrf()))
         .andExpect(status().isNoContent());

@@ -16,11 +16,11 @@ import org.springframework.lang.Nullable;
 @JsonTypeName("TenantMembers_listTenantUsers_200_response")
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-10T19:41:09.458021200+08:00[Asia/Shanghai]",
+    date = "2026-09-12T08:51:22.603663900+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
 public class TenantMembersListTenantUsers200Response {
 
-  private List<@Valid TenantMemberView> items = new ArrayList<>();
+  private List<@Valid TenantMemberUserView> items = new ArrayList<>();
 
   private Integer page;
 
@@ -34,19 +34,19 @@ public class TenantMembersListTenantUsers200Response {
 
   /** Constructor with only required parameters */
   public TenantMembersListTenantUsers200Response(
-      List<@Valid TenantMemberView> items, Integer page, Integer pageSize, Long total) {
+      List<@Valid TenantMemberUserView> items, Integer page, Integer pageSize, Long total) {
     this.items = items;
     this.page = page;
     this.pageSize = pageSize;
     this.total = total;
   }
 
-  public TenantMembersListTenantUsers200Response items(List<@Valid TenantMemberView> items) {
+  public TenantMembersListTenantUsers200Response items(List<@Valid TenantMemberUserView> items) {
     this.items = items;
     return this;
   }
 
-  public TenantMembersListTenantUsers200Response addItemsItem(TenantMemberView itemsItem) {
+  public TenantMembersListTenantUsers200Response addItemsItem(TenantMemberUserView itemsItem) {
     if (this.items == null) {
       this.items = new ArrayList<>();
     }
@@ -63,12 +63,12 @@ public class TenantMembersListTenantUsers200Response {
   @Valid
   @Schema(name = "items", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("items")
-  public List<@Valid TenantMemberView> getItems() {
+  public List<@Valid TenantMemberUserView> getItems() {
     return items;
   }
 
   @JsonProperty("items")
-  public void setItems(List<@Valid TenantMemberView> items) {
+  public void setItems(List<@Valid TenantMemberUserView> items) {
     this.items = items;
   }
 

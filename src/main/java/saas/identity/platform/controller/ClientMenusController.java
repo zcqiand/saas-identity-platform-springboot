@@ -105,20 +105,7 @@ public class ClientMenusController implements ClientMenusApi {
   }
 
   private short typeToShort(SysMenuType t) {
-    return switch (t) {
-      case DIRECTORY -> (short) 1;
-      case MENU -> (short) 2;
-      case BUTTON -> (short) 3;
-    };
-  }
-
-  private SysMenuType shortToType(Short s) {
-    if (s == null) return null;
-    int v = s.intValue();
-    if (v == 1) return SysMenuType.DIRECTORY;
-    if (v == 2) return SysMenuType.MENU;
-    if (v == 3) return SysMenuType.BUTTON;
-    return SysMenuType.MENU;
+    return TypeMapper.toShort(t);
   }
 
   private saas.identity.shared.dto.SysMenu toDto(SysMenu e) {
@@ -127,7 +114,7 @@ public class ClientMenusController implements ClientMenusApi {
     d.setClientId(e.getClientId());
     d.setParentId(e.getParentId());
     d.setTitle(e.getTitle());
-    d.setType(e.getType() == null ? null : shortToType(e.getType()));
+    d.setType(TypeMapper.fromShort(e.getType()));
     d.setPath(e.getPath());
     d.setComponent(e.getComponent());
     d.setPerms(e.getPerms());

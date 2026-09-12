@@ -14,7 +14,7 @@ import org.springframework.lang.Nullable;
 /** ErrorResponse */
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-10T19:41:09.458021200+08:00[Asia/Shanghai]",
+    date = "2026-09-12T08:51:22.603663900+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
 public class ErrorResponse {
 
@@ -22,8 +22,11 @@ public class ErrorResponse {
 
   private String message;
 
+  // 2026-09-12 修复（gen-shared 重生成后重应用）：不再初始化为 new HashMap<>()。
+  // NON_NULL + 恒空 map 会让每个错误体都序列化出 "details":{}，与家族（无 details 键）分叉；
+  // 未设 details 时保持 null → 不序列化。
   @JsonInclude(JsonInclude.Include.NON_NULL)
-  private Map<String, Object> details = new HashMap<>();
+  private Map<String, Object> details;
 
   public ErrorResponse() {
     super();

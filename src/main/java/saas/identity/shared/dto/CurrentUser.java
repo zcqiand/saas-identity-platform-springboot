@@ -16,59 +16,81 @@ import org.springframework.lang.Nullable;
 /** CurrentUser */
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-10T19:41:09.458021200+08:00[Asia/Shanghai]",
+    date = "2026-09-12T08:51:22.603663900+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
 public class CurrentUser {
 
-  private SysUser user;
+  private UUID id;
 
-  private List<@Valid TenantMember> memberships = new ArrayList<>();
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private @Nullable String email;
+
+  private List<@Valid TenantMembership> memberships = new ArrayList<>();
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private @Nullable UUID currentTenantId;
-
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  private @Nullable String clientId;
 
   public CurrentUser() {
     super();
   }
 
   /** Constructor with only required parameters */
-  public CurrentUser(SysUser user, List<@Valid TenantMember> memberships) {
-    this.user = user;
+  public CurrentUser(UUID id, List<@Valid TenantMembership> memberships) {
+    this.id = id;
     this.memberships = memberships;
   }
 
-  public CurrentUser user(SysUser user) {
-    this.user = user;
+  public CurrentUser id(UUID id) {
+    this.id = id;
     return this;
   }
 
   /**
-   * Get user
+   * Get id
    *
-   * @return user
+   * @return id
    */
   @NotNull
   @Valid
-  @Schema(name = "user", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("user")
-  public SysUser getUser() {
-    return user;
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("id")
+  public UUID getId() {
+    return id;
   }
 
-  @JsonProperty("user")
-  public void setUser(SysUser user) {
-    this.user = user;
+  @JsonProperty("id")
+  public void setId(UUID id) {
+    this.id = id;
   }
 
-  public CurrentUser memberships(List<@Valid TenantMember> memberships) {
+  public CurrentUser email(@Nullable String email) {
+    this.email = email;
+    return this;
+  }
+
+  /**
+   * Get email
+   *
+   * @return email
+   */
+  @jakarta.validation.constraints.Email
+  @Schema(name = "email", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("email")
+  public @Nullable String getEmail() {
+    return email;
+  }
+
+  @JsonProperty("email")
+  public void setEmail(@Nullable String email) {
+    this.email = email;
+  }
+
+  public CurrentUser memberships(List<@Valid TenantMembership> memberships) {
     this.memberships = memberships;
     return this;
   }
 
-  public CurrentUser addMembershipsItem(TenantMember membershipsItem) {
+  public CurrentUser addMembershipsItem(TenantMembership membershipsItem) {
     if (this.memberships == null) {
       this.memberships = new ArrayList<>();
     }
@@ -85,12 +107,12 @@ public class CurrentUser {
   @Valid
   @Schema(name = "memberships", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("memberships")
-  public List<@Valid TenantMember> getMemberships() {
+  public List<@Valid TenantMembership> getMemberships() {
     return memberships;
   }
 
   @JsonProperty("memberships")
-  public void setMemberships(List<@Valid TenantMember> memberships) {
+  public void setMemberships(List<@Valid TenantMembership> memberships) {
     this.memberships = memberships;
   }
 
@@ -116,27 +138,6 @@ public class CurrentUser {
     this.currentTenantId = currentTenantId;
   }
 
-  public CurrentUser clientId(@Nullable String clientId) {
-    this.clientId = clientId;
-    return this;
-  }
-
-  /**
-   * Get clientId
-   *
-   * @return clientId
-   */
-  @Schema(name = "clientId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("clientId")
-  public @Nullable String getClientId() {
-    return clientId;
-  }
-
-  @JsonProperty("clientId")
-  public void setClientId(@Nullable String clientId) {
-    this.clientId = clientId;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -146,25 +147,25 @@ public class CurrentUser {
       return false;
     }
     CurrentUser currentUser = (CurrentUser) o;
-    return Objects.equals(this.user, currentUser.user)
+    return Objects.equals(this.id, currentUser.id)
+        && Objects.equals(this.email, currentUser.email)
         && Objects.equals(this.memberships, currentUser.memberships)
-        && Objects.equals(this.currentTenantId, currentUser.currentTenantId)
-        && Objects.equals(this.clientId, currentUser.clientId);
+        && Objects.equals(this.currentTenantId, currentUser.currentTenantId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(user, memberships, currentTenantId, clientId);
+    return Objects.hash(id, email, memberships, currentTenantId);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CurrentUser {\n");
-    sb.append("    user: ").append(toIndentedString(user)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    email: ").append(toIndentedString(email)).append("\n");
     sb.append("    memberships: ").append(toIndentedString(memberships)).append("\n");
     sb.append("    currentTenantId: ").append(toIndentedString(currentTenantId)).append("\n");
-    sb.append("    clientId: ").append(toIndentedString(clientId)).append("\n");
     sb.append("}");
     return sb.toString();
   }
