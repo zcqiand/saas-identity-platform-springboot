@@ -198,12 +198,19 @@ if [ -f "$BASE/springboot.env" ]; then
     echo "→ reconcile SERVER_PORT: 8080 → 5105 (V018 port migration)"
   fi
 
-  # origin 级无损追加：存量白名单缺 saas-vue 时只补这一个 origin（不整值覆盖，运维手工 origin 保留）。
-  # 上方 append-if-missing 只管缺失路径; 存量 env-file 旧白名单（无 saas-vue）在此自愈。
-  if grep -q '^SAAS_CORS_ALLOWED_ORIGINS=' "$BASE/springboot.env" && ! grep '^SAAS_CORS_ALLOWED_ORIGINS=' "$BASE/springboot.env" | grep -q 'saas-vue\.xiangru\.uk'; then
-    sed -i 's#^\(SAAS_CORS_ALLOWED_ORIGINS=.*\)#\1,https://saas-vue.xiangru.uk#' "$BASE/springboot.env"
-    echo "→ reconcile SAAS_CORS_ALLOWED_ORIGINS: 追加缺失 origin saas-vue.xiangru.uk（origin 级，不整值覆盖）"
-  fi
+  # origin 级无损追加（2026-09-13 扩为全 origin 循环，aspnetcore 仓同款）：三前端
+  # （react/vue/nextjs）+ 本域都可以跨源调本后端（SecurityConfig 白名单），
+  # 存量 env-file 缺哪个 origin 就补哪个（不整值覆盖，运维手工 origin 保留）。
+  # 上方 append-if-missing 只管缺失路径; 存量 env-file 旧白名单在此自愈。
+  for cors_origin in "https://${NGINX_DOMAIN}" \
+                     "https://saas-nextjs.xiangru.uk" \
+                     "https://saas-react.xiangru.uk" \
+                     "https://saas-vue.xiangru.uk"; do
+    if grep -q '^SAAS_CORS_ALLOWED_ORIGINS=' "$BASE/springboot.env" && ! grep '^SAAS_CORS_ALLOWED_ORIGINS=' "$BASE/springboot.env" | grep -qF "$cors_origin"; then
+      sed -i "s#^\(SAAS_CORS_ALLOWED_ORIGINS=.*\)#\1,${cors_origin}#" "$BASE/springboot.env"
+      echo "→ reconcile SAAS_CORS_ALLOWED_ORIGINS: 追加缺失 origin ${cors_origin}（origin 级，不整值覆盖）"
+    fi
+  done
 fi
 
 echo "→ image: $IMAGE"
