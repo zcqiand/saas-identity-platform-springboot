@@ -1,37 +1,26 @@
 {
   "schema": 1,
   "project": "saas-identity-platform-springboot",
-  "current_task": "/handoff 收工 — 2026-09-10 晚收口批：AuthControllerLoginTest 补 @MockBean TenantMember/TenantRepository + membership/tenant stub（codegen 19:41 重新生成后 L4 挂的修复）；gate 全绿（含 L4.db.scaffold，PG 新密码）",
-  "last_session_at": "2026-09-10",
+  "current_task": "2026-09-12/13 四方 live 一致性收敛提交（78b7c88）：ADR-0032 扁平成员 S1-S5（status 读 member 行/DB 级过滤/空订阅退化/本租户 role 校验/switch 非 disabled）+ roles 列表 @Query created_at ASC + login 未知用户 401 + refresh rotate 用旧行 clientId",
+  "last_session_at": "2026-09-13",
   "done": [
-    "2026-09-10 晚收口：AuthControllerLoginTest 补 @MockBean TenantMemberRepository/TenantRepository（AuthController 构造器 7 参，I20/I42 改动加了 members/tenants 但 @WebMvcTest 切片没跟上 → ApplicationContext 挂）+ setup() stub active membership/tenant（login 成功路径家族语义 AuthController:105-123 要求，不 stub → 403）→ 14/14 全过",
-    "2026-09-10 晚收口：19:41 codegen 产物跑 spotless:apply（63 文件）；PG_PASSWORD 轮换后 L4.db.scaffold 用新密码 + DATABASE_URL(jdbc:) 全绿",
-    "AuthController.java persistRefreshToken 创建 OauthAccessToken 行加 at.setTokenType(\"Bearer\") + at.setCreatedAt(OffsetDateTime.now())；OauthRefreshToken 行加 rt.setCreatedAt(OffsetDateTime.now())（oauth_access_token.{token_type,created_at} + oauth_refresh_token.created_at 在 shared schema 都是 NOT NULL，Hibernate scaffold 实体只声明列不推 NotNull，业务必须显式赋值）",
-    "live 验证：springboot 之前 100% 401 → 修后 auth.test.ts / admin-clients / tenant-members-write I19 等 I34-I42 端点级联失活消失（springboot target 不再 throw Error: 登录失败）",
-    "springboot 本仓 gate L0/L1/L2/L3/L4/L4.db.scaffold(skipped)/L5 全绿（CI_DB_SCAFFOLD_SKIP=1 — dev 无 PG 直连产物）",
-    "spotless:apply 66 文件同步入库：shared/api + shared/dto 的 codegen 产物与 spotless 期望的 raw types 一致化（移除未用 import、加 @JsonInclude 等注解）",
-    "提交链 d8b940f (fix auth) → ba4dd54 (spotless)",
-    "24 commits ahead of origin（spotless 大批量产物重 emit + 本次修复）"
+    "S1-S5 扁平成员五修复（TenantMemberUserView/MemberStatusMapper/MemberViewAssembler 新组件）",
+    "SysRoleRepository @Query created_at ASC, id ASC（roles 列表排序对齐 oracle）",
+    "login 未知用户=错密码同 401；refresh 响应不回显 userId/tenantId/clientId",
+    "AuditTimestampInterceptor + shared dto/api 重生成；门禁全绿"
   ],
   "next": [
-    "下次进来先 pwd 确认在哪个仓；本仓当前 spring-boot:run 没跑（start-family 收尾 trap 杀干净）。要再跑 live：cd output/saas-identity-platform-contract-test && bash scripts/start-family.sh（先 taskkill 4 后端残留进程）",
-    "I20/I42 仍 fail：测试期望 {roleId, tenantId, menuIds[], updatedAt} 扁平 + {id, email, status} 扁平，但 shared TypeSpec + 4 后端都返嵌套 TenantMemberView / SysRoleMenu[]。按 ADR-0029 需先改 shared 契约才能对齐。修法：改 shared/tsp/routes/{tenant-members,tenant-roles}.tsp 新建 RoleMenuGrant / TenantInvitation 响应模型 + 所有后端 NSwag/Orval/NSwag 重 emit + 4 后端 controller 切新类型",
-    "24 commits ahead of origin 未 push —— 下次开工前先 git push origin master 或写明不 push 的理由"
+    "contract-test 仓 bash run-4way-final.sh（需先起 4 后端，见 docs/conventions/contract-test-run-live.md；springboot gate 另需 libpq 格式 DATABASE_URL）",
+    "同族潜在分叉：TenantMembersController 列表无显式排序（派生查询堆表序），nextjs/aspnetcore 是 created_at DESC——msw 是插入序，暂未翻车"
   ],
-  "open_questions": [
-    "springboot `users.role_ids` 列冗余占位，authoritative 在 memberships —— User DTO LEFT JOIN tenant_memberships 取真值这条 fix 是否要在本仓实施？影响 4 后端 User 字段一致（memory: users-role-ids-redundant-authoritative-memberships）",
-    "AdminAppMenusController 业务 inline（dev unblock）—— 抽 AdminAppMenusService 还是接受 inline 现状？这是 2026-09-06 遗留的 open_questions"
-  ],
+  "open_questions": [],
   "dont": [
-    "不要再用 mvn test 写新 fn @Fn 注解 —— 必须 mvn test -DTRACE_MAP=1 才能进 trace.json（2026-09-06 教训）",
-    "不要再让 persistRefreshToken 创建 OauthAccessToken/OauthRefreshToken 漏 setTokenType / setCreatedAt —— shared schema 都是 NOT NULL，scaffold 实体不推 NotNull，业务必须显式赋（2026-09-10 教训：springboot login 23502 → 401 全家族级联失活）",
-    "不要再 mvn spotless:check 失败后只 commit source 不 commit spotless —— L1 spotless 红（CLAUDE.md §2 铁律）",
-    "不要再手写 OauthAccessToken id —— @GeneratedValue(UUID) 自动生成，手动 setId 会触发 ObjectOptimisticLockingFailureException（memory: springboot-write-path-double-bug）",
-    "不要再用 M04.F02.I06-I08 —— 已废弃，新代码必须 M04.F03.I07-I09（2026-09-06 教训）",
-    "不要改 AuthController 构造器后不查 @WebMvcTest 切片测试的 @MockBean 清单 —— 每加一个构造参数就要对应补一个 @MockBean，且 login 成功路径要 stub active membership + tenant（2026-09-10 教训）",
-    "L4.db.scaffold 跑法：需 DATABASE_URL（jdbc:postgresql://host:port/db）+ DATABASE_USER + DATABASE_PASSWORD 三件 env，共享 .env.test 的 PG_PASSWORD 已同步新值"
+    "gate 的 L4.db.scaffold 必须 export DATABASE_URL='postgresql://postgres:qiand68%2B%2B%2B@100.79.128.25:5432/saas_dev'（libpq 格式）；jdbc: 格式 SASL 崩",
+    "改 Java 后先 mvn spotless:apply 再 gate（L1 会红）",
+    "禁止手动 setId（@GeneratedValue）——merge 走乐观锁 StaleObject"
   ],
   "last_gate_passed_at": "2026-09-10T23:00+08:00 (L0-L5 + L4.db.scaffold 全绿)",
   "active_branch": "master",
-  "ahead_of_origin": "24"
+  "ahead_of_origin": "24",
+  "last_session_summary": "6 code-review blocker 全修；gate 需 libpq 格式 DATABASE_URL（jdbc: 格式只用于 spring-boot:run）；四方终验 222/240"
 }
