@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
@@ -69,11 +70,16 @@ public class TenantMembersController implements TenantMembersApi {
     UUID tenantUuid = UUID.fromString(tenantId);
     // status query 参数过滤（ADR-0032）：分页前 DB 级执行（S2 修复，对齐 aspnetcore），
     // total = 过滤后计数；视图 status 现读 member 行（S1），与过滤键天然一致。
+    // 2026-09-13 排序对齐（积压清偿）：家族约定 list = created_at DESC
+    // （nextjs ORDER BY created_at DESC / aspnetcore OrderByDescending(CreatedAt)
+    // 早已实现，本仓 PageRequest 无 Sort 是漏网 —— 无排序时 PG 返回堆序，
+    // 与两兄弟及 msw 镜像在运行期新建成员后必分叉）。
+    var sort = Sort.by(Sort.Direction.DESC, "createdAt");
     var pg =
         (status == null)
-            ? members.findByTenantId(tenantUuid, PageRequest.of(p, ps))
+            ? members.findByTenantId(tenantUuid, PageRequest.of(p, ps, sort))
             : members.findByTenantIdAndStatus(
-                tenantUuid, MemberStatusMapper.toDb(status), PageRequest.of(p, ps));
+                tenantUuid, MemberStatusMapper.toDb(status), PageRequest.of(p, ps, sort));
     // 扁平视图顶层是 user 行：一页 member 对应一批 user，批量取避免 N+1。
     var userMap =
         users.findAllById(pg.getContent().stream().map(TenantMember::getUserId).toList()).stream()
