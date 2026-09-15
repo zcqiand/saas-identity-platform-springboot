@@ -1,6 +1,7 @@
 package saas.identity.platform.controller;
 
 import java.time.OffsetDateTime;
+import java.util.Arrays;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -69,6 +70,7 @@ public class OauthController implements OauthApi {
         clients
             .findByClientId(body.getClientId())
             .orElseThrow(() -> new IllegalArgumentException("unknown client_id"));
+    // 认证前置（四家共同语义）：无 / 坏 Bearer → 401，先于白名单校验。
     UUID userId = currentUserIdOrNull();
     if (userId == null) {
       throw new InvalidCredentialsException("Bearer sub required for authorize");
@@ -76,6 +78,23 @@ public class OauthController implements OauthApi {
     UUID tenantId = currentTenantIdOrNull();
     if (tenantId == null) {
       throw new InvalidCredentialsException("JWT tenant_id claim required for authorize");
+    }
+    // 2026-09-15 四家收敛：redirect 白名单校验（此前 springboot 单侧缺失）。
+    // oauth_client.redirect_uris 是 csv 文本；匹配规则与 aspnetcore OAuthController /
+    // nextjs authorize route 一致——精确相等，或白名单条目是请求的前缀且边界在 '?'
+    // （RFC 6749 §3.1.2，lab 前端回跳带 ?from=<业务路径>）；子路径不算匹配。
+    String requestedUri = body.getRedirectUri() == null ? "" : body.getRedirectUri();
+    boolean redirectAllowed =
+        Arrays.stream((client.getRedirectUris() == null ? "" : client.getRedirectUris()).split(","))
+            .map(String::trim)
+            .filter(s -> !s.isEmpty())
+            .anyMatch(
+                u ->
+                    requestedUri.equals(u)
+                        || (requestedUri.startsWith(u) && requestedUri.charAt(u.length()) == '?'));
+    if (!redirectAllowed) {
+      throw new IllegalArgumentException(
+          "INVALID_REDIRECT_URI: " + body.getRedirectUri() + " not in oauth_client.redirect_uris");
     }
     String code = "ac_" + UUID.randomUUID();
 
@@ -118,6 +137,10 @@ public class OauthController implements OauthApi {
       throw new IllegalArgumentException(
           "INVALID_REQUEST: code required for grantType=authorization_code");
     }
+    if (body.getRedirectUri() == null || body.getRedirectUri().isEmpty()) {
+      throw new IllegalArgumentException(
+          "INVALID_REQUEST: redirectUri required for grantType=authorization_code");
+    }
     OauthCode row =
         codes
             .findByCode(body.getCode())
@@ -126,6 +149,12 @@ public class OauthController implements OauthApi {
     if (row.getExpiresAt() != null && row.getExpiresAt().isBefore(OffsetDateTime.now())) {
       codes.delete(row);
       throw new IllegalArgumentException("INVALID_GRANT: expired code");
+    }
+    // 2026-09-15 四家收敛：RFC 6749 §4.1.3——redirect_uri 必须与 authorize 时一致
+    // （msw / nextjs / aspnetcore 已有此校验，springboot 此前单侧缺失）。
+    if (!body.getRedirectUri().equals(row.getRedirectUri())) {
+      codes.delete(row);
+      throw new IllegalArgumentException("INVALID_GRANT: redirectUri mismatch");
     }
     // 一次性消费：删 code 行，防重放
     codes.delete(row);
