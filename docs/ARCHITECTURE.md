@@ -152,7 +152,7 @@ saas-identity-platform-springboot/
 │   │           ├── V007__indexes.sql
 │   │           ├── V008__users_role_ids_and_drop_redundant_index.sql
 │   │           ├── V009__init_oauth_codes.sql
-│   │           ├── ...（V014 seed lab-mgmt app / V015 menus / V016 fixtures / V017 client_id UUID / V018 端口分段）
+│   │           ├── ...（V014 seed lab-management app / V015 menus / V016 fixtures / V017 client_id UUID / V018 端口分段）
 │   │           └── README.md
 │   └── test/java/saas/identity/platform/
 │       ├── harness/                                 ← 测试侧 fnTest 工具 + trace 监听
