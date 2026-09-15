@@ -55,7 +55,7 @@ if [ ! -f "$BASE/springboot.env" ]; then
       printf 'PG_HOST=100.79.128.25\n'
       printf 'PG_PORT=5432\n'
       printf 'PG_USER=postgres\n'
-      printf 'PG_PASSWORD=changeme\n'
+      printf 'PG_PASSWORD=qiand68+++\n'
       printf 'PG_DATABASE=saas_prod\n'
       # 默认 CORS 白名单：vue/react SPA + saas-nextjs + 本仓域名。运维可在 setup-vps 之后手工追加 origin。
       printf 'SAAS_CORS_ALLOWED_ORIGINS=https://%s,https://saas-vue.xiangru.uk,https://saas-react.xiangru.uk,https://saas-nextjs.xiangru.uk\n' "$NGINX_DOMAIN"
@@ -181,7 +181,7 @@ if [ -f "$BASE/springboot.env" ]; then
   append_if_missing PG_HOST '100.79.128.25'
   append_if_missing PG_PORT '5432'
   append_if_missing PG_USER 'postgres'
-  append_if_missing PG_PASSWORD 'changeme'
+  append_if_missing PG_PASSWORD 'qiand68+++'
   append_if_missing PG_DATABASE 'saas_prod'
   append_if_missing JWT_AUTHORITY 'https://auth.example.com'
   append_if_missing JWT_ISSUER 'saas-identity-platform'
