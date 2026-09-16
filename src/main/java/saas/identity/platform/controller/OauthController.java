@@ -163,7 +163,10 @@ public class OauthController implements OauthApi {
             jwt.issueAccessToken(row.getUserId(), row.getTenantId()),
             tokenIssuer.persistTokenPair(
                 row.getUserId(), row.getTenantId(), client.getClientId(), row.getScope()),
-            scopeOrNull(row.getScope())));
+            scopeOrNull(row.getScope()),
+            row.getUserId(),
+            client.getClientId(),
+            row.getTenantId()));
   }
 
   /** refresh_token grant：rotate（I28 未知 / 已撤销 refreshToken → 400，此前恒 200）。 */
@@ -194,21 +197,36 @@ public class OauthController implements OauthApi {
     String newRefresh =
         tokenIssuer.persistTokenPair(rt.getUserId(), rt.getTenantId(), clientId, scope);
     return ResponseEntity.ok(
-        tokenResponse(jwt.issueAccessToken(rt.getUserId(), rt.getTenantId()), newRefresh, scope));
+        tokenResponse(
+            jwt.issueAccessToken(rt.getUserId(), rt.getTenantId()),
+            newRefresh,
+            scope,
+            rt.getUserId(),
+            clientId,
+            rt.getTenantId()));
   }
 
   /**
-   * TokenResponse 组装。userId / clientId / tenantId 保持 null（NON_REQUIRED，序列化为 null 后 normalize
-   * 剔除）——msw oracle 与 aspnetcore 的 token 端点响应只有 token 四件套 + scope， 真值（code 行 / rt 行绑定的
-   * user、tenant）写库而不是回显。
+   * TokenResponse 组装。userId / clientId / tenantId 必填三件回显（SSOT TokenResponse，
+   * tsp/routes/oauth.tsp）：msw 已剔除，oracle = shared 契约本身；三方共库 → 同一
+   * user/tenant UUID 逐字相等，回显即对齐（msw 时代「写库不回显」裁决随之作废）。
    */
-  private TokenResponse tokenResponse(String accessToken, String refreshToken, String scope) {
+  private TokenResponse tokenResponse(
+      String accessToken,
+      String refreshToken,
+      String scope,
+      UUID userId,
+      String clientId,
+      UUID tenantId) {
     TokenResponse resp = new TokenResponse();
     resp.setAccessToken(accessToken);
     resp.setRefreshToken(refreshToken);
     resp.setTokenType("Bearer");
     resp.setExpiresIn((int) Math.min(Integer.MAX_VALUE, jwt.getTtlSeconds()));
     resp.setScope(scope);
+    resp.setUserId(userId.toString());
+    resp.setClientId(clientId);
+    resp.setTenantId(tenantId);
     return resp;
   }
 

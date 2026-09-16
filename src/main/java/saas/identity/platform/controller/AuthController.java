@@ -241,6 +241,11 @@ public class AuthController implements AuthApi {
     resp.setTokenType("Bearer");
     resp.setExpiresIn((int) Math.min(Integer.MAX_VALUE, jwt.getTtlSeconds()));
     resp.setScope(scope);
+    // T11(2026-09-16) SSOT TokenResponse 必填三件回显（tsp/routes/oauth.tsp）。msw 已剔除，
+    // oracle = shared 契约本身；三方共库 → 同一 user/tenant UUID 逐字相等，回显即对齐。
+    resp.setUserId(rt.getUserId().toString());
+    resp.setClientId(clientId);
+    resp.setTenantId(rt.getTenantId());
     return ResponseEntity.ok(resp);
   }
 }
