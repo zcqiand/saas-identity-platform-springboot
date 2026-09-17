@@ -1,25 +1,34 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.time.OffsetDateTime;
-import java.util.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
+import saas.identity.shared.dto.TenantMemberStatus;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** TenantMemberUserView */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-12T08:51:22.603663900+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * TenantMemberUserView
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-17T01:38:48.840222800+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class TenantMemberUserView {
 
   private UUID id;
@@ -45,15 +54,10 @@ public class TenantMemberUserView {
     super();
   }
 
-  /** Constructor with only required parameters */
-  public TenantMemberUserView(
-      UUID id,
-      UUID tenantId,
-      String username,
-      TenantMemberStatus status,
-      List<String> roleIds,
-      OffsetDateTime createdAt,
-      OffsetDateTime updatedAt) {
+  /**
+   * Constructor with only required parameters
+   */
+  public TenantMemberUserView(UUID id, UUID tenantId, String username, TenantMemberStatus status, List<String> roleIds, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
     this.id = id;
     this.tenantId = tenantId;
     this.username = username;
@@ -70,11 +74,9 @@ public class TenantMemberUserView {
 
   /**
    * Get id
-   *
    * @return id
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("id")
   public UUID getId() {
@@ -93,11 +95,9 @@ public class TenantMemberUserView {
 
   /**
    * Get tenantId
-   *
    * @return tenantId
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "tenantId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("tenantId")
   public UUID getTenantId() {
@@ -116,11 +116,9 @@ public class TenantMemberUserView {
 
   /**
    * Get username
-   *
    * @return username
    */
-  @NotNull
-  @Size(min = 1, max = 64)
+  @NotNull @Size(min = 1, max = 64) 
   @Schema(name = "username", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("username")
   public String getUsername() {
@@ -139,10 +137,9 @@ public class TenantMemberUserView {
 
   /**
    * Get email
-   *
    * @return email
    */
-  @jakarta.validation.constraints.Email
+  @jakarta.validation.constraints.Email 
   @Schema(name = "email", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("email")
   public @Nullable String getEmail() {
@@ -161,11 +158,9 @@ public class TenantMemberUserView {
 
   /**
    * Get status
-   *
    * @return status
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("status")
   public TenantMemberStatus getStatus() {
@@ -192,10 +187,9 @@ public class TenantMemberUserView {
 
   /**
    * Get roleIds
-   *
    * @return roleIds
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "roleIds", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("roleIds")
   public List<String> getRoleIds() {
@@ -214,11 +208,9 @@ public class TenantMemberUserView {
 
   /**
    * Get createdAt
-   *
    * @return createdAt
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "createdAt", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("createdAt")
   public OffsetDateTime getCreatedAt() {
@@ -237,11 +229,9 @@ public class TenantMemberUserView {
 
   /**
    * Get updatedAt
-   *
    * @return updatedAt
    */
-  @NotNull
-  @Valid
+  @NotNull @Valid 
   @Schema(name = "updatedAt", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("updatedAt")
   public OffsetDateTime getUpdatedAt() {
@@ -262,14 +252,14 @@ public class TenantMemberUserView {
       return false;
     }
     TenantMemberUserView tenantMemberUserView = (TenantMemberUserView) o;
-    return Objects.equals(this.id, tenantMemberUserView.id)
-        && Objects.equals(this.tenantId, tenantMemberUserView.tenantId)
-        && Objects.equals(this.username, tenantMemberUserView.username)
-        && Objects.equals(this.email, tenantMemberUserView.email)
-        && Objects.equals(this.status, tenantMemberUserView.status)
-        && Objects.equals(this.roleIds, tenantMemberUserView.roleIds)
-        && Objects.equals(this.createdAt, tenantMemberUserView.createdAt)
-        && Objects.equals(this.updatedAt, tenantMemberUserView.updatedAt);
+    return Objects.equals(this.id, tenantMemberUserView.id) &&
+        Objects.equals(this.tenantId, tenantMemberUserView.tenantId) &&
+        Objects.equals(this.username, tenantMemberUserView.username) &&
+        Objects.equals(this.email, tenantMemberUserView.email) &&
+        Objects.equals(this.status, tenantMemberUserView.status) &&
+        Objects.equals(this.roleIds, tenantMemberUserView.roleIds) &&
+        Objects.equals(this.createdAt, tenantMemberUserView.createdAt) &&
+        Objects.equals(this.updatedAt, tenantMemberUserView.updatedAt);
   }
 
   @Override
@@ -294,9 +284,11 @@ public class TenantMemberUserView {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

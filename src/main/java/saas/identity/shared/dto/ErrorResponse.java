@@ -1,38 +1,44 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.constraints.*;
-import java.util.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import org.springframework.lang.Nullable;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** ErrorResponse */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-12T08:51:22.603663900+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * ErrorResponse
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-17T01:38:48.840222800+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class ErrorResponse {
 
   private String code;
 
   private String message;
 
-  // 2026-09-12 修复（gen-shared 重生成后重应用）：不再初始化为 new HashMap<>()。
-  // NON_NULL + 恒空 map 会让每个错误体都序列化出 "details":{}，与家族（无 details 键）分叉；
-  // 未设 details 时保持 null → 不序列化。
   @JsonInclude(JsonInclude.Include.NON_NULL)
-  private Map<String, Object> details;
+  private Map<String, Object> details = new HashMap<>();
 
   public ErrorResponse() {
     super();
   }
 
-  /** Constructor with only required parameters */
+  /**
+   * Constructor with only required parameters
+   */
   public ErrorResponse(String code, String message) {
     this.code = code;
     this.message = message;
@@ -45,10 +51,9 @@ public class ErrorResponse {
 
   /**
    * Get code
-   *
    * @return code
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "code", example = "BAD_REQUEST", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("code")
   public String getCode() {
@@ -67,10 +72,9 @@ public class ErrorResponse {
 
   /**
    * Get message
-   *
    * @return message
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "message", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("message")
   public String getMessage() {
@@ -97,9 +101,9 @@ public class ErrorResponse {
 
   /**
    * Get details
-   *
    * @return details
    */
+  
   @Schema(name = "details", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("details")
   public Map<String, Object> getDetails() {
@@ -120,9 +124,9 @@ public class ErrorResponse {
       return false;
     }
     ErrorResponse errorResponse = (ErrorResponse) o;
-    return Objects.equals(this.code, errorResponse.code)
-        && Objects.equals(this.message, errorResponse.message)
-        && Objects.equals(this.details, errorResponse.details);
+    return Objects.equals(this.code, errorResponse.code) &&
+        Objects.equals(this.message, errorResponse.message) &&
+        Objects.equals(this.details, errorResponse.details);
   }
 
   @Override
@@ -142,9 +146,11 @@ public class ErrorResponse {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

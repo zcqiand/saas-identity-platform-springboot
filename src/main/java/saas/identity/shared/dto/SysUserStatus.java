@@ -1,21 +1,32 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonValue;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import jakarta.annotation.Generated;
-import jakarta.validation.constraints.*;
-import java.util.*;
 
-/** Gets or Sets SysUserStatus */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-12T08:51:22.603663900+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+/**
+ * Gets or Sets SysUserStatus
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-17T01:38:48.840222800+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public enum SysUserStatus {
+  
   ACTIVE("active"),
-
+  
   INVITED("invited"),
-
+  
   DISABLED("disabled");
 
   private final String value;
@@ -44,3 +55,4 @@ public enum SysUserStatus {
     throw new IllegalArgumentException("Unexpected value '" + value + "'");
   }
 }
+

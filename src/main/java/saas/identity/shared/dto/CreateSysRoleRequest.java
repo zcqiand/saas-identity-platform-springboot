@@ -1,19 +1,26 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.constraints.*;
-import java.util.*;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import org.springframework.lang.Nullable;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** CreateSysRoleRequest */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-12T08:51:22.603663900+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * CreateSysRoleRequest
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-17T01:38:48.840222800+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class CreateSysRoleRequest {
 
   private String clientId;
@@ -32,7 +39,9 @@ public class CreateSysRoleRequest {
     super();
   }
 
-  /** Constructor with only required parameters */
+  /**
+   * Constructor with only required parameters
+   */
   public CreateSysRoleRequest(String clientId, String roleCode, String roleName) {
     this.clientId = clientId;
     this.roleCode = roleCode;
@@ -46,10 +55,9 @@ public class CreateSysRoleRequest {
 
   /**
    * Get clientId
-   *
    * @return clientId
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "clientId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("clientId")
   public String getClientId() {
@@ -68,11 +76,9 @@ public class CreateSysRoleRequest {
 
   /**
    * Get roleCode
-   *
    * @return roleCode
    */
-  @NotNull
-  @Size(min = 1, max = 64)
+  @NotNull @Size(min = 1, max = 64) 
   @Schema(name = "roleCode", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("roleCode")
   public String getRoleCode() {
@@ -91,11 +97,9 @@ public class CreateSysRoleRequest {
 
   /**
    * Get roleName
-   *
    * @return roleName
    */
-  @NotNull
-  @Size(min = 1, max = 64)
+  @NotNull @Size(min = 1, max = 64) 
   @Schema(name = "roleName", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("roleName")
   public String getRoleName() {
@@ -114,9 +118,9 @@ public class CreateSysRoleRequest {
 
   /**
    * Get description
-   *
    * @return description
    */
+  
   @Schema(name = "description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("description")
   public @Nullable String getDescription() {
@@ -135,9 +139,9 @@ public class CreateSysRoleRequest {
 
   /**
    * Get isPreset
-   *
    * @return isPreset
    */
+  
   @Schema(name = "isPreset", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("isPreset")
   public @Nullable Boolean getIsPreset() {
@@ -158,11 +162,11 @@ public class CreateSysRoleRequest {
       return false;
     }
     CreateSysRoleRequest createSysRoleRequest = (CreateSysRoleRequest) o;
-    return Objects.equals(this.clientId, createSysRoleRequest.clientId)
-        && Objects.equals(this.roleCode, createSysRoleRequest.roleCode)
-        && Objects.equals(this.roleName, createSysRoleRequest.roleName)
-        && Objects.equals(this.description, createSysRoleRequest.description)
-        && Objects.equals(this.isPreset, createSysRoleRequest.isPreset);
+    return Objects.equals(this.clientId, createSysRoleRequest.clientId) &&
+        Objects.equals(this.roleCode, createSysRoleRequest.roleCode) &&
+        Objects.equals(this.roleName, createSysRoleRequest.roleName) &&
+        Objects.equals(this.description, createSysRoleRequest.description) &&
+        Objects.equals(this.isPreset, createSysRoleRequest.isPreset);
   }
 
   @Override
@@ -184,9 +188,11 @@ public class CreateSysRoleRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

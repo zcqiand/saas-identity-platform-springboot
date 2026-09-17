@@ -1,22 +1,28 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.OffsetDateTime;
-import java.util.*;
-import java.util.Objects;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** SubscribeTenantApplicationRequest */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-12T08:51:22.603663900+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * SubscribeTenantApplicationRequest
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-17T01:38:48.840222800+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class SubscribeTenantApplicationRequest {
 
   private String clientId;
@@ -29,7 +35,9 @@ public class SubscribeTenantApplicationRequest {
     super();
   }
 
-  /** Constructor with only required parameters */
+  /**
+   * Constructor with only required parameters
+   */
   public SubscribeTenantApplicationRequest(String clientId) {
     this.clientId = clientId;
   }
@@ -41,10 +49,9 @@ public class SubscribeTenantApplicationRequest {
 
   /**
    * Get clientId
-   *
    * @return clientId
    */
-  @NotNull
+  @NotNull 
   @Schema(name = "clientId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("clientId")
   public String getClientId() {
@@ -63,10 +70,9 @@ public class SubscribeTenantApplicationRequest {
 
   /**
    * Get expireTime
-   *
    * @return expireTime
    */
-  @Valid
+  @Valid 
   @Schema(name = "expireTime", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("expireTime")
   public @Nullable OffsetDateTime getExpireTime() {
@@ -86,10 +92,9 @@ public class SubscribeTenantApplicationRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    SubscribeTenantApplicationRequest subscribeTenantApplicationRequest =
-        (SubscribeTenantApplicationRequest) o;
-    return Objects.equals(this.clientId, subscribeTenantApplicationRequest.clientId)
-        && Objects.equals(this.expireTime, subscribeTenantApplicationRequest.expireTime);
+    SubscribeTenantApplicationRequest subscribeTenantApplicationRequest = (SubscribeTenantApplicationRequest) o;
+    return Objects.equals(this.clientId, subscribeTenantApplicationRequest.clientId) &&
+        Objects.equals(this.expireTime, subscribeTenantApplicationRequest.expireTime);
   }
 
   @Override
@@ -108,9 +113,11 @@ public class SubscribeTenantApplicationRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

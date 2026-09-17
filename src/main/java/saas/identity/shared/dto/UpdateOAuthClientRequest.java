@@ -1,19 +1,26 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.constraints.*;
-import java.util.*;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import org.springframework.lang.Nullable;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** UpdateOAuthClientRequest */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-12T08:51:22.603663900+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * UpdateOAuthClientRequest
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-17T01:38:48.840222800+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class UpdateOAuthClientRequest {
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -47,9 +54,9 @@ public class UpdateOAuthClientRequest {
 
   /**
    * Get clientName
-   *
    * @return clientName
    */
+  
   @Schema(name = "clientName", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("clientName")
   public @Nullable String getClientName() {
@@ -68,9 +75,9 @@ public class UpdateOAuthClientRequest {
 
   /**
    * Get grantTypes
-   *
    * @return grantTypes
    */
+  
   @Schema(name = "grantTypes", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("grantTypes")
   public @Nullable String getGrantTypes() {
@@ -89,9 +96,9 @@ public class UpdateOAuthClientRequest {
 
   /**
    * Get redirectUris
-   *
    * @return redirectUris
    */
+  
   @Schema(name = "redirectUris", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("redirectUris")
   public @Nullable String getRedirectUris() {
@@ -110,9 +117,9 @@ public class UpdateOAuthClientRequest {
 
   /**
    * Get scopes
-   *
    * @return scopes
    */
+  
   @Schema(name = "scopes", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("scopes")
   public @Nullable String getScopes() {
@@ -131,9 +138,9 @@ public class UpdateOAuthClientRequest {
 
   /**
    * Get accessTokenValidity
-   *
    * @return accessTokenValidity
    */
+  
   @Schema(name = "accessTokenValidity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("accessTokenValidity")
   public @Nullable Integer getAccessTokenValidity() {
@@ -152,9 +159,9 @@ public class UpdateOAuthClientRequest {
 
   /**
    * Get refreshTokenValidity
-   *
    * @return refreshTokenValidity
    */
+  
   @Schema(name = "refreshTokenValidity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("refreshTokenValidity")
   public @Nullable Integer getRefreshTokenValidity() {
@@ -173,9 +180,9 @@ public class UpdateOAuthClientRequest {
 
   /**
    * Get autoApprove
-   *
    * @return autoApprove
    */
+  
   @Schema(name = "autoApprove", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("autoApprove")
   public @Nullable Boolean getAutoApprove() {
@@ -194,9 +201,9 @@ public class UpdateOAuthClientRequest {
 
   /**
    * Get status
-   *
    * @return status
    */
+  
   @Schema(name = "status", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("status")
   public @Nullable Integer getStatus() {
@@ -217,27 +224,19 @@ public class UpdateOAuthClientRequest {
       return false;
     }
     UpdateOAuthClientRequest updateOAuthClientRequest = (UpdateOAuthClientRequest) o;
-    return Objects.equals(this.clientName, updateOAuthClientRequest.clientName)
-        && Objects.equals(this.grantTypes, updateOAuthClientRequest.grantTypes)
-        && Objects.equals(this.redirectUris, updateOAuthClientRequest.redirectUris)
-        && Objects.equals(this.scopes, updateOAuthClientRequest.scopes)
-        && Objects.equals(this.accessTokenValidity, updateOAuthClientRequest.accessTokenValidity)
-        && Objects.equals(this.refreshTokenValidity, updateOAuthClientRequest.refreshTokenValidity)
-        && Objects.equals(this.autoApprove, updateOAuthClientRequest.autoApprove)
-        && Objects.equals(this.status, updateOAuthClientRequest.status);
+    return Objects.equals(this.clientName, updateOAuthClientRequest.clientName) &&
+        Objects.equals(this.grantTypes, updateOAuthClientRequest.grantTypes) &&
+        Objects.equals(this.redirectUris, updateOAuthClientRequest.redirectUris) &&
+        Objects.equals(this.scopes, updateOAuthClientRequest.scopes) &&
+        Objects.equals(this.accessTokenValidity, updateOAuthClientRequest.accessTokenValidity) &&
+        Objects.equals(this.refreshTokenValidity, updateOAuthClientRequest.refreshTokenValidity) &&
+        Objects.equals(this.autoApprove, updateOAuthClientRequest.autoApprove) &&
+        Objects.equals(this.status, updateOAuthClientRequest.status);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(
-        clientName,
-        grantTypes,
-        redirectUris,
-        scopes,
-        accessTokenValidity,
-        refreshTokenValidity,
-        autoApprove,
-        status);
+    return Objects.hash(clientName, grantTypes, redirectUris, scopes, accessTokenValidity, refreshTokenValidity, autoApprove, status);
   }
 
   @Override
@@ -248,12 +247,8 @@ public class UpdateOAuthClientRequest {
     sb.append("    grantTypes: ").append(toIndentedString(grantTypes)).append("\n");
     sb.append("    redirectUris: ").append(toIndentedString(redirectUris)).append("\n");
     sb.append("    scopes: ").append(toIndentedString(scopes)).append("\n");
-    sb.append("    accessTokenValidity: ")
-        .append(toIndentedString(accessTokenValidity))
-        .append("\n");
-    sb.append("    refreshTokenValidity: ")
-        .append(toIndentedString(refreshTokenValidity))
-        .append("\n");
+    sb.append("    accessTokenValidity: ").append(toIndentedString(accessTokenValidity)).append("\n");
+    sb.append("    refreshTokenValidity: ").append(toIndentedString(refreshTokenValidity)).append("\n");
     sb.append("    autoApprove: ").append(toIndentedString(autoApprove)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("}");
@@ -261,9 +256,11 @@ public class UpdateOAuthClientRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+

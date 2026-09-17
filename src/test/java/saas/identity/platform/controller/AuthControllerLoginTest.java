@@ -30,8 +30,9 @@ import saas.identity.platform.security.JwtIssuer;
 import saas.identity.shared.dto.LoginRequest;
 
 /**
- * M01.F04 登录流程测试 — 密码正确 / 错误 / 失败锁定。 注：sessionsLogin / sessionsOidcCallback / sessionsRefreshToken
- * 全 4 路都覆盖。
+ * M01.F04 登录流程测试 — 密码正确 / 错误 / 失败锁定（sessionsLogin）。
+ * 注：oidcCallback / refreshToken 两旧径已随 saas-2026-09-16-003 删除，code 交换与
+ * refresh 走 /api/v1/oauth/token（OauthController，另有专项测试覆盖）。
  */
 @WebMvcTest(AuthController.class)
 @org.springframework.context.annotation.Import(MemberViewAssembler.class)

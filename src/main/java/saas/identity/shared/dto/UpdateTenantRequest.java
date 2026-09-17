@@ -1,20 +1,28 @@
 package saas.identity.shared.dto;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import org.springframework.lang.Nullable;
+import saas.identity.shared.dto.TenantStatus;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import java.util.*;
-import java.util.Objects;
-import org.springframework.lang.Nullable;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/** UpdateTenantRequest */
-@Generated(
-    value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-12T08:51:22.603663900+08:00[Asia/Shanghai]",
-    comments = "Generator version: 7.24.0")
+
+import java.util.*;
+import jakarta.annotation.Generated;
+
+/**
+ * UpdateTenantRequest
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-17T01:38:48.840222800+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class UpdateTenantRequest {
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -30,10 +38,9 @@ public class UpdateTenantRequest {
 
   /**
    * Get name
-   *
    * @return name
    */
-  @Size(min = 2, max = 128)
+  @Size(min = 2, max = 128) 
   @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("name")
   public @Nullable String getName() {
@@ -52,10 +59,9 @@ public class UpdateTenantRequest {
 
   /**
    * Get status
-   *
    * @return status
    */
-  @Valid
+  @Valid 
   @Schema(name = "status", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("status")
   public @Nullable TenantStatus getStatus() {
@@ -76,8 +82,8 @@ public class UpdateTenantRequest {
       return false;
     }
     UpdateTenantRequest updateTenantRequest = (UpdateTenantRequest) o;
-    return Objects.equals(this.name, updateTenantRequest.name)
-        && Objects.equals(this.status, updateTenantRequest.status);
+    return Objects.equals(this.name, updateTenantRequest.name) &&
+        Objects.equals(this.status, updateTenantRequest.status);
   }
 
   @Override
@@ -96,9 +102,11 @@ public class UpdateTenantRequest {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
+
