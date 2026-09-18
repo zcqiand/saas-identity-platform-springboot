@@ -74,7 +74,9 @@ public class TenantMembersController implements TenantMembersApi {
     // （nextjs ORDER BY created_at DESC / aspnetcore OrderByDescending(CreatedAt)
     // 早已实现，本仓 PageRequest 无 Sort 是漏网 —— 无排序时 PG 返回堆序，
     // 与两兄弟及 msw 镜像在运行期新建成员后必分叉）。
-    var sort = Sort.by(Sort.Direction.DESC, "createdAt");
+    // 2026-09-18 tiebreak 显式化：家族 seed 多行 created_at 相同，仅按 created_at 排序时
+    // PG 返回堆序 → 顺序不稳定；tiebreak = id ASC（对齐 findByUserId 的 id ASC 先例）。
+    var sort = Sort.by(Sort.Direction.DESC, "createdAt").and(Sort.by(Sort.Direction.ASC, "id"));
     var pg =
         (status == null)
             ? members.findByTenantId(tenantUuid, PageRequest.of(p, ps, sort))
