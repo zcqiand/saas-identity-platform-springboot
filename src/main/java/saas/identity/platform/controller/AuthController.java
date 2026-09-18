@@ -22,9 +22,8 @@ import saas.identity.shared.dto.LoginRequest;
 import saas.identity.shared.dto.LoginResponse;
 
 /**
- * M01.F04 SSO 登录 + 失败锁定 + 登出（ADR-0020 路线 A）。
- * OIDC code 交换与 refresh 已收敛到 OauthController /api/v1/oauth/token（双 grant，
- * saas-2026-09-16-003 删 SSOT 旧径 /auth/oidc/callback + /auth/refresh）。
+ * M01.F04 SSO 登录 + 失败锁定 + 登出（ADR-0020 路线 A）。 OIDC code 交换与 refresh 已收敛到 OauthController
+ * /api/v1/oauth/token（双 grant， saas-2026-09-16-003 删 SSOT 旧径 /auth/oidc/callback + /auth/refresh）。
  *
  * <p>失败锁定策略（M01.F04.I02）：连续 5 次密码错误 → 锁定 15 分钟； 阈值与窗口在 application.yml 由消费后端配置，可在 DevDataFixer
  * 临时放低。

@@ -5,88 +5,86 @@
  */
 package saas.identity.shared.api;
 
-import saas.identity.shared.dto.LoginRequest;
-import saas.identity.shared.dto.LoginResponse;
-import saas.identity.shared.dto.SessionsLoginDefaultResponse;
-import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
+import jakarta.annotation.Generated;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import saas.identity.shared.dto.LoginRequest;
+import saas.identity.shared.dto.LoginResponse;
+import saas.identity.shared.dto.SessionsLoginDefaultResponse;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import jakarta.annotation.Generated;
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-19T07:34:59.395972600+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-19T07:34:59.395972600+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 @Validated
 @Tag(name = "auth", description = "the auth API")
 public interface AuthApi {
 
-    String PATH_SESSIONS_LOGIN = "/api/v1/auth/login";
-    /**
-     * POST /api/v1/auth/login
-     *
-     * @param loginRequest  (required)
-     * @return The request has succeeded. (status code 200)
-     *         or An unexpected error response. (status code 200)
-     */
-    @Operation(
-        operationId = "sessionsLogin",
-        tags = { "auth" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "The request has succeeded.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = LoginResponse.class))
+  String PATH_SESSIONS_LOGIN = "/api/v1/auth/login";
+
+  /**
+   * POST /api/v1/auth/login
+   *
+   * @param loginRequest (required)
+   * @return The request has succeeded. (status code 200) or An unexpected error response. (status
+   *     code 200)
+   */
+  @Operation(
+      operationId = "sessionsLogin",
+      tags = {"auth"},
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "The request has succeeded.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = LoginResponse.class))
             }),
-            @ApiResponse(responseCode = "default", description = "An unexpected error response.", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = SessionsLoginDefaultResponse.class))
+        @ApiResponse(
+            responseCode = "default",
+            description = "An unexpected error response.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = SessionsLoginDefaultResponse.class))
             })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.POST,
-        value = AuthApi.PATH_SESSIONS_LOGIN,
-        produces = { "application/json" },
-        consumes = { "application/json" }
-    )
-    ResponseEntity<LoginResponse> sessionsLogin(
-        @Parameter(name = "LoginRequest", description = "", required = true) @Valid @RequestBody LoginRequest loginRequest
-    );
+      })
+  @RequestMapping(
+      method = RequestMethod.POST,
+      value = AuthApi.PATH_SESSIONS_LOGIN,
+      produces = {"application/json"},
+      consumes = {"application/json"})
+  ResponseEntity<LoginResponse> sessionsLogin(
+      @Parameter(name = "LoginRequest", description = "", required = true) @Valid @RequestBody
+          LoginRequest loginRequest);
 
+  String PATH_SESSIONS_LOGOUT = "/api/v1/auth/logout";
 
-    String PATH_SESSIONS_LOGOUT = "/api/v1/auth/logout";
-    /**
-     * POST /api/v1/auth/logout
-     *
-     * @return There is no content to send for this request, but the headers may be useful.  (status code 204)
-     */
-    @Operation(
-        operationId = "sessionsLogout",
-        tags = { "auth" },
-        responses = {
-            @ApiResponse(responseCode = "204", description = "There is no content to send for this request, but the headers may be useful. ")
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.POST,
-        value = AuthApi.PATH_SESSIONS_LOGOUT
-    )
-    ResponseEntity<Void> sessionsLogout(
-        
-    );
-
+  /**
+   * POST /api/v1/auth/logout
+   *
+   * @return There is no content to send for this request, but the headers may be useful. (status
+   *     code 204)
+   */
+  @Operation(
+      operationId = "sessionsLogout",
+      tags = {"auth"},
+      responses = {
+        @ApiResponse(
+            responseCode = "204",
+            description =
+                "There is no content to send for this request, but the headers may be useful. ")
+      })
+  @RequestMapping(method = RequestMethod.POST, value = AuthApi.PATH_SESSIONS_LOGOUT)
+  ResponseEntity<Void> sessionsLogout();
 }

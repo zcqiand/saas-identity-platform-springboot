@@ -1,31 +1,23 @@
 package saas.identity.shared.dto;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import java.time.OffsetDateTime;
+import java.util.*;
+import java.util.Objects;
 import java.util.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
-import saas.identity.shared.dto.TenantMemberStatus;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import io.swagger.v3.oas.annotations.media.Schema;
 
-
-import java.util.*;
-import jakarta.annotation.Generated;
-
-/**
- * TenantMember
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-19T07:34:59.395972600+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+/** TenantMember */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-19T07:34:59.395972600+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 public class TenantMember {
 
   private UUID id;
@@ -51,10 +43,15 @@ public class TenantMember {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
-  public TenantMember(UUID id, UUID tenantId, UUID userId, Boolean isOwner, TenantMemberStatus status, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
+  /** Constructor with only required parameters */
+  public TenantMember(
+      UUID id,
+      UUID tenantId,
+      UUID userId,
+      Boolean isOwner,
+      TenantMemberStatus status,
+      OffsetDateTime createdAt,
+      OffsetDateTime updatedAt) {
     this.id = id;
     this.tenantId = tenantId;
     this.userId = userId;
@@ -71,9 +68,11 @@ public class TenantMember {
 
   /**
    * Get id
+   *
    * @return id
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("id")
   public UUID getId() {
@@ -92,9 +91,11 @@ public class TenantMember {
 
   /**
    * Get tenantId
+   *
    * @return tenantId
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "tenantId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("tenantId")
   public UUID getTenantId() {
@@ -113,9 +114,11 @@ public class TenantMember {
 
   /**
    * Get userId
+   *
    * @return userId
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "userId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("userId")
   public UUID getUserId() {
@@ -134,9 +137,9 @@ public class TenantMember {
 
   /**
    * Get memberName
+   *
    * @return memberName
    */
-  
   @Schema(name = "memberName", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("memberName")
   public @Nullable String getMemberName() {
@@ -155,9 +158,10 @@ public class TenantMember {
 
   /**
    * Get isOwner
+   *
    * @return isOwner
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "isOwner", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("isOwner")
   public Boolean getIsOwner() {
@@ -176,9 +180,11 @@ public class TenantMember {
 
   /**
    * Get status
+   *
    * @return status
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "status", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("status")
   public TenantMemberStatus getStatus() {
@@ -197,9 +203,11 @@ public class TenantMember {
 
   /**
    * Get createdAt
+   *
    * @return createdAt
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "createdAt", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("createdAt")
   public OffsetDateTime getCreatedAt() {
@@ -218,9 +226,11 @@ public class TenantMember {
 
   /**
    * Get updatedAt
+   *
    * @return updatedAt
    */
-  @NotNull @Valid 
+  @NotNull
+  @Valid
   @Schema(name = "updatedAt", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("updatedAt")
   public OffsetDateTime getUpdatedAt() {
@@ -241,14 +251,14 @@ public class TenantMember {
       return false;
     }
     TenantMember tenantMember = (TenantMember) o;
-    return Objects.equals(this.id, tenantMember.id) &&
-        Objects.equals(this.tenantId, tenantMember.tenantId) &&
-        Objects.equals(this.userId, tenantMember.userId) &&
-        Objects.equals(this.memberName, tenantMember.memberName) &&
-        Objects.equals(this.isOwner, tenantMember.isOwner) &&
-        Objects.equals(this.status, tenantMember.status) &&
-        Objects.equals(this.createdAt, tenantMember.createdAt) &&
-        Objects.equals(this.updatedAt, tenantMember.updatedAt);
+    return Objects.equals(this.id, tenantMember.id)
+        && Objects.equals(this.tenantId, tenantMember.tenantId)
+        && Objects.equals(this.userId, tenantMember.userId)
+        && Objects.equals(this.memberName, tenantMember.memberName)
+        && Objects.equals(this.isOwner, tenantMember.isOwner)
+        && Objects.equals(this.status, tenantMember.status)
+        && Objects.equals(this.createdAt, tenantMember.createdAt)
+        && Objects.equals(this.updatedAt, tenantMember.updatedAt);
   }
 
   @Override
@@ -273,11 +283,9 @@ public class TenantMember {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
-

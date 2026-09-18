@@ -1,26 +1,19 @@
 package saas.identity.shared.dto;
 
-import java.net.URI;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import org.springframework.lang.Nullable;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
-
-
-import java.util.*;
 import jakarta.annotation.Generated;
+import jakarta.validation.constraints.*;
+import java.util.*;
+import java.util.Objects;
+import org.springframework.lang.Nullable;
 
-/**
- * CreateOAuthClientRequest
- */
-
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-19T07:34:59.395972600+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+/** CreateOAuthClientRequest */
+@Generated(
+    value = "org.openapitools.codegen.languages.SpringCodegen",
+    date = "2026-09-19T07:34:59.395972600+08:00[Asia/Shanghai]",
+    comments = "Generator version: 7.24.0")
 public class CreateOAuthClientRequest {
 
   private String clientId;
@@ -49,10 +42,13 @@ public class CreateOAuthClientRequest {
     super();
   }
 
-  /**
-   * Constructor with only required parameters
-   */
-  public CreateOAuthClientRequest(String clientId, String clientName, String clientSecret, String grantTypes, String redirectUris) {
+  /** Constructor with only required parameters */
+  public CreateOAuthClientRequest(
+      String clientId,
+      String clientName,
+      String clientSecret,
+      String grantTypes,
+      String redirectUris) {
     this.clientId = clientId;
     this.clientName = clientName;
     this.clientSecret = clientSecret;
@@ -67,9 +63,10 @@ public class CreateOAuthClientRequest {
 
   /**
    * Get clientId
+   *
    * @return clientId
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "clientId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("clientId")
   public String getClientId() {
@@ -88,9 +85,10 @@ public class CreateOAuthClientRequest {
 
   /**
    * Get clientName
+   *
    * @return clientName
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "clientName", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("clientName")
   public String getClientName() {
@@ -109,9 +107,10 @@ public class CreateOAuthClientRequest {
 
   /**
    * Get clientSecret
+   *
    * @return clientSecret
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "clientSecret", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("clientSecret")
   public String getClientSecret() {
@@ -130,9 +129,10 @@ public class CreateOAuthClientRequest {
 
   /**
    * Get grantTypes
+   *
    * @return grantTypes
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "grantTypes", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("grantTypes")
   public String getGrantTypes() {
@@ -151,9 +151,10 @@ public class CreateOAuthClientRequest {
 
   /**
    * Get redirectUris
+   *
    * @return redirectUris
    */
-  @NotNull 
+  @NotNull
   @Schema(name = "redirectUris", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("redirectUris")
   public String getRedirectUris() {
@@ -172,9 +173,9 @@ public class CreateOAuthClientRequest {
 
   /**
    * Get scopes
+   *
    * @return scopes
    */
-  
   @Schema(name = "scopes", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("scopes")
   public @Nullable String getScopes() {
@@ -193,9 +194,9 @@ public class CreateOAuthClientRequest {
 
   /**
    * Get accessTokenValidity
+   *
    * @return accessTokenValidity
    */
-  
   @Schema(name = "accessTokenValidity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("accessTokenValidity")
   public @Nullable Integer getAccessTokenValidity() {
@@ -214,9 +215,9 @@ public class CreateOAuthClientRequest {
 
   /**
    * Get refreshTokenValidity
+   *
    * @return refreshTokenValidity
    */
-  
   @Schema(name = "refreshTokenValidity", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("refreshTokenValidity")
   public @Nullable Integer getRefreshTokenValidity() {
@@ -235,9 +236,9 @@ public class CreateOAuthClientRequest {
 
   /**
    * Get autoApprove
+   *
    * @return autoApprove
    */
-  
   @Schema(name = "autoApprove", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("autoApprove")
   public @Nullable Boolean getAutoApprove() {
@@ -258,20 +259,29 @@ public class CreateOAuthClientRequest {
       return false;
     }
     CreateOAuthClientRequest createOAuthClientRequest = (CreateOAuthClientRequest) o;
-    return Objects.equals(this.clientId, createOAuthClientRequest.clientId) &&
-        Objects.equals(this.clientName, createOAuthClientRequest.clientName) &&
-        Objects.equals(this.clientSecret, createOAuthClientRequest.clientSecret) &&
-        Objects.equals(this.grantTypes, createOAuthClientRequest.grantTypes) &&
-        Objects.equals(this.redirectUris, createOAuthClientRequest.redirectUris) &&
-        Objects.equals(this.scopes, createOAuthClientRequest.scopes) &&
-        Objects.equals(this.accessTokenValidity, createOAuthClientRequest.accessTokenValidity) &&
-        Objects.equals(this.refreshTokenValidity, createOAuthClientRequest.refreshTokenValidity) &&
-        Objects.equals(this.autoApprove, createOAuthClientRequest.autoApprove);
+    return Objects.equals(this.clientId, createOAuthClientRequest.clientId)
+        && Objects.equals(this.clientName, createOAuthClientRequest.clientName)
+        && Objects.equals(this.clientSecret, createOAuthClientRequest.clientSecret)
+        && Objects.equals(this.grantTypes, createOAuthClientRequest.grantTypes)
+        && Objects.equals(this.redirectUris, createOAuthClientRequest.redirectUris)
+        && Objects.equals(this.scopes, createOAuthClientRequest.scopes)
+        && Objects.equals(this.accessTokenValidity, createOAuthClientRequest.accessTokenValidity)
+        && Objects.equals(this.refreshTokenValidity, createOAuthClientRequest.refreshTokenValidity)
+        && Objects.equals(this.autoApprove, createOAuthClientRequest.autoApprove);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(clientId, clientName, clientSecret, grantTypes, redirectUris, scopes, accessTokenValidity, refreshTokenValidity, autoApprove);
+    return Objects.hash(
+        clientId,
+        clientName,
+        clientSecret,
+        grantTypes,
+        redirectUris,
+        scopes,
+        accessTokenValidity,
+        refreshTokenValidity,
+        autoApprove);
   }
 
   @Override
@@ -284,19 +294,21 @@ public class CreateOAuthClientRequest {
     sb.append("    grantTypes: ").append(toIndentedString(grantTypes)).append("\n");
     sb.append("    redirectUris: ").append(toIndentedString(redirectUris)).append("\n");
     sb.append("    scopes: ").append(toIndentedString(scopes)).append("\n");
-    sb.append("    accessTokenValidity: ").append(toIndentedString(accessTokenValidity)).append("\n");
-    sb.append("    refreshTokenValidity: ").append(toIndentedString(refreshTokenValidity)).append("\n");
+    sb.append("    accessTokenValidity: ")
+        .append(toIndentedString(accessTokenValidity))
+        .append("\n");
+    sb.append("    refreshTokenValidity: ")
+        .append(toIndentedString(refreshTokenValidity))
+        .append("\n");
     sb.append("    autoApprove: ").append(toIndentedString(autoApprove)).append("\n");
     sb.append("}");
     return sb.toString();
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(@Nullable Object o) {
     return o == null ? "null" : o.toString().replace("\n", "\n    ");
   }
 }
-

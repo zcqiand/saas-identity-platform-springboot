@@ -23,9 +23,9 @@ import saas.identity.platform.security.TenantGuard;
 /**
  * 2026-09-18 排序显式化收口：成员列表家族约定 created_at DESC（同 audit occurred_at DESC 家族约定）。
  *
- * <p>同 created_at 种子（家族 seed 多行 createdAt 相同）下顺序必须稳定 —— tiebreak = id ASC，
- * 对齐本仓 findByUserId 的「created_at ASC, id ASC 与 msw 种子序一致」先例（TenantMemberRepository）。
- * 无 tiebreak 时 PG 返回堆序，与 nextjs/aspnetcore/msw 镜像在运行期必分叉。
+ * <p>同 created_at 种子（家族 seed 多行 createdAt 相同）下顺序必须稳定 —— tiebreak = id ASC， 对齐本仓 findByUserId
+ * 的「created_at ASC, id ASC 与 msw 种子序一致」先例（TenantMemberRepository）。 无 tiebreak 时 PG 返回堆序，与
+ * nextjs/aspnetcore/msw 镜像在运行期必分叉。
  */
 class TenantMembersControllerSortTest {
 
@@ -40,11 +40,15 @@ class TenantMembersControllerSortTest {
 
     TenantMembersController ctrl =
         new TenantMembersController(
-            members, memberRoles, users, sysRoles, tenantGuard, new MemberViewAssembler(memberRoles, sysRoles));
+            members,
+            memberRoles,
+            users,
+            sysRoles,
+            tenantGuard,
+            new MemberViewAssembler(memberRoles, sysRoles));
     when(members.findByTenantId(any(UUID.class), any(Pageable.class))).thenReturn(Page.empty());
 
-    ctrl.tenantMembersListTenantUsers(
-        "11111111-1111-1111-1111-111111111111", null, null, null);
+    ctrl.tenantMembersListTenantUsers("11111111-1111-1111-1111-111111111111", null, null, null);
 
     ArgumentCaptor<Pageable> pageable = ArgumentCaptor.forClass(Pageable.class);
     verify(members).findByTenantId(any(UUID.class), pageable.capture());

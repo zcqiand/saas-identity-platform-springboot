@@ -208,8 +208,8 @@ public class OauthController implements OauthApi {
 
   /**
    * TokenResponse 组装。userId / clientId / tenantId 必填三件回显（SSOT TokenResponse，
-   * tsp/routes/oauth.tsp）：msw 已剔除，oracle = shared 契约本身；三方共库 → 同一
-   * user/tenant UUID 逐字相等，回显即对齐（msw 时代「写库不回显」裁决随之作废）。
+   * tsp/routes/oauth.tsp）：msw 已剔除，oracle = shared 契约本身；三方共库 → 同一 user/tenant UUID 逐字相等，回显即对齐（msw
+   * 时代「写库不回显」裁决随之作废）。
    */
   private TokenResponse tokenResponse(
       String accessToken,
