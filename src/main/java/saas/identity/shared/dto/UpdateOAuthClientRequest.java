@@ -20,7 +20,7 @@ import jakarta.annotation.Generated;
  * UpdateOAuthClientRequest
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-17T22:53:30.131396900+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-09-19T06:38:35.081963500+08:00[Asia/Shanghai]", comments = "Generator version: 7.24.0")
 public class UpdateOAuthClientRequest {
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
