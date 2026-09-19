@@ -74,7 +74,9 @@ public class MeController implements MeApi {
   public ResponseEntity<CurrentUser> meWhoami() {
     UUID userId = currentUserId();
     if (userId == null) {
-      return ResponseEntity.ok(new CurrentUser());
+      // 项 5.36：防御分支保留（Security 前置挡匿名的不可达性未实证），但序列化形状
+      // 必须守契约 —— memberships 是 required，null 会违反 CurrentUser 契约形状。
+      return ResponseEntity.ok(new CurrentUser().memberships(List.of()));
     }
     CurrentUser u = new CurrentUser();
     u.setId(userId);
