@@ -31,10 +31,14 @@ node scripts/scaffold-entities.mjs
 echo "[scaffold-entities] step 2/4 — mvn spotless:apply（消除 scaffold 触发的 L1 格式漂移）"
 rm -f target/spotless-index && mvn spotless:apply -q
 
-echo "[scaffold-entities] step 3/4 — git diff entity/Generated/"
-if ! git diff --exit-code --quiet src/main/java/saas/identity/platform/entity/Generated/ 2>/dev/null; then
-  echo "[scaffold-entities] FATAL: scaffold 产物与 git HEAD 不一致" >&2
-  echo "[scaffold-entities]        处理：确认 DB 是最新（shared 已 db:migrate），" >&2
+echo "[scaffold-entities] step 3/4 — git diff + untracked entity/Generated/"
+# 漂移判定 = tracked 改动（git diff）∪ untracked 新文件（git ls-files --others，即
+# git status --porcelain 的 ??）—— 池项 5.31（2026-09-19）：scaffold 连错库（如 saas 门
+# 连到 lab_test）生成的仓外表全部落在 untracked，裸 git diff 不含它们 → 门假 PASS。
+if ! git diff --exit-code --quiet src/main/java/saas/identity/platform/entity/Generated/ 2>/dev/null \
+  || [ -n "$(git ls-files --others --exclude-standard -- src/main/java/saas/identity/platform/entity/Generated/)" ]; then
+  echo "[scaffold-entities] FATAL: scaffold 产物与 git HEAD 不一致（含 untracked 新文件）" >&2
+  echo "[scaffold-entities]        处理：确认 DB 是最新（shared 已 db:migrate）且连的是本族库，" >&2
   echo "[scaffold-entities]        然后 git add src/main/java/saas/identity/platform/entity/Generated/ && git commit" >&2
   exit 1
 fi
