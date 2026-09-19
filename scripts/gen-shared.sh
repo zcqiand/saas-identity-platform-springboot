@@ -34,7 +34,10 @@ npx --yes @openapitools/openapi-generator-cli generate \
   --model-package saas.identity.shared.dto \
   --api-package saas.identity.shared.api \
   --invoker-package saas.identity.shared \
-  --additional-properties useTags=true,interfaceOnly=true,skipDefaultInterface=true,useBeanValidation=true,useSpringBoot3=true,dateLibrary=java8
+  --additional-properties useTags=true,interfaceOnly=true,skipDefaultInterface=true,useBeanValidation=true,useSpringBoot3=true,dateLibrary=java8,containerDefaultToNull=true
+# containerDefaultToNull=true（ADR-0032 候选①，2026-09-19）：容器字段默认 null 而非
+# 空集合初始化——ErrorResponse.details（契约 optional）否则恒序列化 "details":{}。
+# 家族其余容器字段均 required 且手写 mapper 无条件 set 非空列表，行为不变。
 
 # Move generated dto + api into the springboot source tree.
 mkdir -p "$DEST/saas/identity/shared/dto" "$DEST/saas/identity/shared/api"

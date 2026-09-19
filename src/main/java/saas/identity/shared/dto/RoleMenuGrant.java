@@ -17,7 +17,7 @@ import org.springframework.lang.Nullable;
 /** RoleMenuGrant */
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-19T07:34:59.395972600+08:00[Asia/Shanghai]",
+    date = "2026-09-19T11:42:08.525926500+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
 public class RoleMenuGrant {
 
@@ -25,7 +25,7 @@ public class RoleMenuGrant {
 
   private UUID tenantId;
 
-  private List<String> menuIds = new ArrayList<>();
+  private List<String> menuIds;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private OffsetDateTime updatedAt;

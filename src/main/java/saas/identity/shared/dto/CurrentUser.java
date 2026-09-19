@@ -16,7 +16,7 @@ import org.springframework.lang.Nullable;
 /** CurrentUser */
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-19T07:34:59.395972600+08:00[Asia/Shanghai]",
+    date = "2026-09-19T11:42:08.525926500+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
 public class CurrentUser {
 
@@ -25,7 +25,7 @@ public class CurrentUser {
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private @Nullable String email;
 
-  private List<@Valid TenantMembership> memberships = new ArrayList<>();
+  private List<@Valid TenantMembership> memberships;
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private @Nullable UUID currentTenantId;

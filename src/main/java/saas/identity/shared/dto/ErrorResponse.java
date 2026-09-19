@@ -14,7 +14,7 @@ import org.springframework.lang.Nullable;
 /** ErrorResponse */
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-19T07:34:59.395972600+08:00[Asia/Shanghai]",
+    date = "2026-09-19T11:42:08.525926500+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
 public class ErrorResponse {
 
@@ -23,7 +23,7 @@ public class ErrorResponse {
   private String message;
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
-  private Map<String, Object> details = new HashMap<>();
+  private @Nullable Map<String, Object> details;
 
   public ErrorResponse() {
     super();
@@ -79,7 +79,7 @@ public class ErrorResponse {
     this.message = message;
   }
 
-  public ErrorResponse details(Map<String, Object> details) {
+  public ErrorResponse details(@Nullable Map<String, Object> details) {
     this.details = details;
     return this;
   }
@@ -99,12 +99,12 @@ public class ErrorResponse {
    */
   @Schema(name = "details", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("details")
-  public Map<String, Object> getDetails() {
+  public @Nullable Map<String, Object> getDetails() {
     return details;
   }
 
   @JsonProperty("details")
-  public void setDetails(Map<String, Object> details) {
+  public void setDetails(@Nullable Map<String, Object> details) {
     this.details = details;
   }
 

@@ -16,11 +16,11 @@ import org.springframework.lang.Nullable;
 @JsonTypeName("TenantMembers_listTenantUsers_200_response")
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-19T07:34:59.395972600+08:00[Asia/Shanghai]",
+    date = "2026-09-19T11:42:08.525926500+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
 public class TenantMembersListTenantUsers200Response {
 
-  private List<@Valid TenantMemberUserView> items = new ArrayList<>();
+  private List<@Valid TenantMemberUserView> items;
 
   private Integer page;
 
