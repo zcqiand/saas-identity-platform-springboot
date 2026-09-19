@@ -1,8 +1,8 @@
 package saas.identity.platform.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -56,7 +56,7 @@ class MeControllerAnonBranchTest {
     CurrentUser body = res.getBody();
     assertNotNull(body, "防御分支也必须返回 CurrentUser body");
     assertNotNull(body.getMemberships(), "契约 required 字段 memberships 不得为 null");
-    assertFalse(!body.getMemberships().isEmpty(), "无认证上下文 memberships 应为空数组而非非空");
+    assertTrue(body.getMemberships().isEmpty(), "无认证上下文 memberships 应为空数组而非非空");
     JsonNode node = json.readTree(json.writeValueAsString(body));
     org.junit.jupiter.api.Assertions.assertTrue(
         node.has("memberships") && node.get("memberships").isArray(),
