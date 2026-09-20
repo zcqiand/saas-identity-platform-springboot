@@ -12,7 +12,7 @@ import org.springframework.lang.Nullable;
 /** CreateSysUserRequest */
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-20T12:05:54.325061900+08:00[Asia/Shanghai]",
+    date = "2026-09-20T14:36:36.595573300+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
 public class CreateSysUserRequest {
 
@@ -70,6 +70,7 @@ public class CreateSysUserRequest {
    * @return password
    */
   @NotNull
+  @Size(min = 8, max = 256)
   @Schema(name = "password", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("password")
   public String getPassword() {
