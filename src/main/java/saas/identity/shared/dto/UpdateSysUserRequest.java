@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Generated;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import java.util.*;
 import java.util.Objects;
@@ -21,9 +20,6 @@ public class UpdateSysUserRequest {
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private @Nullable String mobile;
-
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  private @Nullable SysUserStatus status;
 
   public UpdateSysUserRequest email(@Nullable String email) {
     this.email = email;
@@ -68,28 +64,6 @@ public class UpdateSysUserRequest {
     this.mobile = mobile;
   }
 
-  public UpdateSysUserRequest status(@Nullable SysUserStatus status) {
-    this.status = status;
-    return this;
-  }
-
-  /**
-   * Get status
-   *
-   * @return status
-   */
-  @Valid
-  @Schema(name = "status", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("status")
-  public @Nullable SysUserStatus getStatus() {
-    return status;
-  }
-
-  @JsonProperty("status")
-  public void setStatus(@Nullable SysUserStatus status) {
-    this.status = status;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -100,13 +74,12 @@ public class UpdateSysUserRequest {
     }
     UpdateSysUserRequest updateSysUserRequest = (UpdateSysUserRequest) o;
     return Objects.equals(this.email, updateSysUserRequest.email)
-        && Objects.equals(this.mobile, updateSysUserRequest.mobile)
-        && Objects.equals(this.status, updateSysUserRequest.status);
+        && Objects.equals(this.mobile, updateSysUserRequest.mobile);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(email, mobile, status);
+    return Objects.hash(email, mobile);
   }
 
   @Override
@@ -115,7 +88,6 @@ public class UpdateSysUserRequest {
     sb.append("class UpdateSysUserRequest {\n");
     sb.append("    email: ").append(toIndentedString(email)).append("\n");
     sb.append("    mobile: ").append(toIndentedString(mobile)).append("\n");
-    sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("}");
     return sb.toString();
   }

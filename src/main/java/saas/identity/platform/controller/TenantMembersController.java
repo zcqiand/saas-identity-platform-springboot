@@ -153,9 +153,10 @@ public class TenantMembersController implements TenantMembersApi {
       if (body.getMobile() != null) {
         u.setMobile(body.getMobile());
       }
-      if (body.getStatus() != null) {
-        u.setStatus(mapSysUserStatus(body.getStatus()));
-      }
+      // 5.13-①（2026-09-20 人裁）：契约 UpdateSysUserRequest 已删 status 字段 ——
+      // 状态变更唯一通道 = 专职 /status 端点（tenantMembersChangeTenantUserStatus）。
+      // 旧实现把 body.status 落 sys_user.status（用户级 3 值），与扁平视图读
+      // tenant_member.status 的 S1 语义（见 toView 注释）静默分叉，随契约收紧一并删除。
       u.setUpdatedAt(OffsetDateTime.now());
       u = users.save(u);
     }
@@ -291,14 +292,7 @@ public class TenantMembersController implements TenantMembersApi {
     return v;
   }
 
-  /** sys_user.status 三值字典（SysUserStatus 无 suspended；家族约定 1=active 2=invited 0=disabled）。 */
-  private static short mapSysUserStatus(SysUserStatus s) {
-    return switch (s) {
-      case ACTIVE -> MemberStatusMapper.DB_ACTIVE;
-      case INVITED -> MemberStatusMapper.DB_INVITED;
-      case DISABLED -> MemberStatusMapper.DB_DISABLED;
-    };
-  }
+  // 5.13-①：mapSysUserStatus（sys_user.status 三值字典）随 PATCH body.status 改写逻辑一并删除。
 
   // ==== invitations 专用：嵌套 TenantMemberView（ADR-0032 保持不动） ====
 
