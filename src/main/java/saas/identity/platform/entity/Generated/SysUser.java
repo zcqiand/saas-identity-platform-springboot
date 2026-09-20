@@ -40,17 +40,17 @@ public class SysUser {
   @Column(name = "status", columnDefinition = "smallint", nullable = false)
   private Short status;
 
-  @Column(name = "failed_attempts", columnDefinition = "integer", nullable = false)
-  private Integer failedAttempts;
-
-  @Column(name = "locked_until", columnDefinition = "timestamptz")
-  private OffsetDateTime lockedUntil;
-
   @Column(name = "created_at", columnDefinition = "timestamptz", nullable = false)
   private OffsetDateTime createdAt;
 
   @Column(name = "updated_at", columnDefinition = "timestamptz", nullable = false)
   private OffsetDateTime updatedAt;
+
+  @Column(name = "failed_attempts", columnDefinition = "integer", nullable = false)
+  private Integer failedAttempts;
+
+  @Column(name = "locked_until", columnDefinition = "timestamptz")
+  private OffsetDateTime lockedUntil;
 
   public UUID getId() {
     return id;
@@ -100,22 +100,6 @@ public class SysUser {
     this.status = status;
   }
 
-  public Integer getFailedAttempts() {
-    return failedAttempts;
-  }
-
-  public void setFailedAttempts(Integer failedAttempts) {
-    this.failedAttempts = failedAttempts;
-  }
-
-  public OffsetDateTime getLockedUntil() {
-    return lockedUntil;
-  }
-
-  public void setLockedUntil(OffsetDateTime lockedUntil) {
-    this.lockedUntil = lockedUntil;
-  }
-
   public OffsetDateTime getCreatedAt() {
     return createdAt;
   }
@@ -130,5 +114,21 @@ public class SysUser {
 
   public void setUpdatedAt(OffsetDateTime updatedAt) {
     this.updatedAt = updatedAt;
+  }
+
+  public Integer getFailedAttempts() {
+    return failedAttempts;
+  }
+
+  public void setFailedAttempts(Integer failedAttempts) {
+    this.failedAttempts = failedAttempts;
+  }
+
+  public OffsetDateTime getLockedUntil() {
+    return lockedUntil;
+  }
+
+  public void setLockedUntil(OffsetDateTime lockedUntil) {
+    this.lockedUntil = lockedUntil;
   }
 }
