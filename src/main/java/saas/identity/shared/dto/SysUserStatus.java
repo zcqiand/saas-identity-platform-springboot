@@ -9,7 +9,6 @@ import java.util.*;
 /** Gets or Sets SysUserStatus */
 @Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2026-09-20T14:36:36.595573300+08:00[Asia/Shanghai]",
     comments = "Generator version: 7.24.0")
 public enum SysUserStatus {
   ACTIVE("active"),

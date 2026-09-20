@@ -26,6 +26,9 @@ echo "[gen-shared] step 2/3 — springboot: openapi-generator → src/main/java/
 # Use npx to resolve @openapitools/openapi-generator-cli (matches shared 仓's config).
 # Config mirrors emit-java.ts in shared (was): spring-boot library, interfaceOnly,
 # useSpringBoot3, etc.
+# hideGenerationTimestamp=true（5.78 照抄 5.70 / lab c9ec17c）：@Generated 不再注入
+# date=时间戳，否则每次 regen 63 文件全量 diff，污染 marker-only 惯例。生成器内置开关，
+# 生成的注解缩为 @Generated(value=..., comments="Generator version: ...")，语义不变。
 npx --yes @openapitools/openapi-generator-cli generate \
   -g spring \
   -i "$OPENAPI" \
@@ -34,7 +37,7 @@ npx --yes @openapitools/openapi-generator-cli generate \
   --model-package saas.identity.shared.dto \
   --api-package saas.identity.shared.api \
   --invoker-package saas.identity.shared \
-  --additional-properties useTags=true,interfaceOnly=true,skipDefaultInterface=true,useBeanValidation=true,useSpringBoot3=true,dateLibrary=java8,containerDefaultToNull=true
+  --additional-properties useTags=true,interfaceOnly=true,skipDefaultInterface=true,useBeanValidation=true,useSpringBoot3=true,dateLibrary=java8,containerDefaultToNull=true,hideGenerationTimestamp=true
 # containerDefaultToNull=true（ADR-0032 候选①，2026-09-19）：容器字段默认 null 而非
 # 空集合初始化——ErrorResponse.details（契约 optional）否则恒序列化 "details":{}。
 # 家族其余容器字段均 required 且手写 mapper 无条件 set 非空列表，行为不变。
