@@ -12,7 +12,7 @@ SHARED_DIR="$(cd "$(dirname "$0")/../../saas-identity-platform-shared" && pwd)"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 DEST="$ROOT/src/main/java"
 
-echo "[gen-shared] step 1/2 — shared: emit OpenAPI.yaml..."
+echo "[gen-shared] step 1/3 — shared: emit OpenAPI.yaml..."
 (cd "$SHARED_DIR" && npm run emit:openapi)
 
 OPENAPI="$SHARED_DIR/generated/openapi/openapi.yaml"
@@ -21,7 +21,7 @@ if [ ! -f "$OPENAPI" ]; then
   exit 1
 fi
 
-echo "[gen-shared] step 2/2 — springboot: openapi-generator → src/main/java/..."
+echo "[gen-shared] step 2/3 — springboot: openapi-generator → src/main/java/..."
 
 # Use npx to resolve @openapitools/openapi-generator-cli (matches shared 仓's config).
 # Config mirrors emit-java.ts in shared (was): spring-boot library, interfaceOnly,
@@ -49,6 +49,11 @@ rm -rf "$DEST/saas/identity/platform/api"
 cp -r "$ROOT/.openapi-tmp/java/src/main/java/saas/identity/shared/dto/." "$DEST/saas/identity/shared/dto/"
 cp -r "$ROOT/.openapi-tmp/java/src/main/java/saas/identity/shared/api/." "$DEST/saas/identity/shared/api/"
 rm -rf "$ROOT/.openapi-tmp"
+
+# 生成物不带 gjf 格式（openapi-generator 是裸 Java）。不内建 spotless 则每次 regen 后
+# L1 格式门必红（3f36123 手工治理是止血；池项 5.46 实证裸漂移 +3383/−3691 全为格式噪音）。
+echo "[gen-shared] step 3/3 — mvn spotless:apply（消除 codegen 触发的 L1 格式漂移）"
+rm -f target/spotless-index && mvn spotless:apply -q
 
 echo "[gen-shared] OK"
 echo "[gen-shared]    DB schema 同步请跑: bash scripts/scaffold-entities.sh（共享已 db:migrate 之后）"
