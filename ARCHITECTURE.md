@@ -156,4 +156,4 @@ exit code 语义：**0** = 全绿完成；**1** = 门红，按 fix 提示回代�
 
 ---
 
-补充：仓内另有一份更详细的 `docs/ARCHITECTURE.md`（662 行，历史版本）；本文为按 suite 模板生成的 DeepWiki 风格速览，两文冲突时以仓内真实代码与 `CLAUDE.md` / `docs/adr/` 为准。
+本文为仓内唯一架构文档：原 `docs/ARCHITECTURE.md`（662 行历史长文）已于 2026-09-22 移除，由本文取代。两代冲突时以仓内真实代码与 `CLAUDE.md` / `docs/adr/` 为准。
