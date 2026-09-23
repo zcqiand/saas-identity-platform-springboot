@@ -6,7 +6,7 @@
     "features": 13,
     "items": 55
   },
-  "warnings_total": 107,
+  "warnings_total": 120,
   "warnings": {
     "已上线但无设计映射": [
       "M00.F01.I01",
@@ -14,6 +14,13 @@
       "M00.F01.I03",
       "M00.F01.I04",
       "M00.F01.I05",
+      "M00.F02.I01",
+      "M00.F02.I02",
+      "M00.F02.I03",
+      "M00.F02.I04",
+      "M00.F02.I05",
+      "M00.F02.I06",
+      "M00.F02.I08",
       "M00.F03.I01",
       "M00.F03.I02",
       "M00.F03.I03",
@@ -22,12 +29,15 @@
       "M00.F04.I01",
       "M00.F04.I03",
       "M00.F04.I04",
+      "M00.F05.I01",
+      "M00.F05.I02",
+      "M00.F05.I03",
+      "M00.F05.I04",
       "M01.F02.I01",
       "M01.F03.I02",
       "M01.F04.I01",
       "M01.F04.I02",
-      "M01.F04.I04",
-      "M01.F04.I05",
+      "M01.F04.I03",
       "M01.F04.I06",
       "M04.F01.I01",
       "M04.F01.I02",
@@ -52,13 +62,17 @@
       "M00.F01.I03",
       "M00.F01.I04",
       "M00.F01.I05",
+      "M00.F02.I06",
+      "M00.F02.I08",
       "M00.F04.I01",
       "M01.F02.I01",
+      "M01.F04.I02",
+      "M01.F04.I03",
       "M04.F01.I03",
       "M04.F01.I04",
       "M04.F01.I05",
-      "M04.F01.I06",
       "M04.F02.I01",
+      "M04.F03.I03",
       "M04.F04.I03",
       "M04.F04.I04",
       "M04.F04.I05",
@@ -71,6 +85,13 @@
       "M00.F01.I03",
       "M00.F01.I04",
       "M00.F01.I05",
+      "M00.F02.I01",
+      "M00.F02.I02",
+      "M00.F02.I03",
+      "M00.F02.I04",
+      "M00.F02.I05",
+      "M00.F02.I06",
+      "M00.F02.I08",
       "M00.F03.I01",
       "M00.F03.I02",
       "M00.F03.I03",
@@ -79,12 +100,15 @@
       "M00.F04.I01",
       "M00.F04.I03",
       "M00.F04.I04",
+      "M00.F05.I01",
+      "M00.F05.I02",
+      "M00.F05.I03",
+      "M00.F05.I04",
       "M01.F02.I01",
       "M01.F03.I02",
       "M01.F04.I01",
       "M01.F04.I02",
-      "M01.F04.I04",
-      "M01.F04.I05",
+      "M01.F04.I03",
       "M01.F04.I06",
       "M04.F01.I01",
       "M04.F01.I02",
@@ -106,18 +130,7 @@
       "M04.F04.I08"
     ],
     "开发中但无需求文档引用": [
-      "M00.F02.I01",
-      "M00.F02.I02",
-      "M00.F02.I03",
-      "M00.F02.I04",
-      "M00.F02.I05",
-      "M00.F02.I06",
-      "M00.F02.I08",
       "M00.F04.I02",
-      "M00.F05.I01",
-      "M00.F05.I02",
-      "M00.F05.I03",
-      "M00.F05.I04",
       "M01.F01.I01",
       "M01.F03.I01"
     ],
@@ -185,73 +198,74 @@
     },
     "M00.F02.I01": {
       "name": "成员列表",
-      "status": "开发中",
+      "status": "已上线",
       "type": "接口",
       "requirements": [],
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-members-read.test.ts:2501 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-members-read.test.ts:963 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-members-write-2.test.ts:1241 (path)",
+        "membersList_sortsCreatedAtDesc_withDeterministicIdTiebreak()",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-members-read.test.ts:1021 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-members-read.test.ts:2597 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-members-write-2.test.ts:1324 (path)",
         "output\\saas-identity-platform-contract-test\\tests\\tenant-members-write.test.ts:987 (path)"
       ],
       "entry": []
     },
     "M00.F02.I02": {
       "name": "创建成员",
-      "status": "开发中",
+      "status": "已上线",
       "type": "接口",
       "requirements": [],
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-members-read.test.ts:2501 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-members-read.test.ts:963 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-members-write-2.test.ts:1241 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-members-read.test.ts:1021 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-members-read.test.ts:2597 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-members-write-2.test.ts:1324 (path)",
         "output\\saas-identity-platform-contract-test\\tests\\tenant-members-write.test.ts:987 (path)"
       ],
       "entry": []
     },
     "M00.F02.I03": {
       "name": "成员详情",
-      "status": "开发中",
+      "status": "已上线",
       "type": "接口",
       "requirements": [],
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-members-read.test.ts:3675 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-members-read.test.ts:3771 (path)"
       ],
       "entry": []
     },
     "M00.F02.I04": {
       "name": "更新成员",
-      "status": "开发中",
+      "status": "已上线",
       "type": "接口",
       "requirements": [],
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-members-read.test.ts:3675 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-members-read.test.ts:3771 (path)"
       ],
       "entry": []
     },
     "M00.F02.I05": {
       "name": "删除成员",
-      "status": "开发中",
+      "status": "已上线",
       "type": "接口",
       "requirements": [],
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-members-read.test.ts:3675 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-members-read.test.ts:3771 (path)"
       ],
       "entry": []
     },
     "M00.F02.I06": {
       "name": "邀请成员",
-      "status": "开发中",
+      "status": "已上线",
       "type": "接口",
       "requirements": [],
       "flows": [],
@@ -271,7 +285,7 @@
     },
     "M00.F02.I08": {
       "name": "状态切换",
-      "status": "开发中",
+      "status": "已上线",
       "type": "接口",
       "requirements": [],
       "flows": [],
@@ -287,7 +301,7 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:1307 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:1365 (path)",
         "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-write.test.ts:1089 (path)"
       ],
       "entry": []
@@ -300,7 +314,7 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:1307 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:1365 (path)",
         "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-write.test.ts:1089 (path)"
       ],
       "entry": []
@@ -313,7 +327,7 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:2514 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:2610 (path)"
       ],
       "entry": []
     },
@@ -325,7 +339,7 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:2514 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:2610 (path)"
       ],
       "entry": []
     },
@@ -337,7 +351,7 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:2514 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:2610 (path)"
       ],
       "entry": []
     },
@@ -360,7 +374,7 @@
       "designs": [],
       "tests": [
         "output\\saas-identity-platform-contract-test\\tests\\tenant-role-menus-write.test.ts:1223 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:3831 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:3965 (path)",
         "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-write.test.ts:1193 (path)"
       ],
       "entry": []
@@ -374,7 +388,7 @@
       "designs": [],
       "tests": [
         "output\\saas-identity-platform-contract-test\\tests\\tenant-role-menus-write.test.ts:1223 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:3831 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:3965 (path)",
         "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-write.test.ts:1193 (path)"
       ],
       "entry": []
@@ -388,53 +402,63 @@
       "designs": [],
       "tests": [
         "output\\saas-identity-platform-contract-test\\tests\\tenant-role-menus-write.test.ts:1223 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:3831 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-read.test.ts:3965 (path)",
         "output\\saas-identity-platform-contract-test\\tests\\tenant-roles-write.test.ts:1193 (path)"
       ],
       "entry": []
     },
     "M00.F05.I01": {
       "name": "列出租户应用",
-      "status": "开发中",
+      "status": "已上线",
       "type": "接口",
       "requirements": [],
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:970 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:1156 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:1560 (annot)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:197 (annot)"
       ],
       "entry": []
     },
     "M00.F05.I02": {
       "name": "订阅应用",
-      "status": "开发中",
+      "status": "已上线",
       "type": "接口",
       "requirements": [],
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:970 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:1156 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:227 (annot)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:2831 (annot)"
       ],
       "entry": []
     },
     "M00.F05.I03": {
       "name": "更新应用订阅",
-      "status": "开发中",
+      "status": "已上线",
       "type": "接口",
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:259 (annot)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:5836 (annot)"
+      ],
       "entry": []
     },
     "M00.F05.I04": {
       "name": "移除应用订阅",
-      "status": "开发中",
+      "status": "已上线",
       "type": "接口",
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:289 (annot)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:8021 (annot)"
+      ],
       "entry": []
     },
     "M01.F01.I01": {
@@ -445,10 +469,10 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\me.test.ts:612 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\me.test.ts:755 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\path.test.ts:1066 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\path.test.ts:1111 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\me.test.ts:670 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\me.test.ts:850 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\path.test.ts:1072 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\path.test.ts:1117 (path)"
       ],
       "entry": []
     },
@@ -471,7 +495,7 @@
       "designs": [],
       "tests": [
         "output\\saas-identity-platform-contract-test\\tests\\me-tenants.test.ts:19 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\me-tenants.test.ts:525 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\me-tenants.test.ts:579 (path)"
       ],
       "entry": []
     },
@@ -496,9 +520,9 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:1260 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:1576 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:2854 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:1274 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:1606 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:2884 (path)"
       ],
       "entry": []
     },
@@ -509,16 +533,12 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:1260 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:1576 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:2854 (path)"
-      ],
+      "tests": [],
       "entry": []
     },
     "M01.F04.I03": {
       "name": "密码登录 UI",
-      "status": "规划",
+      "status": "已上线",
       "type": "页面",
       "requirements": [],
       "flows": [],
@@ -527,28 +547,23 @@
       "entry": []
     },
     "M01.F04.I04": {
-      "name": "OIDC Code 换取",
-      "status": "已上线",
+      "name": "~~OIDC Code 换取~~",
+      "status": "已废弃",
       "type": "接口",
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:6729 (path)"
-      ],
+      "tests": [],
       "entry": []
     },
     "M01.F04.I05": {
-      "name": "refresh token",
-      "status": "已上线",
+      "name": "~~refresh token~~",
+      "status": "已废弃",
       "type": "接口",
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:4778 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:5952 (path)"
-      ],
+      "tests": [],
       "entry": []
     },
     "M01.F04.I06": {
@@ -559,13 +574,13 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:3830 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\auth.test.ts:3965 (path)"
       ],
       "entry": []
     },
     "M01.F04.I07": {
       "name": "登出（全局 SSO）",
-      "status": "规划",
+      "status": "已废弃",
       "type": "接口",
       "requirements": [],
       "flows": [],
@@ -582,9 +597,9 @@
       "designs": [],
       "tests": [
         "output\\saas-identity-platform-contract-test\\tests\\admin-clients-write.test.ts:891 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:3311 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:5216 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:7961 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:3624 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:5529 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:9758 (path)"
       ],
       "entry": []
     },
@@ -597,9 +612,9 @@
       "designs": [],
       "tests": [
         "output\\saas-identity-platform-contract-test\\tests\\admin-clients-write.test.ts:891 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:3311 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:5216 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:7961 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:3624 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:5529 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\tenant-applications.test.ts:9758 (path)"
       ],
       "entry": []
     },
@@ -640,7 +655,10 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "output\\saas-identity-platform-contract-test\\tests\\apps-public.test.ts:22 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\apps-public.test.ts:627 (path)"
+      ],
       "entry": []
     },
     "M04.F02.I01": {
@@ -695,14 +713,7 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:11105 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:12055 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:6035 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:7267 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:8493 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:9983 (path)"
-      ],
+      "tests": [],
       "entry": []
     },
     "M04.F04.I01": {
@@ -787,8 +798,8 @@
       "flows": [],
       "designs": [],
       "tests": [
-        "output\\saas-identity-platform-contract-test\\tests\\me.test.ts:2247 (path)",
-        "output\\saas-identity-platform-contract-test\\tests\\me.test.ts:2476 (path)"
+        "output\\saas-identity-platform-contract-test\\tests\\me.test.ts:2343 (path)",
+        "output\\saas-identity-platform-contract-test\\tests\\me.test.ts:2609 (path)"
       ],
       "entry": []
     }
