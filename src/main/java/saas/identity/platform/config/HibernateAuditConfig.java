@@ -1,5 +1,7 @@
 package saas.identity.platform.config;
 
+// @impl M01.F04.I02 — book anchor (xr-know-007)
+
 import org.hibernate.cfg.AvailableSettings;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
 import org.springframework.context.annotation.Bean;

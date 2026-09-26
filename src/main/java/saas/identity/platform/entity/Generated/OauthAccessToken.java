@@ -1,5 +1,7 @@
 package saas.identity.platform.entity.Generated;
 
+// @impl M04.F03.I02 — book anchor (xr-know-007)
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

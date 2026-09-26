@@ -1,5 +1,7 @@
 package saas.identity.platform.security;
 
+// @impl M01.F04.I01 — book anchor (xr-know-007)
+
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;

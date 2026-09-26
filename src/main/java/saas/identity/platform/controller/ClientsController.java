@@ -1,5 +1,7 @@
 package saas.identity.platform.controller;
 
+// @impl M04.F01.I06 — book anchor (xr-know-007)
+
 import java.util.NoSuchElementException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;

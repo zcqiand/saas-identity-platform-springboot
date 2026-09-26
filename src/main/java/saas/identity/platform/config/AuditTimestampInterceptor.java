@@ -1,5 +1,7 @@
 package saas.identity.platform.config;
 
+// @impl M00.F02.I08 — book anchor (xr-know-007)
+
 import java.time.OffsetDateTime;
 import org.hibernate.Interceptor;
 import org.hibernate.type.Type;

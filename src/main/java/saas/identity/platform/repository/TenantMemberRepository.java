@@ -1,5 +1,7 @@
 package saas.identity.platform.repository;
 
+// @impl M01.F03.I02 — book anchor (xr-know-007)
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

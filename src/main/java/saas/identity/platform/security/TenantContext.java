@@ -1,5 +1,7 @@
 package saas.identity.platform.security;
 
+// @impl M01.F03.I02 — book anchor (xr-know-007)
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
