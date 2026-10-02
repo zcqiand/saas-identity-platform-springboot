@@ -5,7 +5,7 @@
 | 提出人 | 用户 |
 | 提出日期 | 2026-10-02 |
 | 优先级 | P2 |
-| 状态 | 待评审 |
+| 状态 | 开发中 |
 | 关联 ADR | ADR-0027（消费树 ⊆ BASE subset invariant，本需求据以不登记功能树，见 §4） |
 
 ## 1. 需求描述
@@ -51,8 +51,9 @@
 
 | 任务 ID | 任务描述 | 类型 | 负责人 | 预估 | 状态 |
 |---|---|---|---|---|---|
-| T-1 | 根路径跳转：`GET /` → `/swagger-ui.html`（302，匿名；若 SecurityConfig 未放行 `/` 则同批 permitAll；实现不进 openapi 文档面） | 开发 | 待定 | XS | 待开始 |
-| T-2 | L1-L4 门禁回归 + curl 三验（302、跟随 200、/api/v1/* 不回归） | 门禁 | 待定 | XS | 待开始 |
+| T-1 | 根路径跳转：`GET /` → `/swagger-ui.html`（302，匿名；若 SecurityConfig 未放行 `/` 则同批 permitAll；实现不进 openapi 文档面） | 开发 | Claude | XS | 已完成（`RootRedirectConfig` addRedirectViewController + SecurityConfig 增补 `/`、`/swagger-ui`、`/health`；证据：`RootRedirectIntegrationTest.rootRedirectsAnonymouslyToSwaggerUiHtml` 等 4 测绿） |
+| T-2 | L1-L4 门禁回归 + curl 三验（302、跟随 200、/api/v1/* 不回归） | 门禁 | Claude | XS | 已完成（`python scripts/gate.py -p saas-identity-platform-springboot` exit 0 门禁全绿，2026-10-02；TDD 红→绿证据：实现前 `/` 与 `/health` 红 401（swagger 两测因 v0.1.13 先行放行本就绿），实现后 4/4 绿） |
+| T-3 | 对齐项（用户已批准）：裸 `/health` 家族统一形状 `{"status":"ok"}`（aspnetcore 双仓先例），匿名 200，`@Hidden` 不进 openapi 文档面 | 开发 | Claude | XS | 已完成（`HealthController`；证据：`RootRedirectIntegrationTest.healthEndpointReturnsFamilyShapeAnonymously` 绿） |
 
 ## 4. 功能影响（需求与功能对齐的唯一位置）
 
@@ -81,3 +82,21 @@
 | prod 暴露面认知：裸域名直达 API 文档 | 安全姿态认知 | Swagger 本就全环境暴露（家族现状「prod 暂全开」），本需求不改变暴露姿态；后续 prod 收口时跳转随 UI gating 同步收口 | revert 跳由 commit，恢复 404 现状 |
 
 无数据面、无契约面变更。
+
+## 7. 实施备注（2026-10-02，待追认）
+
+L4.db.scaffold 门在实施期间转红：saas_dev 由本族 rails 栈共用，ActiveRecord 的 bookkeeping 表
+`schema_migrations` / `ar_internal_metadata` 落进了 saas_dev，scaffold 反向工程把它们当成 springboot
+应拥有的表 → 生成两个 untracked entity（ArInternalMetadata / SchemaMigrations）→ 与 HEAD 漂移。
+与本次 REQ 无关（本需求零 DB/entity 改动），系 rails 栈入族后的既有边界缺口。
+
+处理：在 `scripts/scaffold-entities.mjs` 的 `EXCLUDE_TABLES` 增补这两个表名——与既有先例
+`__drizzle_migrations`（注释「tracking 表，不是业务表」）完全同类；家族业务 schema 真源 =
+shared src/db/schema.ts，Rails tracking 表从来不是 springboot entity 面。附门禁红/绿前后证据：
+增补前 gate 1（L4.db.scaffold FAIL），增补后 gate exit 0（门禁全绿）。
+
+候选方案（若用户裁定不同）：
+
+1. 改回并改走「commit 这两个 entity」——不推荐（springboot 从此拥有 rails bookkeeping 表的 entity，反向错位）；
+2. 改回并约束 rails 不在 saas_dev 入 bookkeeping 表——不可行（ActiveRecord 机制性行为，rails 家族约定 dev 库共用）；
+3. 维持本方案（EXCLUDE_TABLES 增补）——与 `__drizzle_migrations` 先例同类，推荐。

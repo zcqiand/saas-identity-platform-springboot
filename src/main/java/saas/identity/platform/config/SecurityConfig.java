@@ -70,11 +70,14 @@ public class SecurityConfig {
                     // 性质; 公开让任何客户端能 introspect endpoint contract.
                     // 业务 endpoint 仍走 .anyRequest().authenticated() 不放宽.
                     .requestMatchers(
+                        "/",
+                        "/swagger-ui",
                         "/v3/api-docs",
                         "/v3/api-docs.yaml",
                         "/v3/api-docs/**",
                         "/swagger-ui.html",
-                        "/swagger-ui/**")
+                        "/swagger-ui/**",
+                        "/health")
                     .permitAll()
                     // Dev 简化：任何 authenticated() 用户都能访问所有 endpoint。
                     // Production 要恢复：
