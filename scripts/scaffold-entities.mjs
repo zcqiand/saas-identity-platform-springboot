@@ -54,6 +54,11 @@ const EXCLUDE_TABLES = new Set([
   // Drizzle tracking — 不是业务表
   "__drizzle_migrations",
   // Drizzle 在 __drizzle_migrations 旁的 journal 表也不该有，跳过
+  // Rails tracking（REQ-2026-001 期间发现，2026-10-02）：saas_dev 由本族 rails 栈共用，
+  // ActiveRecord 会在库里建自己的 bookkeeping 表；与 drizzle tracking 同类——不是家族业务
+  // schema（真源 = shared src/db/schema.ts），springboot 不应为其生成 entity。
+  "schema_migrations",
+  "ar_internal_metadata",
 ]);
 
 // PG 类型 → Java 类型 + JdbcTypeCode 注解
