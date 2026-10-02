@@ -68,6 +68,9 @@ public class TenantApplicationsController implements TenantApplicationsApi {
     e.setTenantId(UUID.fromString(tenantId));
     e.setClientId(body.getClientId());
     e.setStatus((short) 1);
+    // 2026-10-02 修复（REQ-2026-012 探针实证）：契约 SubscribeTenantApplicationRequest
+    // 带 expireTime?，controller 原来丢弃 → UI 订阅时填的到期日静默丢失。
+    if (body.getExpireTime() != null) e.setExpireTime(body.getExpireTime());
     e.setCreatedAt(now); // createdAt 列 NOT NULL（schema-first DB-First）
     return ResponseEntity.ok(toDto(apps.save(e)));
   }
@@ -104,6 +107,10 @@ public class TenantApplicationsController implements TenantApplicationsApi {
     d.setClientId(e.getClientId());
     d.setStatus(e.getStatus() == null ? null : e.getStatus().intValue());
     d.setExpireTime(e.getExpireTime());
+    // 2026-10-02 修复（REQ-2026-012 探针实证）：createdAt 契约 REQUIRED，
+    // DB 列 NOT NULL 且 insert 已写值，但 DTO 映射漏 set → wire 恒 null，
+    // 严格解码端（swift 生成物非可选 Date）整个 list 炸。
+    d.setCreatedAt(e.getCreatedAt());
     return d;
   }
 }
