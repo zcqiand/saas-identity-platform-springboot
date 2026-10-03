@@ -1,5 +1,9 @@
 server:
   port: ${SERVER_PORT:5105}
+  # TLS 终结在 VPS nginx（模板已发 X-Forwarded-Proto $scheme）：framework 策略让
+  # redirect/Location 等自生成 URL 尊重外层 scheme——根路径跳 Swagger 的 Location
+  # 由 http://… 收敛为 https://…（2026-10-03 用户裁定 polish，REQ-2026-001 §6 遗留）。
+  forward-headers-strategy: framework
 
 # Spring Security OAuth2 resource server 配置：SecurityConfig.jwtDecoder() 用 JWT_SIGNING_KEY
 # 构造 NimbusJwtDecoder.withSecretKey()（HS256 真验签，Phase 2 起）。
