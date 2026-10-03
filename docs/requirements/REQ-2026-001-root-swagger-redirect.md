@@ -85,6 +85,12 @@
 
 无数据面、无契约面变更。
 
+**追记（2026-10-03）**：prod 复验发现 302 Location 为 `http://…`（TLS 终结在 nginx，
+后端自生成 URL 不知外层 scheme）。用户裁定 polish 修复：application.yml 增
+`server.forward-headers-strategy: framework`（nginx 模板已发 `X-Forwarded-Proto $scheme`），
+tag v0.2.37-20261003 部署后 curl 复验 `location: https://saas-springboot.xiangru.uk/swagger-ui.html`，
+跟随 200。
+
 ## 7. 实施备注（2026-10-02 提出；2026-10-03 用户裁定维持，已追认）
 
 **用户裁定（2026-10-03）**：三候选中选「3. 维持本方案（EXCLUDE_TABLES 增补）」，
