@@ -62,6 +62,13 @@ public class TenantApplicationsController implements TenantApplicationsApi {
     oauthClients
         .findByClientId(body.getClientId())
         .orElseThrow(() -> new NoSuchElementException("oauth_client " + body.getClientId()));
+    // 2026-10-03 修复（CT 断言同批）：重复订阅同 (tenant, client) 先查再插——此前盲插撞
+    // uk_tenant_client → DataIntegrityViolationHandler 把 PG 约束名/驱动消息整段上 wire
+    // （裸 DB 诊断泄漏，REQ-2026-012 澄清记录在案 wart）；aspnetcore 同款预检先例。
+    if (apps.findByTenantIdAndClientId(UUID.fromString(tenantId), body.getClientId()).isPresent()) {
+      throw new IllegalArgumentException(
+          "subscription already exists: tenant=" + tenantId + " client=" + body.getClientId());
+    }
     java.time.OffsetDateTime now = java.time.OffsetDateTime.now();
     saas.identity.platform.entity.Generated.TenantApplication e =
         new saas.identity.platform.entity.Generated.TenantApplication();
