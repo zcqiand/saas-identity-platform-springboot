@@ -58,7 +58,7 @@ if [ ! -f "$BASE/springboot.env" ]; then
       printf 'PG_PASSWORD=qiand68+++\n'
       printf 'PG_DATABASE=saas_prod\n'
       # 默认 CORS 白名单：vue/react SPA + saas-nextjs + 本仓域名。运维可在 setup-vps 之后手工追加 origin。
-      printf 'SAAS_CORS_ALLOWED_ORIGINS=https://%s,https://saas-vue.xiangru.uk,https://saas-react.xiangru.uk,https://saas-nextjs.xiangru.uk\n' "$NGINX_DOMAIN"
+      printf 'SAAS_CORS_ALLOWED_ORIGINS=https://%s,https://saas-vue.xiangru.uk,https://saas-react.xiangru.uk,https://saas-nextjs.xiangru.uk,https://saas-flutter.xiangru.uk\n' "$NGINX_DOMAIN"
       # JWT 三件套显式写(JwtIssuer @Value 默认值兜底是反模式,禁;值=契约文件值)
       printf 'JWT_AUTHORITY=https://auth.example.com\n'
       printf 'JWT_ISSUER=saas-identity-platform\n'
@@ -150,7 +150,7 @@ fi
 if ! grep -q '^SAAS_CORS_ALLOWED_ORIGINS=' "$BASE/springboot.env"; then
   echo "→ append SAAS_CORS_ALLOWED_ORIGINS to existing $BASE/springboot.env"
   umask 077
-  printf 'SAAS_CORS_ALLOWED_ORIGINS=https://%s,https://saas-vue.xiangru.uk,https://saas-react.xiangru.uk,https://saas-nextjs.xiangru.uk\n' "$NGINX_DOMAIN" >> "$BASE/springboot.env"
+  printf 'SAAS_CORS_ALLOWED_ORIGINS=https://%s,https://saas-vue.xiangru.uk,https://saas-react.xiangru.uk,https://saas-nextjs.xiangru.uk,https://saas-flutter.xiangru.uk\n' "$NGINX_DOMAIN" >> "$BASE/springboot.env"
 fi
 
 # v0.2.0+: JwtIssuer(HS256 签 access token) 构造 fail-fast 要求 JWT_SIGNING_KEY(≥32B)。
@@ -205,7 +205,8 @@ if [ -f "$BASE/springboot.env" ]; then
   for cors_origin in "https://${NGINX_DOMAIN}" \
                      "https://saas-nextjs.xiangru.uk" \
                      "https://saas-react.xiangru.uk" \
-                     "https://saas-vue.xiangru.uk"; do
+                     "https://saas-vue.xiangru.uk" \
+                     "https://saas-flutter.xiangru.uk"; do
     if grep -q '^SAAS_CORS_ALLOWED_ORIGINS=' "$BASE/springboot.env" && ! grep '^SAAS_CORS_ALLOWED_ORIGINS=' "$BASE/springboot.env" | grep -qF "$cors_origin"; then
       sed -i "s#^\(SAAS_CORS_ALLOWED_ORIGINS=.*\)#\1,${cors_origin}#" "$BASE/springboot.env"
       echo "→ reconcile SAAS_CORS_ALLOWED_ORIGINS: 追加缺失 origin ${cors_origin}（origin 级，不整值覆盖）"
