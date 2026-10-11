@@ -8,7 +8,7 @@
 # - 手写 @PreUpdate / @Convert 等业务逻辑通过 extends Generated.<Entity> 叠加（ADR-0025 D7）
 #
 # 用法：
-#   bash scripts/scaffold-entities.sh                       # default saas_dev @ 100.79.128.25
+#   bash scripts/scaffold-entities.sh                       # default saas_dev @ 127.0.0.1:54321
 #   DATABASE_URL=postgresql://... bash scripts/scaffold-entities.sh
 #
 # 退出码：
