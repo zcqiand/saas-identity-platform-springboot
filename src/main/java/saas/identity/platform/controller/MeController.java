@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -276,7 +277,12 @@ public class MeController implements MeApi {
       EffectiveMenuNode n = new EffectiveMenuNode();
       n.setId(m.getId());
       n.setClientId(m.getClientId());
-      n.setParentId(isZeroUuid(m.getParentId()) ? null : m.getParentId());
+      // 5.112① 契约 required+nullable：DTO 生成物 JsonNullable<UUID>；根 sentinel → undefined
+      // （openapi-jackson 序列化器把 undefined 写 wire null）
+      n.setParentId(
+          isZeroUuid(m.getParentId())
+              ? JsonNullable.<UUID>undefined()
+              : JsonNullable.of(m.getParentId()));
       n.setTitle(m.getTitle());
       n.setType(TypeMapper.fromShort(m.getType()));
       n.setPath(m.getPath());
@@ -288,12 +294,13 @@ public class MeController implements MeApi {
       byId.put(m.getId(), n);
     }
 
-    // 2. tree 装配：parentId 为 null（含已归零的根 sentinel）的为 root
+    // 2. tree 装配：parentId 空（undefined 含已归零的根 sentinel）的为 root
     for (EffectiveMenuNode n : byId.values()) {
-      if (n.getParentId() == null) {
+      UUID parentId = n.getParentId().isPresent() ? n.getParentId().get() : null;
+      if (parentId == null) {
         roots.add(n);
       } else {
-        EffectiveMenuNode parent = byId.get(n.getParentId());
+        EffectiveMenuNode parent = byId.get(parentId);
         if (parent != null) {
           parent.getChildren().add(n);
         } else {

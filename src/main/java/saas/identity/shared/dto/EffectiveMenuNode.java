@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.lang.Nullable;
 
 /** EffectiveMenuNode */
@@ -23,7 +24,7 @@ public class EffectiveMenuNode {
 
   private String clientId;
 
-  private UUID parentId;
+  private JsonNullable<UUID> parentId = JsonNullable.<UUID>undefined();
 
   private String title;
 
@@ -60,7 +61,7 @@ public class EffectiveMenuNode {
       List<@Valid EffectiveMenuNode> children) {
     this.id = id;
     this.clientId = clientId;
-    this.parentId = parentId;
+    this.parentId = JsonNullable.of(parentId);
     this.title = title;
     this.type = type;
     this.sortOrder = sortOrder;
@@ -113,7 +114,7 @@ public class EffectiveMenuNode {
   }
 
   public EffectiveMenuNode parentId(UUID parentId) {
-    this.parentId = parentId;
+    this.parentId = JsonNullable.of(parentId);
     return this;
   }
 
@@ -126,12 +127,12 @@ public class EffectiveMenuNode {
   @Valid
   @Schema(name = "parentId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("parentId")
-  public UUID getParentId() {
+  public JsonNullable<UUID> getParentId() {
     return parentId;
   }
 
   @JsonProperty("parentId")
-  public void setParentId(UUID parentId) {
+  public void setParentId(JsonNullable<UUID> parentId) {
     this.parentId = parentId;
   }
 
