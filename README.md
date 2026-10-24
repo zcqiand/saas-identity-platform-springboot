@@ -35,7 +35,7 @@ mvn spring-boot:run           # 本地起服务
 
 > 同一案例仓后续接入其他书籍时，在此节下新增书籍小节。
 
-### 《Spring Boot 从入门到项目实践》（亚马逊电子书）
+### 书一《Spring Boot 从入门到项目实践》（亚马逊电子书）
 
 - 书稿基线：tag `v0.2.34-20260926`（冻结，正文代码清单以此为准）
 - 书稿定位：案例二「SaaS 统一身份管理系统」，覆盖第 47-56 章
@@ -53,6 +53,19 @@ mvn spring-boot:run           # 本地起服务
 | 55 | Docker 部署与交付物：从镜像到 VPS 上线 | `Dockerfile`、`deploy/setup-vps.sh`、`deploy/saas-identity-platform-springboot.sh` |
 | 56 | 项目总结：SaaS 身份平台的复盘与运维清单 | — |
 
+### 书二《PostgreSQL DBA 实战：从开发到数据库专家的转型指南》（第二部分）
+
+- 书稿定位：xr-know-007，第 37、38、39、40、41、42 章正文代码块挂本仓 `source=` 锚点
+- 配套版本：`v0.2.34-20260926`（registry 冻结 tag，代码以此为准）
+
+| 章 | 章题 | 对应源文件 |
+| :--- | :--- | :--- |
+| 37 | 实战二开卷：SaaS 身份平台的合规分析与容灾架构设计 | `src/main/java/saas/identity/platform/repository/TenantRepository.java` + `src/main/java/saas/identity/platform/controller/TenantMembersController.java` + `src/main/java/saas/identity/platform/repository/SysUserRepository.java` + `src/main/java/saas/identity/platform/repository/SysRoleRepository.java` + `src/main/java/saas/identity/platform/controller/TenantApplicationsController.java` |
+| 38 | 实战二第二章：身份平台的数据安全三件套 | `src/main/java/saas/identity/platform/controller/AuthController.java` + `src/main/java/saas/identity/platform/security/JwtIssuer.java` + `src/main/java/saas/identity/platform/config/HibernateAuditConfig.java` + `src/main/java/saas/identity/platform/controller/TenantMembersController.java` + `src/main/java/saas/identity/platform/config/AuditTimestampInterceptor.java` |
+| 39 | 实战二第三章：令牌数据的一致性与跨中心复制 | `src/main/java/saas/identity/platform/controller/OauthController.java` + `src/main/java/saas/identity/platform/repository/OauthCodeRepository.java` + `src/main/java/saas/identity/platform/controller/TokenIssuer.java` + `src/main/java/saas/identity/platform/repository/OauthRefreshTokenRepository.java` + `src/main/java/saas/identity/platform/repository/TenantMemberRepository.java` + `src/main/java/saas/identity/platform/security/TenantContext.java` |
+| 40 | 实战二第四章：全链路压测与故障演练 | `src/main/java/saas/identity/platform/repository/SysMenuRepository.java` + `src/main/java/saas/identity/platform/controller/MeController.java` + `src/main/java/saas/identity/platform/controller/ClientsController.java` |
+| 41 | 实战二第五章：运维自动化与 SOP 手册 | `src/main/java/saas/identity/platform/controller/AdminTenantsController.java` + `src/main/java/saas/identity/platform/controller/AdminClientsController.java` + `src/main/java/saas/identity/platform/controller/TenantApplicationsController.java` |
+| 42 | 终章：DBA 能力模型与职业路径 | — |
 ## 快速链接
 
 - [CLAUDE.md](CLAUDE.md) — 开发约定与编码规范
