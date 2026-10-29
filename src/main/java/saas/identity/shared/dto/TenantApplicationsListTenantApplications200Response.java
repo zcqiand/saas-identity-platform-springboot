@@ -79,12 +79,16 @@ public class TenantApplicationsListTenantApplications200Response {
   }
 
   /**
-   * Get page
+   * 页码，0 基（Spring Data Pageable）：首页 page=0。
    *
    * @return page
    */
   @NotNull
-  @Schema(name = "page", example = "0", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(
+      name = "page",
+      example = "0",
+      description = "页码，0 基（Spring Data Pageable）：首页 page=0。",
+      requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("page")
   public Integer getPage() {
     return page;
@@ -101,12 +105,16 @@ public class TenantApplicationsListTenantApplications200Response {
   }
 
   /**
-   * Get pageSize
+   * 每页条数。
    *
    * @return pageSize
    */
   @NotNull
-  @Schema(name = "pageSize", example = "20", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(
+      name = "pageSize",
+      example = "20",
+      description = "每页条数。",
+      requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("pageSize")
   public Integer getPageSize() {
     return pageSize;

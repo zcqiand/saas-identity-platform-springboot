@@ -166,8 +166,8 @@ public interface TenantRolesApi {
    *
    * @param tenantId (required)
    * @param clientId (optional)
-   * @param page (optional)
-   * @param pageSize (optional)
+   * @param page 页码，0 基（Spring Data Pageable）：首页 page&#x3D;0。 (optional)
+   * @param pageSize 每页条数。 (optional)
    * @return The request has succeeded. (status code 200) or An unexpected error response. (status
    *     code 200)
    */
@@ -205,12 +205,15 @@ public interface TenantRolesApi {
           @RequestParam(value = "clientId", required = false)
           @Nullable
           String clientId,
-      @Parameter(name = "page", description = "", in = ParameterIn.QUERY)
+      @Parameter(
+              name = "page",
+              description = "页码，0 基（Spring Data Pageable）：首页 page=0。",
+              in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "page", required = false)
           @Nullable
           Integer page,
-      @Parameter(name = "pageSize", description = "", in = ParameterIn.QUERY)
+      @Parameter(name = "pageSize", description = "每页条数。", in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "pageSize", required = false)
           @Nullable
