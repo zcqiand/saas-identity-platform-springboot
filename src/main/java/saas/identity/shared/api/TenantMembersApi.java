@@ -315,17 +315,19 @@ public interface TenantMembersApi {
   String PATH_TENANT_MEMBERS_LIST_TENANT_USERS = "/api/v1/tenants/{tenantId}/members";
 
   /**
-   * GET /api/v1/tenants/{tenantId}/members
+   * GET /api/v1/tenants/{tenantId}/members 分页：page 0 基（Spring Data Pageable），首页
+   * page&#x3D;0；pageSize 每页条数。
    *
    * @param tenantId (required)
-   * @param page 页码，0 基（Spring Data Pageable）：首页 page&#x3D;0。 (optional)
-   * @param pageSize 每页条数。 (optional)
+   * @param page (optional)
+   * @param pageSize (optional)
    * @param status (optional)
    * @return The request has succeeded. (status code 200) or An unexpected error response. (status
    *     code 200)
    */
   @Operation(
       operationId = "tenantMembersListTenantUsers",
+      description = "分页：page 0 基（Spring Data Pageable），首页 page=0；pageSize 每页条数。",
       tags = {"tenant-members"},
       responses = {
         @ApiResponse(
@@ -353,15 +355,12 @@ public interface TenantMembersApi {
       @Parameter(name = "tenantId", description = "", required = true, in = ParameterIn.PATH)
           @PathVariable("tenantId")
           String tenantId,
-      @Parameter(
-              name = "page",
-              description = "页码，0 基（Spring Data Pageable）：首页 page=0。",
-              in = ParameterIn.QUERY)
+      @Parameter(name = "page", description = "", in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "page", required = false)
           @Nullable
           Integer page,
-      @Parameter(name = "pageSize", description = "每页条数。", in = ParameterIn.QUERY)
+      @Parameter(name = "pageSize", description = "", in = ParameterIn.QUERY)
           @Valid
           @RequestParam(value = "pageSize", required = false)
           @Nullable
