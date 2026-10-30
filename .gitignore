@@ -24,3 +24,6 @@ target/
 
 # 2026-10-04：dev server 运行态日志不入库
 .runtime-logs/
+
+# 可再生件（正式区/临时区纪律：过程件进 _work/，_work 整体不入库；2026-10-24 人裁）
+_work/
