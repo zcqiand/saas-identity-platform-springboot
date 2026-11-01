@@ -6,7 +6,7 @@
     "features": 13,
     "items": 55
   },
-  "warnings_total": 120,
+  "warnings_total": 119,
   "warnings": {
     "已上线但无设计映射": [
       "M00.F01.I01",
@@ -72,7 +72,6 @@
       "M04.F01.I04",
       "M04.F01.I05",
       "M04.F02.I01",
-      "M04.F03.I03",
       "M04.F04.I03",
       "M04.F04.I04",
       "M04.F04.I05",
@@ -697,6 +696,7 @@
       "flows": [],
       "designs": [],
       "tests": [
+        "exchange_replayAfterClaimIsRejected()",
         "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:11105 (path)",
         "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:12055 (path)",
         "output\\saas-identity-platform-contract-test\\tests\\oauth.test.ts:6035 (path)",
@@ -713,7 +713,9 @@
       "requirements": [],
       "flows": [],
       "designs": [],
-      "tests": [],
+      "tests": [
+        "rotateIsAtomic_failedIssuanceRestoresOldToken()"
+      ],
       "entry": []
     },
     "M04.F04.I01": {

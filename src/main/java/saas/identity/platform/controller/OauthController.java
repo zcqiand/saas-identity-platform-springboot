@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -50,6 +51,7 @@ public class OauthController implements OauthApi {
   private final JwtIssuer jwt;
   private final TokenIssuer tokenIssuer;
   private final JwtDecoder jwtDecoder;
+  private final TransactionTemplate tx;
 
   public OauthController(
       OauthClientRepository clients,
@@ -58,7 +60,8 @@ public class OauthController implements OauthApi {
       OauthRefreshTokenRepository refreshTokens,
       JwtIssuer jwt,
       TokenIssuer tokenIssuer,
-      JwtDecoder jwtDecoder) {
+      JwtDecoder jwtDecoder,
+      TransactionTemplate tx) {
     this.clients = clients;
     this.codes = codes;
     this.accessTokens = accessTokens;
@@ -66,6 +69,7 @@ public class OauthController implements OauthApi {
     this.jwt = jwt;
     this.tokenIssuer = tokenIssuer;
     this.jwtDecoder = jwtDecoder;
+    this.tx = tx;
   }
 
   @Override
@@ -151,17 +155,20 @@ public class OauthController implements OauthApi {
             .filter(c -> client.getClientId().equals(c.getClientId()))
             .orElseThrow(() -> new IllegalArgumentException("INVALID_GRANT: code 不存在或已被使用"));
     if (row.getExpiresAt() != null && row.getExpiresAt().isBefore(OffsetDateTime.now())) {
-      codes.delete(row);
+      codes.deleteByCode(row.getCode());
       throw new IllegalArgumentException("INVALID_GRANT: expired code");
     }
     // 2026-09-15 四家收敛：RFC 6749 §4.1.3——redirect_uri 必须与 authorize 时一致
     // （msw / nextjs / aspnetcore 已有此校验，springboot 此前单侧缺失）。
     if (!body.getRedirectUri().equals(row.getRedirectUri())) {
-      codes.delete(row);
+      codes.deleteByCode(row.getCode());
       throw new IllegalArgumentException("INVALID_GRANT: redirectUri mismatch");
     }
-    // 一次性消费：删 code 行，防重放
-    codes.delete(row);
+    // 一次性消费 claim 原子化（5.123①）：按 code 谓词删并校验影响行数——「读到行但删除
+    // 未生效」（0 行）的并发输家必须 INVALID_GRANT 拒签，禁止 read-then-delete 裸删
+    if (codes.deleteByCode(row.getCode()) == 0) {
+      throw new IllegalArgumentException("INVALID_GRANT: code 不存在或已被使用");
+    }
     return ResponseEntity.ok(
         tokenResponse(
             jwt.issueAccessToken(row.getUserId(), row.getTenantId()),
@@ -187,19 +194,30 @@ public class OauthController implements OauthApi {
     if (Boolean.TRUE.equals(rt.getRevoked())) {
       throw new IllegalArgumentException("INVALID_GRANT: revoked refresh_token");
     }
-    // rotate：旧 rt 标 revoked
-    rt.setRevoked(true);
-    refreshTokens.save(rt);
-    // 新 refresh 行的 client_id 以旧 rt 行绑定的值为准（登录时已过 FK 校验），不信任请求体。
-    String clientId = rt.getClientId() != null ? rt.getClientId() : client.getClientId();
-    String scope =
-        scopeOrNull(
-            accessTokens
-                .findById(rt.getAccessTokenId())
-                .map(OauthAccessToken::getScope)
-                .orElse(null));
-    String newRefresh =
-        tokenIssuer.persistTokenPair(rt.getUserId(), rt.getTenantId(), clientId, scope);
+    // 5.123② 轮换段原子化：撤销旧行与签发新对同事务——签发段故障回滚恢复旧行，
+    // 同一 refresh 可重试；修前 revoke 先行落库，签发段故障留「旧废新未落」半态
+    String[] rotation =
+        tx.execute(
+            status -> {
+              rt.setRevoked(true);
+              refreshTokens.save(rt);
+              // 新 refresh 行的 client_id 以旧 rt 行绑定的值为准（登录时已过 FK 校验），不信任请求体。
+              String newClientId =
+                  rt.getClientId() != null ? rt.getClientId() : client.getClientId();
+              String newScope =
+                  scopeOrNull(
+                      accessTokens
+                          .findById(rt.getAccessTokenId())
+                          .map(OauthAccessToken::getScope)
+                          .orElse(null));
+              String issued =
+                  tokenIssuer.persistTokenPair(
+                      rt.getUserId(), rt.getTenantId(), newClientId, newScope);
+              return new String[] {newClientId, newScope, issued};
+            });
+    String clientId = rotation[0];
+    String scope = rotation[1];
+    String newRefresh = rotation[2];
     return ResponseEntity.ok(
         tokenResponse(
             jwt.issueAccessToken(rt.getUserId(), rt.getTenantId()),

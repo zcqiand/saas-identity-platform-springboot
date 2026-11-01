@@ -3,20 +3,20 @@
   "project": "saas-identity-platform-springboot",
   "tier": "full",
   "excluded_tier": [],
-  "passed": true,
+  "passed": false,
   "partial": true,
   "ran": [
-    "L5"
+    "L4"
   ],
-  "checked_at": "2026-10-02T13:01:26+0800",
+  "checked_at": "2026-11-01T16:32:15+0800",
   "gates": [
     {
-      "level": "L5",
-      "name": "引用完整性",
-      "passed": true,
-      "returncode": 0,
-      "duration_s": 9.828,
-      "output": "71 个功能条目，引用完整。软告警 120 条（见 .state/alignment.json）\r\n  [WARN] 已上线但无设计映射: M00.F01.I01, M00.F01.I02, M00.F01.I03, M00.F01.I04, M00.F01.I05, M00.F02.I01 …共 48 项\r\n  [WARN] 已上线但无测试引用: M00.F01.I03, M00.F01.I04, M00.F01.I05, M00.F02.I06, M00.F02.I08, M00.F04.I01 …共 19 项\r\n  [WARN] 已上线但不在任何流程且非孤儿白名单: M00.F01.I01, M00.F01.I02, M00.F01.I03, M00.F01.I04, M00.F01.I05, M00.F02.I01 …共 48 项\r\n  [WARN] 开发中但无需求文档引用: M00.F04.I02, M01.F01.I01, M01.F03.I01\r\n  [WARN] 开发中但代码里无 UI 入口(用户还点不到): M01.F01.I01, M01.F03.I01"
+      "level": "L4",
+      "name": "测试",
+      "passed": false,
+      "returncode": 1,
+      "duration_s": 13.813,
+      "output": "[INFO][gate-inject] SERVER_PORT <- saas-identity-platform-springboot/.env.test（通用通道，调用方未设）\n[INFO][gate-inject] PG_HOST <- saas-identity-platform-springboot/.env.test（通用通道，调用方未设）\n[INFO][gate-inject] PG_PORT <- saas-identity-platform-springboot/.env.test（通用通道，调用方未设）\n[INFO][gate-inject] PG_USER <- saas-identity-platform-springboot/.env.test（通用通道，调用方未设）\n[INFO][gate-inject] PG_DATABASE <- saas-identity-platform-springboot/.env.test（通用通道，调用方未设）\n[INFO][gate-inject] JWT_SIGNING_KEY <- saas-identity-platform-springboot/.env.test（通用通道，调用方未设）\n[INFO][gate-inject] JWT_ISSUER <- saas-identity-platform-springboot/.env.test（通用通道，调用方未设）\n[INFO][gate-inject] JWT_AUDIENCE <- saas-identity-platform-springboot/.env.test（通用通道，调用方未设）\n[INFO][gate-inject] JWT_TTL_SECONDS <- saas-identity-platform-springboot/.env.test（通用通道，调用方未设）\n[INFO][gate-inject] SAAS_CORS_ALLOWED_ORIGINS <- saas-identity-platform-springboot/.env.test（通用通道，调用方未设）\n[INFO][gate-inject] DATABASE_URL <- saas-identity-platform-springboot/.env.test（通用通道，调用方未设）\n[INFO][gate-inject] DATABASE_NAME <- saas-identity-platform-springboot/.env.test（通用通道，调用方未设）\n[INFO][gate-inject] DATABASE_USER <- saas-identity-platform-springboot/.env.test（通用通道，调用方未设）\n[INFO][gate-inject] DATABASE_PASSWORD <- saas-identity-platform-springboot/.env.test（通用通道，调用方未设）\n[INFO][gate-inject] JWT_AUTHORITY <- saas-identity-platform-springboot/.env.test（通用通道，调用方未设）\n16:32:05.382 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [saas.identity.platform.controller.AdminTenantsControllerTest]: AdminTenantsControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.\r\n16:32:05.515 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration saas.identity.platform.Application for test class saas.identity.platform.controller.AdminTenantsControllerTest\r\n\r\n  .   ____          _            __ _ _\n /\\\\ / ___'_ __ _ _(_)_ __  __ _ \\ \\ \\ \\\n( ( )\\___ | '_ | '_| | '_ \\/ _` | \\ \\ \\ \\\n \\\\/  ___)| |_)| | | | | || (_| |  ) ) ) )\n  '  |____| .__|_| |_|_| |_\\__, | / / / /\n =========|_|==============|___/=/_/_/_/\n\r\n :: Spring Boot ::                (v3.4.0)\r\n\r\n2026-11-01T16:32:05.909+08:00  INFO 37736 --- [           main] s.i.p.c.AdminTenantsControllerTest       : Starting AdminTenantsControllerTest using Java 21.0.6 with PID 37736 (started by zcqiand in D:\\qiand-life\\1-projects\\xr-code-suite\\output\\saas-identity-platform-springboot)\r\n2026-11-01T16:32:05.910+08:00  INFO 37736 --- [           main] s.i.p.c.AdminTenantsControllerTest       : No active profile set, falling back to 1 default profile: \"default\"\r\n2026-11-01T16:32:08.245+08:00  INFO 37736 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''\r\n2026-11-01T16:32:08.245+08:00  INFO 37736 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''\r\n2026-11-01T16:32:08.247+08:00  INFO 37736 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms\r\n2026-11-01T16:32:08.281+08:00  INFO 37736 --- [           main] s.i.p.c.AdminTenantsControllerTest       : Started AdminTenantsControllerTest in 2.697 seconds (process running for 3.582)\r\n2026-11-01T16:32:08.664+08:00  INFO 37736 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [saas.identity.platform.controller.AuthControllerLoginTest]: AuthControllerLoginTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.\r\n2026-11-01T16:32:08.677+08:00  INFO 37736 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration saas.identity.platform.Application for test class saas.identity.platform.controller.AuthControllerLoginTest\r\n\r\n  .   ____          _            __ _ _"
     }
   ]
 }
