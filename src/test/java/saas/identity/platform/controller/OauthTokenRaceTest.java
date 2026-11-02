@@ -10,6 +10,7 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -46,7 +47,11 @@ import saas.identity.shared.dto.TokenResponse;
  * claim 承接）。
  *
  * <p>@DataJpaTest + NOT_SUPPORTED：控制器写走真事务（外层测试事务会吞内层回滚语义）。
+ *
+ * <p>@Tag("pg")：真 PG 切片（DATABASE_URL fail-fast），按 ci.yml 分层「CI=编译+mock 单测 / gate=真库全量」 在 CI 排除——本仓
+ * excludedGroups=pg 通道既有（lab-aspnetcore v0.2.27 同款）；本地 gate L4 全量照跑。
  */
+@Tag("pg")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
