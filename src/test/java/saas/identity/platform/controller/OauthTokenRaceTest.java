@@ -128,6 +128,9 @@ class OauthTokenRaceTest {
     t.setUpdatedAt(OffsetDateTime.now());
     tenantId = tenants.save(t).getId();
 
+    // 共享 saas_test 里其他仓的种子常已写 saas-console（uk_oauth_client_id 唯一键）——先清自己的键再种
+    clients.findByClientId(CLIENT_ID).ifPresent(clients::delete);
+
     OauthClient c = new OauthClient();
     c.setClientId(CLIENT_ID);
     c.setClientSecret("n/a");
